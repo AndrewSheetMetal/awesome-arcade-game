@@ -11,5 +11,4 @@ public class Main {
 		System.out.println("Hier ist Andi");
 		System.out.println("Hier ist Änderung");
 	}
-
 }
