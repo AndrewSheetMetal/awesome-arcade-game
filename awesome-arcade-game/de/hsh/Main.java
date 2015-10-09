@@ -11,5 +11,7 @@ public class Main {
 		System.out.println("Hier ist Andi");
 		System.out.println("Hier ist Änderung");
 		System.out.println("Hier ist Basti");
+		System.out.println("Hier ist Philipp");
+		System.out.println("Hier ist deine Mudda");
 	}
 }
