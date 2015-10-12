@@ -1,18 +1,20 @@
 package de.hsh;
 
-public class Main {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		System.out.println("Hello world");
-		System.out.println("Hier ist Sven");
-		System.out.println("Hier ist Andi");
-		System.out.println("Hier ist Änderung");
-		System.out.println("Hier ist Basti");
-		System.out.println("Hier ist Philipp");
-		System.out.println("Hier ist deine Mudda");
-		System.out.println("Hier ist dein Vatter");
+import javax.swing.JFrame;
+
+public class Main extends JFrame{
+	private static final long serialVersionUID = 1L;
+	public static Main main;
+	public static void main(String[] args)  {
+		new Main().start();
+	}
+	private void start(){
+		main = this;
+		setTitle("Field$");
+		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		getContentPane().add(new MenuScreen());
 	}
 }
