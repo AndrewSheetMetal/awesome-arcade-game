@@ -1,4 +1,11 @@
 /Main.class
 /Level.class
 /Player.class
+<<<<<<< HEAD
 /Game.class
+=======
+/Screen.class
+/MenuScreen.class
+/GameScreen.class
+/MenuScreen$1.class
+>>>>>>> branch 'master' of https://github.com/AndrewSheetMetal/awesome-arcade-game.git
