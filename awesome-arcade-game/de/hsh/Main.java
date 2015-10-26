@@ -2,19 +2,29 @@ package de.hsh;
 
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Main extends JFrame{
 	private static final long serialVersionUID = 1L;
-	public static Main main;
+		
+	private GameScreen gameScreen;
+	private MenuScreen menuScreen;
+	
 	public static void main(String[] args)  {
 		new Main().start();
 	}
+	
 	private void start(){
-		main = this;
 		setTitle("Field$");
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		getContentPane().add(new MenuScreen());
+		menuScreen = new MenuScreen();
+		setScreen(menuScreen);
+	}
+	
+	public void setScreen(JPanel pScreen){		
+
+		getContentPane().add(pScreen);
 	}
 }

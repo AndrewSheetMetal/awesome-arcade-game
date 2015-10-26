@@ -1,11 +1,20 @@
 package de.hsh;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.util.List;
 
-public class GameScreen extends JPanel{
+public class GameScreen extends Screen {
+	
 	private static final long serialVersionUID = 1L;
-	public GameScreen(){
-		add(new JButton("Hallo"));
+	private List<Battlefield> battlefields;
+	private float time;
+	
+	public GameScreen(List<Battlefield> pBattlefields){
+		
+		battlefields = pBattlefields;
+	}
+	
+	private void update(float pDeltaTime){
+		
+		time += pDeltaTime;
 	}
 }

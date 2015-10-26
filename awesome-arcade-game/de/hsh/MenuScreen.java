@@ -8,7 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class MenuScreen extends JPanel{
+public class MenuScreen extends Screen{
 	private static final long serialVersionUID = 1L;
 	public MenuScreen(){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -21,12 +21,13 @@ public class MenuScreen extends JPanel{
 		higscoreBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(creditsBtn);
 		creditsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		newGameBtn.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GameScreen tmp =new GameScreen();
+				GameScreen tmp =new GameScreen(null);
 				setVisible(true);
-				Main.main.add(tmp);
+				Main.setScreen(tmp);
 				setVisible(false);
 				
 			}
