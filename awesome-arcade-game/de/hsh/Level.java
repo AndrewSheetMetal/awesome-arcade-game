@@ -2,6 +2,7 @@ package de.hsh;
 
 public class Level {
 	private int levelNummer;
+	
 	public Level(int nr){
 		setLevelNummer(nr);
 	}
