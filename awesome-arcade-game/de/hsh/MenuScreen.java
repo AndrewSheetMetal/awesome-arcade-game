@@ -10,7 +10,9 @@ import javax.swing.JPanel;
 
 public class MenuScreen extends Screen{
 	private static final long serialVersionUID = 1L;
+	
 	public MenuScreen(){
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton higscoreBtn = new JButton("Highscore");
@@ -27,7 +29,6 @@ public class MenuScreen extends Screen{
 			public void actionPerformed(ActionEvent arg0) {
 				GameScreen tmp =new GameScreen(null);
 				setVisible(true);
-				Main.setScreen(tmp);
 				setVisible(false);
 				
 			}
