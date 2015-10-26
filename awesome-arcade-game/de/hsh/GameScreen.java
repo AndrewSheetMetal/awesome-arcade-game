@@ -1,23 +1,25 @@
 package de.hsh;
 
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
-import de.hsh.Objects.*;
 
 public class GameScreen extends Screen {
 	
-	private de.hsh.Objects.Player player;
 	private static final long serialVersionUID = 1L;
 	private List<Battlefield> battlefields;
 	private float time;
+	private de.hsh.Objects.Player player;
 	
 	public GameScreen(List<Battlefield> pBattlefields){
-		player = new de.hsh.Objects.Player();
+		
 		battlefields = pBattlefields;
+		
+		player = new de.hsh.Objects.Player();
 		
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
@@ -40,7 +42,6 @@ public class GameScreen extends Screen {
 		super.paintComponent(g);
 		
 		player.draw(g);
-		
 	}
 
 	private class TAdapter extends KeyAdapter {

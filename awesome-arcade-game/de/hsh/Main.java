@@ -20,7 +20,9 @@ public class Main extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		menuScreen = new MenuScreen();
-		setScreen(menuScreen);
+		gameScreen = new GameScreen(null);
+		setScreen(gameScreen);
+		//setScreen(menuScreen);
 	}
 	
 	public void setScreen(JPanel pScreen){		

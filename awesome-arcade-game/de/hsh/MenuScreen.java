@@ -13,6 +13,8 @@ public class MenuScreen extends Screen{
 	
 	public MenuScreen(){
 		
+		
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton higscoreBtn = new JButton("Highscore");
