@@ -1,6 +1,10 @@
 package de.hsh;
 
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 import de.hsh.Objects.*;
 
@@ -14,11 +18,21 @@ public class GameScreen extends Screen {
 	public GameScreen(List<Battlefield> pBattlefields){
 		player = new de.hsh.Objects.Player();
 		battlefields = pBattlefields;
+		
+		this.addKeyListener(new TAdapter());
+		System.out.println("Keylistener"+this.getKeyListeners());
 	}
 	
 	private void update(float pDeltaTime){
 		
 		time += pDeltaTime;
+		
+		Point pos = player.getPosition();
+		Point direction = player.getDirection();
+		pos.x += direction.x*pDeltaTime;
+		pos.y += direction.y*pDeltaTime;
+		player.setPosition(pos);
+		
 	}
 	
 	@Override
@@ -28,4 +42,30 @@ public class GameScreen extends Screen {
 		player.draw(g);
 		
 	}
+
+	private class TAdapter extends KeyAdapter {
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+        	System.out.println("Taste gedrückt "+e);
+    		
+    		if(e.getKeyCode() == KeyEvent.VK_UP) {
+    			player.setDirection(new Point(0,1));
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+    			player.setDirection(new Point(0,-1));
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+    			player.setDirection(new Point(1,0));
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+    			player.setDirection(new Point(-1,0));
+    		}
+        }
+    }
 }
