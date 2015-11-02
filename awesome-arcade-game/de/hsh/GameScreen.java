@@ -43,6 +43,7 @@ public class GameScreen extends Screen implements Runnable {
 		Point2D direction = player.getDirection();
 		pos.setLocation(pos.getX() + direction.getX()*pDeltaTime, pos.getY() + direction.getY()*pDeltaTime);
 		player.setPosition(pos);
+		
 		updateUI();
 		
 	}
@@ -51,6 +52,9 @@ public class GameScreen extends Screen implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		for(Battlefield b : battlefields) {
+			b.draw(g);
+		}
 		player.draw(g);
 	}
 
