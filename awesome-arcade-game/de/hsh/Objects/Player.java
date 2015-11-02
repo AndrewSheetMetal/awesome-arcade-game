@@ -17,7 +17,7 @@ public class Player extends Movable {
 	public void setDirection(Point2D direction) {
 		this.direction = direction;
 		
-		System.out.println("Direction "+direction);
+		//System.out.println("Direction "+direction);
 		
 		// TODO Auto-generated method stub
 		
@@ -75,5 +75,4 @@ public class Player extends Movable {
 		toReturn.setSize(50, 50);
 		return toReturn;
 	}
-	
 }
