@@ -40,7 +40,7 @@ public class GameScreen extends Screen implements Runnable {
 	private void update(float pDeltaTime){
 		
 		
-		System.out.println("Update: pDeltaTime: "+pDeltaTime);
+		//System.out.println("Update: pDeltaTime: "+pDeltaTime);
 		
 		time += pDeltaTime;
 		
@@ -67,7 +67,19 @@ public class GameScreen extends Screen implements Runnable {
 				
 				if(battlefieldHitPoint.x < 0 && battlefieldHitPoint.y < 0 && b.contains(new Point2D.Double(player.getPosition().getX()+player.getSize().width/2,player.getPosition().getY()+player.getSize().height/2))) {
 					/*Moment in dem Spieler das Battlefield schneidet*/
+					battlefieldHitPoint = new Point((int)player.getPosition().getX()+player.getSize().width/2,(int)player.getPosition().getY()+player.getSize().height/2);
+					System.out.println("Battlefield Hitpoint: " + battlefieldHitPoint);
+					player.setColor(Color.BLACK);
 				}
+				else if(battlefieldHitPoint.x > 0 && battlefieldHitPoint.y > 0 && !b.contains(new Point2D.Double(player.getPosition().getX()+player.getSize().width/2,player.getPosition().getY()+player.getSize().height/2))) {
+					battlefieldHitPoint = new Point((int)player.getPosition().getX()+player.getSize().width/2,(int)player.getPosition().getY()+player.getSize().height/2);
+					System.out.println("Battlefield Hitpoint: " + battlefieldHitPoint);
+					player.setColor(Color.BLACK);
+					
+				}
+			}
+			else {
+				battlefieldHitPoint = new Point(-1,-1);
 			}
 		}
 		

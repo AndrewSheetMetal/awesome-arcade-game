@@ -61,7 +61,7 @@ public class Player extends Movable {
 		//pos.y += 1;
 		//pos.x = pos.x % 300;
 		//pos.y = pos.y % 300;
-		System.out.println("Position: "+pos);
+		//System.out.println("Position: "+pos);
 		
 		this.setPosition(pos);
 		
