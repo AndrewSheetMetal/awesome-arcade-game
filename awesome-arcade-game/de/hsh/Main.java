@@ -22,6 +22,8 @@ public class Main extends JFrame{
 		menuScreen = new MenuScreen();
 		gameScreen = new GameScreen(null);
 		setScreen(gameScreen);
+		gameScreen.setFocusable(true);
+		gameScreen.requestFocus();
 		//setScreen(menuScreen);
 	}
 	
