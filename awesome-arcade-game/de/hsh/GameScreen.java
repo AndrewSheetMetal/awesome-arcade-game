@@ -3,6 +3,7 @@ package de.hsh;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,6 +20,7 @@ public class GameScreen extends Screen implements Runnable {
 	private float time;
 	private de.hsh.Objects.Player player;
 	private boolean running;
+	private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 
 	
 	public GameScreen(List<Battlefield> pBattlefields){
@@ -32,6 +34,7 @@ public class GameScreen extends Screen implements Runnable {
 		new Thread(this).start();
 		running = true;
 		
+		battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
 	private void update(float pDeltaTime){
@@ -54,12 +57,17 @@ public class GameScreen extends Screen implements Runnable {
 		player.setColor(Color.BLUE);
 		for(Battlefield b : battlefields) {
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
-				
+				/*Der Spieler ist innerhalb eines Battlefields*/
 				player.setColor(Color.RED);
 			}
 			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
+				/*Der Spieler schneidet das Battlefield*/
 				player.setColor(Color.GREEN);
 				
+				
+				if(battlefieldHitPoint.x < 0 && battlefieldHitPoint.y < 0 && b.contains(new Point2D.Double(player.getPosition().getX()+player.getSize().width/2,player.getPosition().getY()+player.getSize().height/2))) {
+					/*Moment in dem Spieler das Battlefield schneidet*/
+				}
 			}
 		}
 		
