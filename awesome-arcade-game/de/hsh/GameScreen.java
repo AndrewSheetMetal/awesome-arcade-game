@@ -1,10 +1,13 @@
 package de.hsh;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,7 @@ public class GameScreen extends Screen implements Runnable {
 	private int speed = 2;
 	private boolean painting = false;
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
+	private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 
 	
 	public GameScreen(List<Battlefield> pBattlefields){
@@ -31,6 +35,7 @@ public class GameScreen extends Screen implements Runnable {
 		new Thread(this).start();
 		running = true;
 		
+		battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
 	private void update(float pDeltaTime){
@@ -44,14 +49,43 @@ public class GameScreen extends Screen implements Runnable {
 		Point2D direction = player.getDirection();
 		pos.setLocation(pos.getX() + speed*(direction.getX()*pDeltaTime), pos.getY() + speed*(direction.getY()*pDeltaTime));
 		player.setPosition(pos);
-		updateUI();
 		
+		
+		/*Checken, ob Player im Battlefield ist*/
+		
+		
+		
+		player.setColor(Color.BLUE);
+		for(Battlefield b : battlefields) {
+			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
+				/*Der Spieler ist innerhalb eines Battlefields*/
+				player.setColor(Color.RED);
+			}
+			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
+				/*Der Spieler schneidet das Battlefield*/
+				player.setColor(Color.GREEN);
+				
+				
+				if(battlefieldHitPoint.x < 0 && battlefieldHitPoint.y < 0 && b.contains(new Point2D.Double(player.getPosition().getX()+player.getSize().width/2,player.getPosition().getY()+player.getSize().height/2))) {
+					/*Moment in dem Spieler das Battlefield schneidet*/
+				}
+			}
+		}
+		
+		
+		
+		updateUI();
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		this.setBackground(Color.YELLOW);
+		
+		for(Battlefield b : battlefields) {
+			b.draw(g);
+		}
 		player.draw(g);
 		
 		//Zeichnet die Linen hinter dem Player, wenn der das Battlefield betritt
