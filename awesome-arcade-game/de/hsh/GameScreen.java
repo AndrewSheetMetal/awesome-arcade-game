@@ -27,6 +27,9 @@ public class GameScreen extends Screen {
 	
 	private void update(float pDeltaTime){
 		
+		
+		
+		
 		time += pDeltaTime;
 		
 		Point pos = player.getPosition();
