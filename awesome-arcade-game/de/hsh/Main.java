@@ -1,6 +1,8 @@
 package de.hsh;
 
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -18,7 +20,8 @@ public class Main extends JFrame{
 		setTitle("Field$");
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setMinimumSize(new Dimension(100,100));
 		menuScreen = new MenuScreen();
 		gameScreen = new GameScreen(null);
 		setScreen(gameScreen);

@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 
@@ -13,7 +13,7 @@ public class Player extends Movable {
 	private int livePoints;
 
 	@Override
-	public void setDirection(Point direction) {
+	public void setDirection(Point2D direction) {
 		this.direction = direction;
 		
 		System.out.println("Direction "+direction);
@@ -23,8 +23,8 @@ public class Player extends Movable {
 	}
 	
 	public Player() {
-		setDirection(new Point(0,0));
-		setPosition(new Point(50,50));
+		setDirection(new Point2D.Double(0,0));
+		setPosition(new Point2D.Double(50,50));
 	}
 	
 	public void draw(Graphics g) {
@@ -43,14 +43,14 @@ public class Player extends Movable {
 		g2d.setStroke(new BasicStroke(1));
 		g2d.setColor(Color.RED);
 		
-		Point pos = this.getPosition();
+		Point2D pos = this.getPosition();
 		
-		circle2D.setFrame(pos.x, pos.y, w, h);
+		circle2D.setFrame(pos.getX(), pos.getY(), w, h);
 		
-		pos.x += 1;
-		pos.y += 1;
-		pos.x = pos.x % 300;
-		pos.y = pos.y % 300;
+		//pos.x += 1;
+		//pos.y += 1;
+		//pos.x = pos.x % 300;
+		//pos.y = pos.y % 300;
 		System.out.println("Position: "+pos);
 		
 		this.setPosition(pos);

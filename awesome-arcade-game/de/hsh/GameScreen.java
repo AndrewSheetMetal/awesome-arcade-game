@@ -2,10 +2,10 @@ package de.hsh;
 
 
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.List;
@@ -35,14 +35,13 @@ public class GameScreen extends Screen implements Runnable {
 	private void update(float pDeltaTime){
 		
 		
-		
+		System.out.println("Update: pDeltaTime: "+pDeltaTime);
 		
 		time += pDeltaTime;
 		
-		Point pos = player.getPosition();
-		Point direction = player.getDirection();
-		pos.x += direction.x*pDeltaTime/100000;
-		pos.y += direction.y*pDeltaTime/100000;
+		Point2D pos = player.getPosition();
+		Point2D direction = player.getDirection();
+		pos.setLocation(pos.getX() + direction.getX()*pDeltaTime, pos.getY() + direction.getY()*pDeltaTime);
 		player.setPosition(pos);
 		updateUI();
 		
@@ -67,16 +66,16 @@ public class GameScreen extends Screen implements Runnable {
         	System.out.println("Taste gedrückt "+e);
     		
     		if(e.getKeyCode() == KeyEvent.VK_UP) {
-    			player.setDirection(new Point(0,1));
+    			player.setDirection(new Point2D.Double(0,-1));
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-    			player.setDirection(new Point(0,-1));
+    			player.setDirection(new Point2D.Double(0,1));
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-    			player.setDirection(new Point(1,0));
+    			player.setDirection(new Point2D.Double(1,0));
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-    			player.setDirection(new Point(-1,0));
+    			player.setDirection(new Point2D.Double(-1,0));
     		}
     		
         }
@@ -91,7 +90,10 @@ public class GameScreen extends Screen implements Runnable {
 		while(running){
 			long now = System.nanoTime();
 			delta +=  (now-lastTime)/nsPerTick;
+			lastTime = now;
+			
 			update(delta);
+			delta = 0;
 			}
 		}
 	}
