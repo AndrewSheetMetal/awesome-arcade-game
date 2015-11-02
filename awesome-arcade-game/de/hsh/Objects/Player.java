@@ -11,7 +11,8 @@ import java.awt.geom.Ellipse2D;
 
 public class Player extends Movable {
 	private int livePoints;
-
+	private Color color;
+	
 	@Override
 	public void setDirection(Point2D direction) {
 		this.direction = direction;
@@ -25,6 +26,15 @@ public class Player extends Movable {
 	public Player() {
 		setDirection(new Point2D.Double(0,0));
 		setPosition(new Point2D.Double(50,50));
+		setColor(Color.RED);
+	}
+	
+	public void setColor(Color c) {
+		color = c;
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 	
 	public void draw(Graphics g) {
@@ -41,7 +51,7 @@ public class Player extends Movable {
 		
 		Ellipse2D circle2D = new Ellipse2D.Double();
 		g2d.setStroke(new BasicStroke(1));
-		g2d.setColor(Color.RED);
+		g2d.setColor(getColor());
 		
 		Point2D pos = this.getPosition();
 		
@@ -60,7 +70,7 @@ public class Player extends Movable {
 
 	}
 	
-	private Dimension getSize() {
+	public Dimension getSize() {
 		Dimension toReturn = new Dimension();
 		toReturn.setSize(50, 50);
 		return toReturn;

@@ -1,11 +1,13 @@
 package de.hsh;
 
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.List;
@@ -44,8 +46,21 @@ public class GameScreen extends Screen implements Runnable {
 		pos.setLocation(pos.getX() + direction.getX()*pDeltaTime, pos.getY() + direction.getY()*pDeltaTime);
 		player.setPosition(pos);
 		
-		updateUI();
 		
+		/*Checken, ob Player im Battlefield ist*/
+		
+		
+		
+		player.setColor(Color.BLUE);
+		for(Battlefield b : battlefields) {
+			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
+				
+				player.setColor(Color.RED);
+			}
+		}
+		
+		
+		updateUI();
 	}
 	
 	@Override
