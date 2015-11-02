@@ -91,9 +91,14 @@ public class GameScreen extends Screen implements Runnable {
 			long now = System.nanoTime();
 			delta +=  (now-lastTime)/nsPerTick;
 			lastTime = now;
+				
 			
-			update(delta);
-			delta = 0;
+			
+			if(delta >= 1) {
+				update(delta);
+				delta = 0;
+			}
+			
 			}
 		}
 	}
