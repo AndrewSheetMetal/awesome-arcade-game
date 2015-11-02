@@ -57,7 +57,12 @@ public class GameScreen extends Screen implements Runnable {
 				
 				player.setColor(Color.RED);
 			}
+			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
+				player.setColor(Color.GREEN);
+				
+			}
 		}
+		
 		
 		
 		updateUI();
@@ -66,6 +71,8 @@ public class GameScreen extends Screen implements Runnable {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+		this.setBackground(Color.YELLOW);
 		
 		for(Battlefield b : battlefields) {
 			b.draw(g);
