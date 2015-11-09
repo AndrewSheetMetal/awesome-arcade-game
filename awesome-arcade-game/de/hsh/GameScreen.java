@@ -46,34 +46,10 @@ public class GameScreen extends Screen implements Runnable {
 		mBallList = new ArrayList<Ball>();
 		// Muss später dynamisch erzeugt werden.
 		mBallList.add(new Ball());
-		Random lRandom = new Random();
+		
 		for(Ball lBall : mBallList)
 		{
-			// Zufälligen Winkel erzeugen.
-			double lDir = 360 * lRandom.nextDouble();
-			// Passenden Quadranten bestimmen.
-			int lQuarter = (int)(lDir / 90);
-			lDir -= lQuarter * 90;
-			lDir /= 90;
-			switch(lQuarter)
-			{
-				// Ball bewegt sich nach oben rechts.
-				case 0:
-					lBall.setDirection(new Point2D.Double(lDir, -(1 - lDir)));
-					break;
-				// Ball bewegt sich nach unten rechts.
-				case 1:
-					lBall.setDirection(new Point2D.Double(1 - lDir, lDir));
-					break;
-				// Ball bewegt sich nach unten links.
-				case 2:
-					lBall.setDirection(new Point2D.Double(-lDir, 1 - lDir));
-					break;
-				// Ball bewegt sich nach oben links.
-				case 3:
-					lBall.setDirection(new Point2D.Double(-(1 - lDir), -lDir));
-					break;
-			}
+			lBall.setRandomDirection();
 			lBall.setSpeed(1);
 		}
 		

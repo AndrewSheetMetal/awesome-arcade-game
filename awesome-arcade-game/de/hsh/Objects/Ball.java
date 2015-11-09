@@ -85,15 +85,4 @@ public class Ball extends Enemy {
 	{
 		return mSpeed;
 	}
-	
-	// ALEX
-	public Point2D getDirection()
-	{
-		return mDirection;
-	}
-	
-	// ALEX
-	public void setDirection(Point2D pDirection) {
-		mDirection = pDirection;		
-	}
 }
