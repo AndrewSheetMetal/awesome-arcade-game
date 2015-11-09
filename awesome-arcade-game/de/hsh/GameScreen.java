@@ -10,8 +10,11 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
+// ALEX
 import de.hsh.Objects.Ball;
 import de.hsh.Objects.Player;
+import java.util.Random;
 
 public class GameScreen extends Screen implements Runnable {
 	
@@ -23,7 +26,7 @@ public class GameScreen extends Screen implements Runnable {
 	private List<Ball> mBallList;
 	
 	private boolean running;
-	private int speed = 2;
+	// ALEX: speed entfernt.
 	private boolean painting = false;
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
@@ -38,13 +41,40 @@ public class GameScreen extends Screen implements Runnable {
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
 		player.setPosition(new Point2D.Double(50,50));
+		player.setSpeed(2);
+		
 		mBallList = new ArrayList<Ball>();
 		// Muss später dynamisch erzeugt werden.
 		mBallList.add(new Ball());
+		Random lRandom = new Random();
 		for(Ball lBall : mBallList)
 		{
-			// Muss später zufällig generiert werden.
-			lBall.setDirection(new Point2D.Double(1, 0));
+			// Zufälligen Winkel erzeugen.
+			double lDir = 360 * lRandom.nextDouble();
+			// Passenden Quadranten bestimmen.
+			int lQuarter = (int)(lDir / 90);
+			lDir -= lQuarter * 90;
+			lDir /= 90;
+			switch(lQuarter)
+			{
+				// Ball bewegt sich nach oben rechts.
+				case 0:
+					lBall.setDirection(new Point2D.Double(lDir, -(1 - lDir)));
+					break;
+				// Ball bewegt sich nach unten rechts.
+				case 1:
+					lBall.setDirection(new Point2D.Double(1 - lDir, lDir));
+					break;
+				// Ball bewegt sich nach unten links.
+				case 2:
+					lBall.setDirection(new Point2D.Double(-lDir, 1 - lDir));
+					break;
+				// Ball bewegt sich nach oben links.
+				case 3:
+					lBall.setDirection(new Point2D.Double(-(1 - lDir), -lDir));
+					break;
+			}
+			lBall.setSpeed(1);
 		}
 		
 		this.addKeyListener(new TAdapter());
@@ -64,11 +94,20 @@ public class GameScreen extends Screen implements Runnable {
 		
 		Point2D pos = player.getPosition();
 		Point2D direction = player.getDirection();
-		pos.setLocation(pos.getX() + speed*(direction.getX()*pDeltaTime), 
-				pos.getY() + speed*(direction.getY()*pDeltaTime));
+		pos.setLocation(pos.getX() + player.getSpeed()*(direction.getX()*pDeltaTime), 
+				pos.getY() + player.getSpeed()*(direction.getY()*pDeltaTime));
 		player.setPosition(pos);
 		
-		
+		// ALEX
+		for(Ball lBall : mBallList)
+		{
+			pos = lBall.getPosition();
+			direction = lBall.getDirection();
+			pos.setLocation(pos.getX() + lBall.getSpeed()*(direction.getX()*pDeltaTime), 
+					pos.getY() + lBall.getSpeed()*(direction.getY()*pDeltaTime));
+			lBall.setPosition(pos);
+		}
+				
 		/*Checken, ob Player im Battlefield ist*/		
 		
 		player.setColor(Color.BLUE);
@@ -93,7 +132,16 @@ public class GameScreen extends Screen implements Runnable {
 					leaveBattlefield();
 				}
 			}
-			
+			for(Ball lBall : mBallList)
+			{
+				// Ball schneidet das Spielfeld.
+				if(!b.contains(lBall.getPosition().getX(), lBall.getPosition().getY(),
+						lBall.getSize().getWidth(), lBall.getSize().getHeight()))
+				{
+					lBall.setDirection(new Point2D.Double(1,0));
+				}
+			}
+							
 		}
 		updateUI();
 	}

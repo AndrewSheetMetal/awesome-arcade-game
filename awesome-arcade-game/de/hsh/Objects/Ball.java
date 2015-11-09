@@ -21,7 +21,7 @@ public class Ball extends Enemy {
 		
 		// ALEX: Muss später zufällig gewählt werden.
 		setPosition(new Point2D.Double(200,100));
-		setDirection(new Point2D.Double(1,0));
+		setDirection(new Point2D.Double(0, 0));
 		
 		setColor(Color.WHITE);
 	}
