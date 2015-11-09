@@ -29,9 +29,7 @@ public class MenuScreen extends Screen{
 		newGameBtn.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GameScreen tmp =new GameScreen(null);
-				setVisible(true);
-				setVisible(false);
+				
 				
 			}
 		});

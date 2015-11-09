@@ -26,11 +26,11 @@ public class Main extends JFrame{
 		//setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setMinimumSize(new Dimension(400,400));
 		menuScreen = new MenuScreen();
-		gameScreen = new GameScreen(createBattlefields());
-		setScreen(gameScreen);
-		gameScreen.setFocusable(true);
-		gameScreen.requestFocus();
-		//setScreen(menuScreen);
+		//gameScreen = new GameScreen(createBattlefields());
+		//setScreen(gameScreen);
+		//gameScreen.setFocusable(true);
+		//gameScreen.requestFocus();
+		setScreen(menuScreen);
 	}
 	
 	public void setScreen(JPanel pScreen){		
