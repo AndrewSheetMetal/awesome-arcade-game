@@ -6,25 +6,36 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 
 public class Player extends Movable {
 	private int livePoints;
-
+	private Color color;
+	
 	@Override
-	public void setDirection(Point direction) {
+	public void setDirection(Point2D direction) {
 		this.direction = direction;
 		
-		System.out.println("Direction "+direction);
+		//System.out.println("Direction "+direction);
 		
 		// TODO Auto-generated method stub
 		
 	}
 	
 	public Player() {
-		setDirection(new Point(0,0));
-		setPosition(new Point(50,50));
+		setDirection(new Point2D.Double(0,0));
+		setPosition(new Point2D.Double(50,50));
+		setColor(Color.RED);
+	}
+	
+	public void setColor(Color c) {
+		color = c;
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 	
 	public void draw(Graphics g) {
@@ -41,17 +52,17 @@ public class Player extends Movable {
 		
 		Ellipse2D circle2D = new Ellipse2D.Double();
 		g2d.setStroke(new BasicStroke(1));
-		g2d.setColor(Color.RED);
+		g2d.setColor(getColor());
 		
-		Point pos = this.getPosition();
+		Point2D pos = this.getPosition();
 		
-		circle2D.setFrame(pos.x, pos.y, w, h);
+		circle2D.setFrame(pos.getX(), pos.getY(), w, h);
 		
-		pos.x += 1;
-		pos.y += 1;
-		pos.x = pos.x % 300;
-		pos.y = pos.y % 300;
-		System.out.println("Position: "+pos);
+		//pos.x += 1;
+		//pos.y += 1;
+		//pos.x = pos.x % 300;
+		//pos.y = pos.y % 300;
+		//System.out.println("Position: "+pos);
 		
 		this.setPosition(pos);
 		
@@ -60,10 +71,13 @@ public class Player extends Movable {
 
 	}
 	
-	private Dimension getSize() {
+	public Point getCenter() {
+		return new Point((int)getPosition().getX()+getSize().width/2,(int)getPosition().getY()+getSize().height/2);
+	}
+	
+	public Dimension getSize() {
 		Dimension toReturn = new Dimension();
 		toReturn.setSize(50, 50);
 		return toReturn;
 	}
-	
 }
