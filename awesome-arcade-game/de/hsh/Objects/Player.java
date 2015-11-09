@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
@@ -68,6 +69,10 @@ public class Player extends Movable {
 		g2d.draw(circle2D);
 		
 
+	}
+	
+	public Point getCenter() {
+		return new Point((int)getPosition().getX()+getSize().width/2,(int)getPosition().getY()+getSize().height/2);
 	}
 	
 	public Dimension getSize() {

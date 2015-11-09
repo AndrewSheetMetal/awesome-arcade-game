@@ -21,8 +21,8 @@ public class GameScreen extends Screen implements Runnable {
 	private int speed = 2;
 	private boolean painting = false;
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
-	private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
-
+	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
+	private boolean playerIsInBattlefield = false;
 	
 	public GameScreen(List<Battlefield> pBattlefields){
 		
@@ -35,7 +35,7 @@ public class GameScreen extends Screen implements Runnable {
 		new Thread(this).start();
 		running = true;
 		
-		battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
+		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
 	private void update(float pDeltaTime){
@@ -66,27 +66,33 @@ public class GameScreen extends Screen implements Runnable {
 				player.setColor(Color.GREEN);
 				
 				
-				if(battlefieldHitPoint.x < 0 && battlefieldHitPoint.y < 0 && b.contains(new Point2D.Double(player.getPosition().getX()+player.getSize().width/2,player.getPosition().getY()+player.getSize().height/2))) {
-					/*Moment in dem Spieler das Battlefield schneidet*/
-					battlefieldHitPoint = new Point((int)player.getPosition().getX()+player.getSize().width/2,(int)player.getPosition().getY()+player.getSize().height/2);
-					System.out.println("Battlefield Hitpoint: " + battlefieldHitPoint);
-					player.setColor(Color.BLACK);
+				if(!playerIsInBattlefield && b.contains(player.getCenter())) {
+					playerIsInBattlefield = true;
+					enterBattlefield();
 				}
-				else if(battlefieldHitPoint.x > 0 && battlefieldHitPoint.y > 0 && !b.contains(new Point2D.Double(player.getPosition().getX()+player.getSize().width/2,player.getPosition().getY()+player.getSize().height/2))) {
-					battlefieldHitPoint = new Point((int)player.getPosition().getX()+player.getSize().width/2,(int)player.getPosition().getY()+player.getSize().height/2);
-					System.out.println("Battlefield Hitpoint: " + battlefieldHitPoint);
-					player.setColor(Color.BLACK);
-					
+				else if(playerIsInBattlefield && !b.contains(player.getCenter())) {
+					playerIsInBattlefield = false;
+					leaveBattlefield();
 				}
 			}
-			else {
-				battlefieldHitPoint = new Point(-1,-1);
-			}
+			
 		}
-		
-		
-		
 		updateUI();
+	}
+	
+	public void enterBattlefield() {
+		player.setColor(Color.BLACK);
+		lines.clear();
+		Point2D tmp = (Point2D) player.getPosition().clone();
+		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
+		lines.add(tmp);
+		painting = true;
+	}
+	
+	public void leaveBattlefield() {
+		player.setColor(Color.BLACK);
+		painting = false;
+		
 	}
 	
 	@Override
