@@ -25,11 +25,13 @@ public class Main extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setMinimumSize(new Dimension(400,400));
-		menuScreen = new MenuScreen();
+		menuScreen = new MenuScreen(this);
 		//gameScreen = new GameScreen(createBattlefields());
 		//setScreen(gameScreen);
 		//gameScreen.setFocusable(true);
 		//gameScreen.requestFocus();
+		setScreen(menuScreen);
+		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
 	}
 	
@@ -38,19 +40,5 @@ public class Main extends JFrame{
 		getContentPane().add(pScreen);
 	}
 	
-	public List<Battlefield> createBattlefields() {
-		List<Battlefield> fields = new ArrayList<Battlefield>();
-		Battlefield field = new Battlefield();
-		
-		field.addPoint(30,30);
-		field.addPoint(30,170);
-		field.addPoint(220,170);
-		field.addPoint(220,320);
-		field.addPoint(460,320);
-		field.addPoint(460,30);
-		
-		
-		fields.add(field);
-		return fields;
-	}
+	
 }
