@@ -12,20 +12,18 @@ import java.awt.geom.Point2D;
 public class Ball extends Enemy {	
 
 	private Color mColor;
+	
+	// ALEX
+	private int mSpeed;
+	private Point2D mDirection;
 		
 	public Ball() {
-		setDirection(new Point2D.Double(0,0));
 		
 		// ALEX: Muss später zufällig gewählt werden.
 		setPosition(new Point2D.Double(200,100));
+		setDirection(new Point2D.Double(1,0));
 		
 		setColor(Color.WHITE);
-	}
-
-	@Override
-	public void setDirection(Point2D pDirection) {
-		this.direction = pDirection;	
-		
 	}
 	
 	public void draw(Graphics g) {
@@ -76,5 +74,26 @@ public class Ball extends Enemy {
 	
 	public void setColor(Color pColor) {
 		mColor = pColor;
+	}
+
+	public void setSpeed(int pSpeed)
+	{
+		mSpeed = pSpeed;
+	}
+	
+	public int getSpeed()
+	{
+		return mSpeed;
+	}
+	
+	// ALEX
+	public Point2D getDirection()
+	{
+		return mDirection;
+	}
+	
+	// ALEX
+	public void setDirection(Point2D pDirection) {
+		mDirection = pDirection;		
 	}
 }
