@@ -14,19 +14,11 @@ public class Player extends Movable {
 	private int livePoints;
 	private Color color;
 	
-	@Override
-	public void setDirection(Point2D direction) {
-		this.direction = direction;
+	// ALEX
+	private int mSpeed;
+	private Point2D mDirection;
 		
-		//System.out.println("Direction "+direction);
-		
-		// TODO Auto-generated method stub
-		
-	}
-	
 	public Player() {
-		setDirection(new Point2D.Double(0,0));
-		setPosition(new Point2D.Double(50,50));
 		setColor(Color.RED);
 	}
 	
@@ -83,5 +75,31 @@ public class Player extends Movable {
 	
 	public Rectangle2D getBounds() {
 		return new Rectangle2D.Double(getPosition().getX(), getPosition().getY(), getSize().getWidth(), getSize().getHeight());
+	}
+		
+	public void setSpeed(int pSpeed)
+	{
+		mSpeed = pSpeed;
+	}
+	
+	public int getSpeed()
+	{
+		return mSpeed;
+	}
+
+	// ALEX
+	public void setDirection(Point2D pDirection) {
+		mDirection = pDirection;
+		
+		//System.out.println("Direction "+direction);
+		
+		// TODO Auto-generated method stub
+		
+	}
+	
+	// ALEX
+	public Point2D getDirection()
+	{
+		return mDirection;
 	}
 }

@@ -3,11 +3,6 @@ package de.hsh.Objects;
 import java.awt.geom.Point2D;
 
 public class Enemy extends Movable {
-
-	@Override
-	public void setDirection(Point2D direction) {
-		// TODO Auto-generated method stub
-		
-	}
+	// ALEX: setDirection gelöscht und in Player und Ball eingefügt.
 
 }
