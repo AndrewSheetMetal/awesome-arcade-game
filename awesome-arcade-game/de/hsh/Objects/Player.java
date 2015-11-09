@@ -80,4 +80,8 @@ public class Player extends Movable {
 		toReturn.setSize(50, 50);
 		return toReturn;
 	}
+	
+	public Rectangle2D getBounds() {
+		return new Rectangle2D.Double(getPosition().getX(), getPosition().getY(), getSize().getWidth(), getSize().getHeight());
+	}
 }

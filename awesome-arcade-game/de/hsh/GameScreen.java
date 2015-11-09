@@ -1,6 +1,7 @@
 package de.hsh;
 
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -11,6 +12,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hsh.Objects.PrototypeWall;
+
 public class GameScreen extends Screen implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
@@ -20,6 +23,7 @@ public class GameScreen extends Screen implements Runnable {
 	private boolean running;
 	private int speed = 2;
 	private boolean painting = false;
+	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 	private boolean playerIsInBattlefield = false;
@@ -29,7 +33,7 @@ public class GameScreen extends Screen implements Runnable {
 		battlefields = pBattlefields;
 		
 		player = new de.hsh.Objects.Player();
-		
+		prototypeWall = new PrototypeWall();
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
 		new Thread(this).start();
@@ -75,8 +79,13 @@ public class GameScreen extends Screen implements Runnable {
 					leaveBattlefield();
 				}
 			}
-			
 		}
+		
+		/*Schauen, ob der Player seine eigene Linie kreuzt*/
+		if(prototypeWall.intersects(player.getBounds())) {
+			player.setColor(Color.PINK);
+		}
+		
 		updateUI();
 	}
 	
@@ -86,11 +95,14 @@ public class GameScreen extends Screen implements Runnable {
 		Point2D tmp = (Point2D) player.getPosition().clone();
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
 		lines.add(tmp);
+		prototypeWall.addEdge(tmp);
 		painting = true;
 	}
 	
 	public void leaveBattlefield() {
 		player.setColor(Color.BLACK);
+		
+		prototypeWall.clear();
 		painting = false;
 		
 	}
@@ -104,20 +116,12 @@ public class GameScreen extends Screen implements Runnable {
 		for(Battlefield b : battlefields) {
 			b.draw(g);
 		}
+		
 		player.draw(g);
 		
-		//Zeichnet die Linen hinter dem Player, wenn der das Battlefield betritt
-		if(painting){
-			if(lines.size() ==1){
-				g.drawLine((int)lines.get(0).getX(), (int)lines.get(0).getY(), (int)(player.getPosition().getX()+player.getSize().getWidth()/2), (int)(player.getPosition().getY()+player.getSize().getHeight()/2));
-			}
-			for(int i =0;i<lines.size()-1;i++){
-					g.drawLine((int)lines.get(i).getX(), (int)lines.get(i).getY(), (int)lines.get(i+1).getX(), (int)lines.get(i+1).getY());
-				}
-				g.drawLine((int)lines.get(lines.size()-1).getX(), (int)lines.get(lines.size()-1).getY(), (int)(player.getPosition().getX()+player.getSize().getWidth()/2), (int)(player.getPosition().getY()+player.getSize().getHeight()/2));
-			}
+		prototypeWall.draw(g,player.getCenter());
 			
-		}
+	}
 		
 
 	private class TAdapter extends KeyAdapter {
@@ -131,10 +135,11 @@ public class GameScreen extends Screen implements Runnable {
         public void keyPressed(KeyEvent e) {
         	
         	//Fügt Positionen zu zur Liste für die Linen hinzu
-    		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT ){
+    		if(prototypeWall.isDrawn() && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT )){
     			Point2D tmp = (Point2D) player.getPosition().clone();
 				tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
 				lines.add(tmp);
+				prototypeWall.addEdge(tmp);
     		}
     		if(e.getKeyCode() == KeyEvent.VK_UP) {
     			player.setDirection(new Point2D.Double(0,-1));
@@ -148,19 +153,7 @@ public class GameScreen extends Screen implements Runnable {
     		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
     			player.setDirection(new Point2D.Double(-1,0));
     		}
-    		else if(e.getKeyCode() == KeyEvent.VK_ENTER){
-    			
-    			//Test! simuliert Eintritt in Battlefield
-    			lines.clear();
-    			if(!painting){
-    				Point2D tmp = (Point2D) player.getPosition().clone();
-    				tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
-    				lines.add(tmp);
-    				painting = true;
-    			}else{
-    				painting = false;
-    			}
-    		}
+    		
         }
     }
 
