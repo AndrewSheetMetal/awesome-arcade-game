@@ -61,7 +61,7 @@ public class PrototypeWall extends Unmovable {
 	
 	public boolean intersects(Rectangle2D rect) {
 		if(lines.size() >= 2) {
-			for(int i = 0; i<lines.size()-2; i++) {
+			for(int i = 0; i<lines.size()-2; i++) { // -2 da er die letzte Linie eh nicht schneiden kann und es sonst beim Abbiegen kurz zu einem fehlerhaften true kommt
 				Line2D line = new Line2D.Double(lines.get(i),lines.get(i+1));
 				if(rect.intersectsLine(line)) {
 					return true;

@@ -7,6 +7,8 @@ import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hsh.Objects.PrototypeWall;
+
 public class Battlefield extends Polygon{
 
 	
@@ -32,5 +34,17 @@ public class Battlefield extends Polygon{
 			g.fillPolygon(this);
 			
 		
+	}
+
+
+	/* Diese Methode zerteilt das Battlefield basierend auf der prototypeWall und gibt ein neues Battlefield zurück
+	 * */
+	public Battlefield splitByPrototypeWall(PrototypeWall prototypeWall) {
+		Battlefield newB = new Battlefield();
+		
+		
+		
+		
+		return null;
 	}
 }

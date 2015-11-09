@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +44,6 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
-		
-		
-		//System.out.println("Update: pDeltaTime: "+pDeltaTime);
-		
 		time += pDeltaTime;
 		
 		Point2D pos = player.getPosition();
@@ -56,9 +53,6 @@ public class GameScreen extends Screen implements Runnable {
 		
 		
 		/*Checken, ob Player im Battlefield ist*/
-		
-		
-		
 		player.setColor(Color.BLUE);
 		for(Battlefield b : battlefields) {
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
@@ -72,39 +66,58 @@ public class GameScreen extends Screen implements Runnable {
 				
 				if(!playerIsInBattlefield && b.contains(player.getCenter())) {
 					playerIsInBattlefield = true;
-					enterBattlefield();
+					enterBattlefield(b);
 				}
 				else if(playerIsInBattlefield && !b.contains(player.getCenter())) {
 					playerIsInBattlefield = false;
-					leaveBattlefield();
+					leaveBattlefield(b);
 				}
 			}
 		}
 		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
 		if(prototypeWall.intersects(player.getBounds())) {
-			player.setColor(Color.PINK);
+			lostLife();
+			//player.setColor(Color.PINK);
 		}
 		
 		updateUI();
 	}
 	
-	public void enterBattlefield() {
+	public void enterBattlefield(Battlefield b) {
 		player.setColor(Color.BLACK);
 		lines.clear();
 		Point2D tmp = (Point2D) player.getPosition().clone();
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
-		lines.add(tmp);
+		//lines.add(tmp);
 		prototypeWall.addEdge(tmp);
 		painting = true;
 	}
 	
-	public void leaveBattlefield() {
+	/*Verlässt der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
+	public void leaveBattlefield(Battlefield b) {
 		player.setColor(Color.BLACK);
+		
+		Point2D tmp = (Point2D) player.getPosition().clone();
+		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
+		//lines.add(tmp);
+		prototypeWall.addEdge(tmp);
+		
+		
+		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen könnte wie das Battlefield schrumpft*/
+		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
+		
 		
 		prototypeWall.clear();
 		painting = false;
 		
+	}
+	
+	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
+	 * Hier wird er z.B. auf die Startposition gesetzt*/
+	public void lostLife() {
+		prototypeWall.clear();
+		player.setPosition(new Point2D.Double(50,50));
 	}
 	
 	@Override
