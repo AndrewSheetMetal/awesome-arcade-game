@@ -73,6 +73,10 @@ public class Player extends Movable {
 		return toReturn;
 	}
 	
+	public Rectangle2D getBounds() {
+		return new Rectangle2D.Double(getPosition().getX(), getPosition().getY(), getSize().getWidth(), getSize().getHeight());
+	}
+		
 	public void setSpeed(int pSpeed)
 	{
 		mSpeed = pSpeed;

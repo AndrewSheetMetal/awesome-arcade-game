@@ -1,15 +1,19 @@
 package de.hsh;
 
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hsh.Objects.PrototypeWall;
 
 // ALEX
 import de.hsh.Objects.Ball;
@@ -28,6 +32,7 @@ public class GameScreen extends Screen implements Runnable {
 	private boolean running;
 	// ALEX: speed entfernt.
 	private boolean painting = false;
+	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 	private boolean playerIsInBattlefield = false;
@@ -38,13 +43,17 @@ public class GameScreen extends Screen implements Runnable {
 		
 		player = new de.hsh.Objects.Player();
 
+		prototypeWall = new PrototypeWall();
+
+
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
 		player.setPosition(new Point2D.Double(50,50));
 		player.setSpeed(2);		
 		mBallList = new ArrayList<Ball>();
 		// Muss sp�ter dynamisch erzeugt werden.
-		mBallList.add(new Ball());		
+		mBallList.add(new Ball());
+		Random lRandom = new Random();
 		for(Ball lBall : mBallList)
 		{
 			lBall.setRandomDirection();
@@ -60,10 +69,6 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
-		
-		
-		//System.out.println("Update: pDeltaTime: "+pDeltaTime);
-		
 		time += pDeltaTime;
 		
 		Point2D pos = player.getPosition();
@@ -72,6 +77,7 @@ public class GameScreen extends Screen implements Runnable {
 				pos.getY() + player.getSpeed()*(direction.getY()*pDeltaTime));
 		player.setPosition(pos);
 		
+		/*Checken, ob Player im Battlefield ist*/
 		// ALEX
 		for(Ball lBall : mBallList)
 		{
@@ -84,6 +90,7 @@ public class GameScreen extends Screen implements Runnable {
 				
 		/*Checken, ob Player im Battlefield ist*/		
 		
+
 		player.setColor(Color.BLUE);
 		for(Battlefield b : battlefields) {
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),
@@ -99,11 +106,11 @@ public class GameScreen extends Screen implements Runnable {
 				
 				if(!playerIsInBattlefield && b.contains(player.getCenter())) {
 					playerIsInBattlefield = true;
-					enterBattlefield();
+					enterBattlefield(b);
 				}
 				else if(playerIsInBattlefield && !b.contains(player.getCenter())) {
 					playerIsInBattlefield = false;
-					leaveBattlefield();
+					leaveBattlefield(b);
 				}
 			}
 			for(Ball lBall : mBallList)
@@ -116,23 +123,52 @@ public class GameScreen extends Screen implements Runnable {
 				}
 			}
 							
+
 		}
+		
+		/*Schauen, ob der Player seine eigene Linie kreuzt*/
+		if(prototypeWall.intersects(player.getBounds())) {
+			lostLife();
+			//player.setColor(Color.PINK);
+		}
+		
 		updateUI();
 	}
 	
-	public void enterBattlefield() {
+	public void enterBattlefield(Battlefield b) {
 		player.setColor(Color.BLACK);
 		lines.clear();
 		Point2D tmp = (Point2D) player.getPosition().clone();
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
-		lines.add(tmp);
+		//lines.add(tmp);
+		prototypeWall.addEdge(tmp);
 		painting = true;
 	}
 	
-	public void leaveBattlefield() {
+	/*Verlässt der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
+	public void leaveBattlefield(Battlefield b) {
 		player.setColor(Color.BLACK);
+		
+		Point2D tmp = (Point2D) player.getPosition().clone();
+		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
+		//lines.add(tmp);
+		prototypeWall.addEdge(tmp);
+		
+		
+		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen könnte wie das Battlefield schrumpft*/
+		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
+		
+		
+		prototypeWall.clear();
 		painting = false;
 		
+	}
+	
+	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
+	 * Hier wird er z.B. auf die Startposition gesetzt*/
+	public void lostLife() {
+		prototypeWall.clear();
+		player.setPosition(new Point2D.Double(50,50));
 	}
 	
 	@Override
@@ -145,6 +181,10 @@ public class GameScreen extends Screen implements Runnable {
 			b.draw(g);
 		}
 		
+		player.draw(g);
+
+		prototypeWall.draw(g,player.getCenter());
+
 		// ALEX (Schleife sollte vor "player.draw" stehen, damit die Linien im Anschluss
 		// in der selben Farbe wie der Player gezeichnet werden.
 		for(Ball lBall : mBallList)
@@ -169,8 +209,9 @@ public class GameScreen extends Screen implements Runnable {
 						(int)(player.getPosition().getX()+player.getSize().getWidth()/2), 
 						(int)(player.getPosition().getY()+player.getSize().getHeight()/2));
 			}
+
 			
-		}
+	}
 		
 
 	private class TAdapter extends KeyAdapter {
@@ -184,14 +225,14 @@ public class GameScreen extends Screen implements Runnable {
         public void keyPressed(KeyEvent e) {
         	
         	//Fügt Positionen zu zur Liste für die Linen hinzu
-    		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN 
-    				|| e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT ){
-    			
+
+    		if(prototypeWall.isDrawn() && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT )){
     			Point2D tmp = (Point2D) player.getPosition().clone();
 				tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, 
 						tmp.getY()+player.getSize().getHeight()/2);
 				
 				lines.add(tmp);
+				prototypeWall.addEdge(tmp);
     		}
     		if(e.getKeyCode() == KeyEvent.VK_UP) {
     			player.setDirection(new Point2D.Double(0,-1));
@@ -205,19 +246,7 @@ public class GameScreen extends Screen implements Runnable {
     		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
     			player.setDirection(new Point2D.Double(-1,0));
     		}
-    		else if(e.getKeyCode() == KeyEvent.VK_ENTER){
-    			
-    			//Test! simuliert Eintritt in Battlefield
-    			lines.clear();
-    			if(!painting){
-    				Point2D tmp = (Point2D) player.getPosition().clone();
-    				tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
-    				lines.add(tmp);
-    				painting = true;
-    			}else{
-    				painting = false;
-    			}
-    		}
+    		
         }
     }
 
@@ -241,4 +270,3 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}
 	}
-
