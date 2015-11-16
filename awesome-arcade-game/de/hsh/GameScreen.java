@@ -53,7 +53,7 @@ public class GameScreen extends Screen implements Runnable {
 		mBallList = new ArrayList<Ball>();
 		// Muss später dynamisch erzeugt werden.
 		mBallList.add(new Ball());
-		Random lRandom = new Random();
+		
 		for(Ball lBall : mBallList)
 		{
 			lBall.setRandomDirection();
