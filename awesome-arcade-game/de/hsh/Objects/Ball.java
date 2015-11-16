@@ -15,12 +15,12 @@ public class Ball extends Enemy {
 	
 	// ALEX
 	private int mSpeed;
-	private Point2D mDirection;
 		
 	public Ball() {
 		
 		// ALEX: Muss später zufällig gewählt werden.
 		setPosition(new Point2D.Double(200,100));
+		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geändert.
 		setDirection(new Point2D.Double(0, 0));
 		
 		setColor(Color.WHITE);

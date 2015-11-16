@@ -77,8 +77,8 @@ public class GameScreen extends Screen implements Runnable {
 				pos.getY() + player.getSpeed()*(direction.getY()*pDeltaTime));
 		player.setPosition(pos);
 		
-		/*Checken, ob Player im Battlefield ist*/
 		// ALEX
+		// Ballpositionen aktualisieren.
 		for(Ball lBall : mBallList)
 		{
 			pos = lBall.getPosition();
@@ -88,9 +88,7 @@ public class GameScreen extends Screen implements Runnable {
 			lBall.setPosition(pos);
 		}
 				
-		/*Checken, ob Player im Battlefield ist*/		
-		
-
+		/*Checken, ob Player im Battlefield ist*/
 		player.setColor(Color.BLUE);
 		for(Battlefield b : battlefields) {
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),
@@ -113,6 +111,7 @@ public class GameScreen extends Screen implements Runnable {
 					leaveBattlefield(b);
 				}
 			}
+			// Prüfen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
 			for(Ball lBall : mBallList)
 			{
 				// Ball schneidet das Spielfeld.
@@ -121,10 +120,7 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					lBall.setDirection(new Point2D.Double(1,0));
 				}
-			}
-							
-
-		}
+			}		}
 		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
 		if(prototypeWall.intersects(player.getBounds())) {

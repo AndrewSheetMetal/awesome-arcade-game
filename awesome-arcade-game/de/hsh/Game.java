@@ -128,8 +128,9 @@ public class Game extends Canvas implements Runnable{
 		bs.show();
 	}
 	
-	public static void main(String[] args){
+	// ALEX: Auskommentiert.
+/*	public static void main(String[] args){
 		new Game().start();
-	}
+	} */
 
 }
