@@ -30,7 +30,7 @@ public class GameScreen extends Screen implements Runnable {
 	private List<Ball> mBallList;
 	
 	private boolean running;
-	// ALEX: speed entfernt.
+    private int speed = 2;
 	private boolean painting = false;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
@@ -42,16 +42,14 @@ public class GameScreen extends Screen implements Runnable {
 		battlefields = pBattlefields;
 		
 		player = new de.hsh.Objects.Player();
-
 		prototypeWall = new PrototypeWall();
-
 
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
 		player.setPosition(new Point2D.Double(50,50));
 		player.setSpeed(2);		
 		mBallList = new ArrayList<Ball>();
-		// Muss später dynamisch erzeugt werden.
+		// Muss spï¿½ter dynamisch erzeugt werden.
 		mBallList.add(new Ball());
 		
 		for(Ball lBall : mBallList)
@@ -60,6 +58,7 @@ public class GameScreen extends Screen implements Runnable {
 			lBall.setSpeed(1);
 		}
 		
+
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
 		new Thread(this).start();
@@ -73,8 +72,7 @@ public class GameScreen extends Screen implements Runnable {
 		
 		Point2D pos = player.getPosition();
 		Point2D direction = player.getDirection();
-		pos.setLocation(pos.getX() + player.getSpeed()*(direction.getX()*pDeltaTime), 
-				pos.getY() + player.getSpeed()*(direction.getY()*pDeltaTime));
+		pos.setLocation(pos.getX() + speed*(direction.getX()*pDeltaTime), pos.getY() + speed*(direction.getY()*pDeltaTime));
 		player.setPosition(pos);
 		
 		// ALEX
@@ -87,17 +85,16 @@ public class GameScreen extends Screen implements Runnable {
 					pos.getY() + lBall.getSpeed()*(direction.getY()*pDeltaTime));
 			lBall.setPosition(pos);
 		}
-				
+		
+		
 		/*Checken, ob Player im Battlefield ist*/
 		player.setColor(Color.BLUE);
 		for(Battlefield b : battlefields) {
-			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),
-					player.getSize().getWidth(),player.getSize().getHeight())) {
+			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler ist innerhalb eines Battlefields*/
 				player.setColor(Color.RED);
 			}
-			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),
-					player.getSize().getWidth(),player.getSize().getHeight())) {
+			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler schneidet das Battlefield*/
 				player.setColor(Color.GREEN);
 				
@@ -111,6 +108,7 @@ public class GameScreen extends Screen implements Runnable {
 					leaveBattlefield(b);
 				}
 			}
+			
 			// Prüfen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
 			for(Ball lBall : mBallList)
 			{
@@ -120,7 +118,8 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					lBall.setDirection(new Point2D.Double(1,0));
 				}
-			}		}
+			}		
+		}
 		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
 		if(prototypeWall.intersects(player.getBounds())) {
@@ -178,34 +177,8 @@ public class GameScreen extends Screen implements Runnable {
 		}
 		
 		player.draw(g);
-
-		prototypeWall.draw(g,player.getCenter());
-
-		// ALEX (Schleife sollte vor "player.draw" stehen, damit die Linien im Anschluss
-		// in der selben Farbe wie der Player gezeichnet werden.
-		for(Ball lBall : mBallList)
-		{
-			lBall.draw(g);
-		}	
 		
-		player.draw(g);
-			
-		//Zeichnet die Linen hinter dem Player, wenn der das Battlefield betritt
-		if(painting){
-			if(lines.size() ==1){
-				g.drawLine((int)lines.get(0).getX(), (int)lines.get(0).getY(), 
-						(int)(player.getPosition().getX()+player.getSize().getWidth()/2), 
-						(int)(player.getPosition().getY()+player.getSize().getHeight()/2));
-			}
-			for(int i =0;i<lines.size()-1;i++){
-					g.drawLine((int)lines.get(i).getX(), (int)lines.get(i).getY(), 
-							(int)lines.get(i+1).getX(), (int)lines.get(i+1).getY());
-				}
-				g.drawLine((int)lines.get(lines.size()-1).getX(), (int)lines.get(lines.size()-1).getY(), 
-						(int)(player.getPosition().getX()+player.getSize().getWidth()/2), 
-						(int)(player.getPosition().getY()+player.getSize().getHeight()/2));
-			}
-
+		prototypeWall.draw(g,player.getCenter());
 			
 	}
 		
@@ -221,12 +194,9 @@ public class GameScreen extends Screen implements Runnable {
         public void keyPressed(KeyEvent e) {
         	
         	//FÃ¼gt Positionen zu zur Liste fÃ¼r die Linen hinzu
-
     		if(prototypeWall.isDrawn() && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_LEFT )){
     			Point2D tmp = (Point2D) player.getPosition().clone();
-				tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, 
-						tmp.getY()+player.getSize().getHeight()/2);
-				
+				tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
 				lines.add(tmp);
 				prototypeWall.addEdge(tmp);
     		}
@@ -266,3 +236,4 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}
 	}
+
