@@ -4,13 +4,17 @@ package de.hsh;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.hsh.Objects.PrototypeWall;
@@ -20,14 +24,17 @@ import de.hsh.Objects.Ball;
 import de.hsh.Objects.Player;
 import java.util.Random;
 
+import org.omg.Messaging.SyncScopeHelper;
+
 public class GameScreen extends Screen implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
 	private List<Battlefield> battlefields;
 	private float time;
 	private Player player;
-	
 	private List<Ball> mBallList;
+	private double scaleX  = 1;
+	private double scaleY = 1;
 	
 	private boolean running;
     private int speed = 2;
@@ -63,6 +70,31 @@ public class GameScreen extends Screen implements Runnable {
 		System.out.println("Keylistener"+this.getKeyListeners());
 		new Thread(this).start();
 		running = true;
+		addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void componentResized(ComponentEvent e) {
+				scaleX = (double)getWidth()/500;
+				scaleY = (double)getHeight()/500;
+			}
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
@@ -109,7 +141,7 @@ public class GameScreen extends Screen implements Runnable {
 				}
 			}
 			
-			// Prüfen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
+			// Prï¿½fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
 			for(Ball lBall : mBallList)
 			{
 				// Ball schneidet das Spielfeld.
@@ -170,8 +202,11 @@ public class GameScreen extends Screen implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		this.setBackground(Color.YELLOW);
+		//Spielfeld skalierbar
+		Graphics2D gT = (Graphics2D) g;
+		gT.scale(scaleX, scaleY);
 		
+		this.setBackground(Color.YELLOW);
 		for(Battlefield b : battlefields) {
 			b.draw(g);
 		}

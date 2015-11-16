@@ -3,6 +3,9 @@ package de.hsh;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +27,7 @@ public class Main extends JFrame{
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setMinimumSize(new Dimension(400,400));
+		setMinimumSize(new Dimension(500,500));
 		menuScreen = new MenuScreen(this);
 		//gameScreen = new GameScreen(createBattlefields());
 		//setScreen(gameScreen);
@@ -33,6 +36,9 @@ public class Main extends JFrame{
 		setScreen(menuScreen);
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
+		//In die Mitte des Spielfelds anzeigen
+		setLocationRelativeTo(null);
+		
 	}
 	
 	public void setScreen(JPanel pScreen){		
