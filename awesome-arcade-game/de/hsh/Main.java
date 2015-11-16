@@ -36,7 +36,7 @@ public class Main extends JFrame{
 		setScreen(menuScreen);
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
-		//In die Mitte des Spielfelds anzeigen
+		//In der Mitte des Spielfelds anzeigen
 		setLocationRelativeTo(null);
 		
 	}
