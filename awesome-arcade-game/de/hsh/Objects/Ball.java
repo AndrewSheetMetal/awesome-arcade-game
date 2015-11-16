@@ -8,6 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.List;
+
+import de.hsh.Battlefield;
 
 public class Ball extends Enemy {	
 
@@ -84,5 +87,93 @@ public class Ball extends Enemy {
 	public int getSpeed()
 	{
 		return mSpeed;
+	}
+	
+	// ALEX
+	// Prüfen, ob ein Ball gegen eine Wand stößt und ggf. seine Richtung ändern.
+	public void handleIntersection(List<Battlefield> pBattlefields, int pSpeed)
+	{
+		for(Battlefield lBf : pBattlefields)
+		{
+			// Ball befindet sich im aktuellen Spielfeld und berührt eine Wand.
+			if((lBf.intersects(this.getPosition().getX(), this.getPosition().getY(),
+					this.getSize().getWidth(), this.getSize().getHeight()))
+				&& (!lBf.contains(this.getPosition().getX(), this.getPosition().getY(),
+					this.getSize().getWidth(), this.getSize().getHeight())))
+			{
+				// X: Abstand; Y: 0 = waagerecht, 1 = senkrecht 
+				Point lNearest = new Point(Integer.MAX_VALUE, 0);	
+				// Alle Wände des Schlachtfeldes durchsuchen und die passende Wand finden.
+				for(int i = 0; i < lBf.npoints - 1; i++)
+				{
+					// Wand senkrecht.
+					if(lBf.xpoints[i] == lBf.xpoints[i+1])
+					{
+						// Ball im Bereich der Wand?
+						if((this.getPosition().getY() /*+ 1*/) >= Math.min(lBf.ypoints[i], (lBf.ypoints[i+1]))
+								&& ((this.getPosition().getY() /*- 1*/) <= Math.max(lBf.ypoints[i], lBf.ypoints[i+1])))
+						{
+							// X-Abstand von Ball und Wand kleiner dem aktuellen Maximum?
+							if(Math.abs(lBf.xpoints[i] - this.getPosition().getX()) < lNearest.x)
+							{
+								lNearest.x = (int)Math.abs(lBf.xpoints[i] - this.getPosition().getX());
+								lNearest.y = 1;
+							}
+						}						
+					}
+					// Wand waagerecht.
+					else
+					{
+						// Ball im Bereich der Wand?
+						if((this.getPosition().getX() /*+ 1*/) >= Math.min(lBf.xpoints[i], lBf.xpoints[i+1])
+								&& ((this.getPosition().getX() /*- 1*/) <= Math.max(lBf.xpoints[i], lBf.xpoints[i+1])))
+						{
+							// Y-Abstand von Ball und Wand kleiner dem aktuellen Maximum?
+							if(Math.abs(lBf.ypoints[i] - this.getPosition().getY()) < lNearest.x)
+							{
+								lNearest.x = (int)Math.abs(lBf.ypoints[i] - this.getPosition().getY());
+								lNearest.y = 0;
+							}
+						}
+					}
+				}
+				// Nahste Wand ist waagerecht.
+				if(lNearest.y == 0)
+				{
+					// Ball bewegte sich nach unten.
+					if(this.getDirection().getY() > 0)
+					{
+						this.setPosition(new Point2D.Double(this.getPosition().getX(), 
+								this.getPosition().getY() - pSpeed));
+					}
+					// Ball bewegte sich nach oben.
+					else
+					{
+						this.setPosition(new Point2D.Double(this.getPosition().getX(), 
+								this.getPosition().getY() + pSpeed));							
+					}
+					this.setDirection(new Point2D.Double(this.getDirection().getX(), 
+						-this.getDirection().getY()));
+				}
+				// Nahste Wand ist senkrecht.
+				else
+				{
+					// Ball bewegte sich nach rechts.
+					if(this.getDirection().getX() > 0)
+					{
+						this.setPosition(new Point2D.Double(this.getPosition().getX() - pSpeed, 
+								this.getPosition().getY()));							
+					}
+					// Ball bewegte sich nach links
+					else
+					{
+						this.setPosition(new Point2D.Double(this.getPosition().getX() + pSpeed, 
+								this.getPosition().getY()));							
+					}
+					this.setDirection(new Point2D.Double(-this.getDirection().getX(), 
+							this.getDirection().getY()));								
+				}
+			}
+		}		
 	}
 }

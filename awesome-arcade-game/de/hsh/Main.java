@@ -24,7 +24,7 @@ public class Main extends JFrame{
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setMinimumSize(new Dimension(400,400));
+		setMinimumSize(new Dimension(500,400));
 		menuScreen = new MenuScreen(this);
 		//gameScreen = new GameScreen(createBattlefields());
 		//setScreen(gameScreen);

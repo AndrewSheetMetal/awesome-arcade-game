@@ -51,13 +51,14 @@ public class GameScreen extends Screen implements Runnable {
 		mBallList = new ArrayList<Ball>();
 		// Muss spï¿½ter dynamisch erzeugt werden.
 		mBallList.add(new Ball());
+		mBallList.add(new Ball());
+		mBallList.add(new Ball());
 		
 		for(Ball lBall : mBallList)
 		{
 			lBall.setRandomDirection();
 			lBall.setSpeed(1);
-		}
-		
+		}		
 
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
@@ -84,8 +85,7 @@ public class GameScreen extends Screen implements Runnable {
 			pos.setLocation(pos.getX() + lBall.getSpeed()*(direction.getX()*pDeltaTime), 
 					pos.getY() + lBall.getSpeed()*(direction.getY()*pDeltaTime));
 			lBall.setPosition(pos);
-		}
-		
+		}		
 		
 		/*Checken, ob Player im Battlefield ist*/
 		player.setColor(Color.BLUE);
@@ -96,8 +96,7 @@ public class GameScreen extends Screen implements Runnable {
 			}
 			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler schneidet das Battlefield*/
-				player.setColor(Color.GREEN);
-				
+				player.setColor(Color.GREEN);				
 				
 				if(!playerIsInBattlefield && b.contains(player.getCenter())) {
 					playerIsInBattlefield = true;
@@ -107,18 +106,13 @@ public class GameScreen extends Screen implements Runnable {
 					playerIsInBattlefield = false;
 					leaveBattlefield(b);
 				}
-			}
-			
-			// Prüfen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
+			}			
+					
+			// ALEX
 			for(Ball lBall : mBallList)
 			{
-				// Ball schneidet das Spielfeld.
-				if(!b.contains(lBall.getPosition().getX(), lBall.getPosition().getY(),
-						lBall.getSize().getWidth(), lBall.getSize().getHeight()))
-				{
-					lBall.setDirection(new Point2D.Double(1,0));
-				}
-			}		
+				lBall.handleIntersection(battlefields, speed);
+			}
 		}
 		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
@@ -155,8 +149,7 @@ public class GameScreen extends Screen implements Runnable {
 		
 		
 		prototypeWall.clear();
-		painting = false;
-		
+		painting = false;		
 	}
 	
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
@@ -178,13 +171,17 @@ public class GameScreen extends Screen implements Runnable {
 		
 		player.draw(g);
 		
-		prototypeWall.draw(g,player.getCenter());
-			
+		// ALEX
+		for(Ball lBall : mBallList)
+		{
+			lBall.draw(g);
+		}
+		
+		prototypeWall.draw(g,player.getCenter());			
 	}
 		
 
 	private class TAdapter extends KeyAdapter {
-
         @Override
         public void keyReleased(KeyEvent e) {
             
@@ -211,8 +208,7 @@ public class GameScreen extends Screen implements Runnable {
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
     			player.setDirection(new Point2D.Double(-1,0));
-    		}
-    		
+    		}    		
         }
     }
 
@@ -225,15 +221,13 @@ public class GameScreen extends Screen implements Runnable {
 		while(running){
 			long now = System.nanoTime();
 			delta +=  (now-lastTime)/nsPerTick;
-			lastTime = now;
-				
-			
+			lastTime = now;			
 			
 			if(delta >= 1) {
 				update(delta);
 				delta = 0;
 			}
-			}
 		}
 	}
+}
 
