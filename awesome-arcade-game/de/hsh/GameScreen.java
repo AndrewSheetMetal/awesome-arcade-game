@@ -41,12 +41,10 @@ public class GameScreen extends Screen implements Runnable {
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
 		player.setPosition(new Point2D.Double(50,50));
-		player.setSpeed(2);
-		
+		player.setSpeed(2);		
 		mBallList = new ArrayList<Ball>();
 		// Muss später dynamisch erzeugt werden.
-		mBallList.add(new Ball());
-		
+		mBallList.add(new Ball());		
 		for(Ball lBall : mBallList)
 		{
 			lBall.setRandomDirection();
