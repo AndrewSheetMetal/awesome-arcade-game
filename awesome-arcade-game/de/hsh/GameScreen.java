@@ -43,6 +43,22 @@ public class GameScreen extends Screen implements Runnable {
 		
 		player = new de.hsh.Objects.Player();
 		prototypeWall = new PrototypeWall();
+
+		// ALEX
+		player.setDirection(new Point2D.Double(0,0));
+		player.setPosition(new Point2D.Double(50,50));
+		player.setSpeed(2);		
+		mBallList = new ArrayList<Ball>();
+		// Muss sp�ter dynamisch erzeugt werden.
+		mBallList.add(new Ball());
+		
+		for(Ball lBall : mBallList)
+		{
+			lBall.setRandomDirection();
+			lBall.setSpeed(1);
+		}
+		
+
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
 		new Thread(this).start();

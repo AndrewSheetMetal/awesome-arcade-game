@@ -60,4 +60,4 @@ public class MenuScreen extends Screen{
 		fields.add(field);
 		return fields;
 	}
-	}
+}
