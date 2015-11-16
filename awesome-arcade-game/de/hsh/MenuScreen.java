@@ -39,6 +39,7 @@ public class MenuScreen extends Screen{
 				
 				GameScreen gameScreen = new GameScreen(createBattlefields());
 				main.setScreen(gameScreen);
+				setVisible(false);
 				gameScreen.setFocusable(true);
 				gameScreen.requestFocus();
 				
