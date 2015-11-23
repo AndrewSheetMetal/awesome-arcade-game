@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.awt.Polygon;
 
 import de.hsh.Battlefield;
 
@@ -21,8 +22,6 @@ public class Ball extends Enemy {
 		
 	public Ball() {
 		
-		// ALEX: Muss später zufällig gewählt werden.
-		setPosition(new Point2D.Double(200,100));
 		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geändert.
 		setDirection(new Point2D.Double(0, 0));
 		
@@ -62,7 +61,8 @@ public class Ball extends Enemy {
 	}
 	
 	public Point getCenter() {
-		return new Point((int)getPosition().getX()+getSize().width/2,(int)getPosition().getY()+getSize().height/2);
+		return new Point((int)getPosition().getX()+getSize().width/2,
+				(int)getPosition().getY()+getSize().height/2);
 	}
 	
 	public Dimension getSize() {
@@ -101,44 +101,109 @@ public class Ball extends Enemy {
 				&& (!lBf.contains(this.getPosition().getX(), this.getPosition().getY(),
 					this.getSize().getWidth(), this.getSize().getHeight())))
 			{
-				// X: Abstand; Y: 0 = waagerecht, 1 = senkrecht 
-				Point lNearest = new Point(Integer.MAX_VALUE, 0);	
+				// 0: Abstand; 1: 0 = waagerecht, 1 = senkrecht; 2 = Anzahl Pixel innerhalb
+				int[] lNearest = new int[3];
+				int lPixelInside = 0;
+				// Der Index des zweiten Punktes einer Wand.
+				int lSecond = 0;
+				// Gibt an, ob der Ball über einen Teil der Mauer hinausragt.
+				boolean lIntersected = false;
+				lNearest[0] = Integer.MAX_VALUE;
+				lNearest[1] = 0;
+				lNearest[2] = 0;
 				// Alle Wände des Schlachtfeldes durchsuchen und die passende Wand finden.
-				for(int i = 0; i < lBf.npoints - 1; i++)
+				for(int i = 0; i < lBf.npoints; i++)
 				{
+					lSecond = (i == (lBf.npoints - 1)) ? 0 : (i+1);					
 					// Wand senkrecht.
-					if(lBf.xpoints[i] == lBf.xpoints[i+1])
+					if(lBf.xpoints[i] == lBf.xpoints[lSecond])
 					{
-						// Ball im Bereich der Wand?
-						if((this.getPosition().getY() /*+ 1*/) >= Math.min(lBf.ypoints[i], (lBf.ypoints[i+1]))
-								&& ((this.getPosition().getY() /*- 1*/) <= Math.max(lBf.ypoints[i], lBf.ypoints[i+1])))
+						// Ball im Bereich der Wand und berührt sie.
+						if((this.getPosition().getY() + this.getSize().getHeight()) > Math.min(lBf.ypoints[i], (lBf.ypoints[lSecond]))
+								&& (this.getPosition().getY() <= Math.max(lBf.ypoints[i], lBf.ypoints[lSecond]))
+								&& ((Math.abs(lBf.xpoints[i] - this.getCenter().getX())) <= (this.getSize().getWidth() / 2)))
 						{
-							// X-Abstand von Ball und Wand kleiner dem aktuellen Maximum?
-							if(Math.abs(lBf.xpoints[i] - this.getPosition().getX()) < lNearest.x)
+							lIntersected = false;
+							lPixelInside = 0;
+							// Ragt der Ball oben etwas über die Mauer hinaus?
+							if(this.getPosition().getY() < Math.min(lBf.ypoints[i], lBf.ypoints[lSecond]))
 							{
-								lNearest.x = (int)Math.abs(lBf.xpoints[i] - this.getPosition().getX());
-								lNearest.y = 1;
+								// Berechnen, wie weit der Ball von oben innerhalb des Wandbereiches ist.
+								lPixelInside = (int) (this.getSize().getHeight() - (Math.min(lBf.ypoints[i], lBf.ypoints[lSecond])
+										- this.getPosition().getY()));	
+								lIntersected = true;
 							}
-						}						
+							// Ragt der Ball unten etwas über die Mauer hinaus?
+							if((this.getPosition().getY() + this.getSize().getHeight()) > Math.max(lBf.ypoints[i], lBf.ypoints[lSecond]))
+							{
+								// Befindet sich der Ball von unten mehr innerhalb als von oben?
+								if((int)(Math.max(lBf.ypoints[i], lBf.ypoints[lSecond]) - this.getPosition().getY()) > lPixelInside)
+								{
+									// Berechnen, wie weit der Ball von unten innerhalb des Wandbereiches ist.
+									lPixelInside = (int)(Math.max(lBf.ypoints[i], lBf.ypoints[lSecond]) - this.getPosition().getY());	
+									lIntersected = true;
+								}
+							}
+							if(!lIntersected)
+							{
+								lPixelInside = 50;
+							}
+							// Mehr Pixel des Balls innerhalb der Mauer oder Abstand kleiner?
+							if((lPixelInside > lNearest[2]))
+								//	|| (Math.abs(lBf.xpoints[i] - this.getCenter().getX()) < lNearest[0]))
+							{
+								lNearest[0] = (int)Math.abs(lBf.xpoints[i] - this.getCenter().getX());
+								lNearest[1] = 1;
+								lNearest[2] = lPixelInside;
+							}
+						}		
 					}
 					// Wand waagerecht.
 					else
 					{
-						// Ball im Bereich der Wand?
-						if((this.getPosition().getX() /*+ 1*/) >= Math.min(lBf.xpoints[i], lBf.xpoints[i+1])
-								&& ((this.getPosition().getX() /*- 1*/) <= Math.max(lBf.xpoints[i], lBf.xpoints[i+1])))
+						// Ball im Bereich der Wand und berührt sie.
+						if((this.getPosition().getX() + this.getSize().getWidth()) > Math.min(lBf.xpoints[i], (lBf.xpoints[lSecond]))
+								&& (this.getPosition().getX() <= Math.max(lBf.xpoints[i], lBf.xpoints[lSecond]))
+								&& ((Math.abs(lBf.ypoints[i] - this.getCenter().getY())) <= (this.getSize().getWidth() / 2)))
 						{
-							// Y-Abstand von Ball und Wand kleiner dem aktuellen Maximum?
-							if(Math.abs(lBf.ypoints[i] - this.getPosition().getY()) < lNearest.x)
+							lIntersected = false;
+							lPixelInside = 0;
+							// Ragt der Ball links etwas über die Mauer hinaus?
+							if(this.getPosition().getX() < Math.min(lBf.xpoints[i], lBf.xpoints[lSecond]))
 							{
-								lNearest.x = (int)Math.abs(lBf.ypoints[i] - this.getPosition().getY());
-								lNearest.y = 0;
+								// Berechnen, wie weit der Ball von links innerhalb des Wandbereiches ist.
+								lPixelInside = (int) (this.getSize().getWidth() - (Math.min(lBf.xpoints[i], lBf.xpoints[lSecond])
+										- this.getPosition().getX()));	
+								lIntersected = true;
+							}
+							// Ragt der Ball rechts etwas über die Mauer hinaus?
+							if((this.getPosition().getX() + this.getSize().getWidth()) > Math.max(lBf.xpoints[i], lBf.xpoints[lSecond]))
+							{
+								// Befindet sich der Ball von rechts mehr innerhalb als von links?
+								if((int)(Math.max(lBf.xpoints[i], lBf.xpoints[lSecond]) - this.getPosition().getX()) > lPixelInside)
+								{
+									// Berechnen, wie weit der Ball von rechts innerhalb des Wandbereiches ist.
+									lPixelInside = (int)(Math.max(lBf.xpoints[i], lBf.xpoints[lSecond]) - this.getPosition().getX());	
+									lIntersected = true;
+								}
+							}
+							if(!lIntersected)
+							{
+								lPixelInside = 50;
+							}
+							// Mehr Pixel des Balls innerhalb der Mauer als bei der vorigen?
+							if((lPixelInside > lNearest[2]))
+									//|| (Math.abs(lBf.ypoints[i] - this.getPosition().getY()) < lNearest[0]))
+							{
+								lNearest[0] = (int)Math.abs(lBf.ypoints[i] - this.getCenter().getY());
+								lNearest[1] = 0;
+								lNearest[2] = lPixelInside;
 							}
 						}
 					}
 				}
 				// Nahste Wand ist waagerecht.
-				if(lNearest.y == 0)
+				if(lNearest[1] == 0)
 				{
 					// Ball bewegte sich nach unten.
 					if(this.getDirection().getY() > 0)
