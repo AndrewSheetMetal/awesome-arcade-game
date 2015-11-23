@@ -125,12 +125,6 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
-
-		//Falls Countdown null, spiel beenden
-		if (timeout == 0) {
-			running = false;
-		}
-
 		
 		time += pDeltaTime;
 		
@@ -291,6 +285,7 @@ public class GameScreen extends Screen implements Runnable {
 			timebox.setText("" + timeout);
 			if (timeout == 10) {
 				running = false;
+				
 				this.cancel();
 			}
 		}
