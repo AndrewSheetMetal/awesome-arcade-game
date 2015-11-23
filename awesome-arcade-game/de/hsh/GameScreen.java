@@ -166,7 +166,7 @@ public class GameScreen extends Screen implements Runnable {
 		painting = true;
 	}
 	
-	/*Verlässt der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
+	/*Verlaesst der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
 	public void leaveBattlefield(Battlefield b) {
 		player.setColor(Color.BLACK);
 		
@@ -176,7 +176,7 @@ public class GameScreen extends Screen implements Runnable {
 		prototypeWall.addEdge(tmp);
 		
 		
-		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen könnte wie das Battlefield schrumpft*/
+		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen koennte wie das Battlefield schrumpft*/
 		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
 		
 		
