@@ -2,8 +2,10 @@ package de.hsh;
 
 
 import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
@@ -22,7 +24,15 @@ import de.hsh.Objects.PrototypeWall;
 // ALEX
 import de.hsh.Objects.Ball;
 import de.hsh.Objects.Player;
+
 import java.util.Random;
+
+
+//Cocken
+import javax.swing.JLabel;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.omg.Messaging.SyncScopeHelper;
 
@@ -31,7 +41,9 @@ public class GameScreen extends Screen implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private List<Battlefield> battlefields;
 	private float time;
+	private int timeout;
 	private Player player;
+	private JLabel timebox = new JLabel();
 	private List<Ball> mBallList;
 	private double scaleX  = 1;
 	private double scaleY = 1;
@@ -43,6 +55,9 @@ public class GameScreen extends Screen implements Runnable {
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 	private boolean playerIsInBattlefield = false;
+	//Timer-Objekt für den Countdown
+	private Timer timer = new Timer();
+	
 	
 	public GameScreen(List<Battlefield> pBattlefields){
 		
@@ -51,6 +66,15 @@ public class GameScreen extends Screen implements Runnable {
 		player = new de.hsh.Objects.Player();
 		prototypeWall = new PrototypeWall();
 
+		// Goldbeck
+		this.setLayout(new BorderLayout());
+		this.add(timebox, BorderLayout.PAGE_END);
+		timebox.setVisible(true);
+		timeout = 0;
+
+		// Goldbeck: starten der TimerTask run() methode
+		this.start();
+		
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
 		player.setPosition(new Point2D.Double(50,50));
@@ -104,6 +128,7 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
+		
 		time += pDeltaTime;
 		
 		Point2D pos = player.getPosition();
@@ -169,7 +194,7 @@ public class GameScreen extends Screen implements Runnable {
 		painting = true;
 	}
 	
-	/*VerlÃ¤sst der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
+	/*Verlaesst der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
 	public void leaveBattlefield(Battlefield b) {
 		player.setColor(Color.BLACK);
 		
@@ -179,7 +204,7 @@ public class GameScreen extends Screen implements Runnable {
 		prototypeWall.addEdge(tmp);
 		
 		
-		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen kÃ¶nnte wie das Battlefield schrumpft*/
+		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen koennte wie das Battlefield schrumpft*/
 		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
 		
 		
@@ -250,6 +275,37 @@ public class GameScreen extends Screen implements Runnable {
         }
     }
 
+	
+
+	//Goldbeck: run() Methode des Timers, mit der im Sekundentakt hochgezählt wird.
+
+	TimerTask timerTask = new TimerTask() {
+
+		public void run() {
+
+			timeout++;
+			System.out.println("Timer:" + timeout);
+			timebox.setText("" + timeout);
+			if (timeout == 10) {
+				running = false;
+				
+				this.cancel();
+			}
+		}
+
+	};
+	
+	
+	/**
+	 * Startet den Timer des Spiels
+	 */
+	
+	public void start() {
+
+		timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+
+	}
+	
 	@Override
 	public void run() {
 		long lastTime = System.nanoTime();
