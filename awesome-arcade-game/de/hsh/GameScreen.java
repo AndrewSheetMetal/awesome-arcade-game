@@ -64,7 +64,10 @@ public class GameScreen extends Screen implements Runnable {
 		for(Ball lBall : mBallList)
 		{
 			lBall.setRandomDirection();
+			//lBall.setDirection(new Point2D.Double(0.3, -0.7));
 			lBall.setSpeed(1);
+			// ALEX: Muss später zufällig gewählt werden.
+			lBall.setPosition(new Point2D.Double(150,100));
 		}		
 
 		this.addKeyListener(new TAdapter());
