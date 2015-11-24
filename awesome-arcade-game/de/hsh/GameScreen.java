@@ -47,6 +47,7 @@ public class GameScreen extends Screen implements Runnable {
 	private List<Ball> mBallList;
 	private double scaleX  = 1;
 	private double scaleY = 1;
+	private double scale = 1;
 	
 	private boolean running;
     private int speed = 2;
@@ -55,7 +56,7 @@ public class GameScreen extends Screen implements Runnable {
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 	private boolean playerIsInBattlefield = false;
-	//Timer-Objekt für den Countdown
+	//Timer-Objekt fï¿½r den Countdown
 	private Timer timer = new Timer();
 	
 	
@@ -221,12 +222,18 @@ public class GameScreen extends Screen implements Runnable {
 		super.paintComponent(g);
 		
 		//Spielfeld skalierbar
-		Graphics2D gT = (Graphics2D) g;
-		gT.scale(scaleX, scaleY);
-		
+		// VerhÃ¤ltnis wird beibehalten
+		// TODO Spieler, BÃ¤lle und Spielfelder zentrieren
+		Graphics2D gT = (Graphics2D) g; 
+		if(scaleY<scaleX){
+			gT.scale(scaleY, scaleY);
+		}else{
+			gT.scale(scaleX,scaleX);
+		}
 		this.setBackground(Color.YELLOW);
 		for(Battlefield b : battlefields) {
 			b.draw(g);
+			
 		}
 		
 		player.draw(g);
@@ -268,26 +275,30 @@ public class GameScreen extends Screen implements Runnable {
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
     			player.setDirection(new Point2D.Double(-1,0));
-    		}    		
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_C){
+    			System.out.println("ScaleX: "+scaleX+"\nScaleY: "+scaleY);
+    		}
         }
     }
 
 	
 
-	//Goldbeck: run() Methode des Timers, mit der im Sekundentakt hochgezählt wird.
+	//Goldbeck: run() Methode des Timers, mit der im Sekundentakt hochgezï¿½hlt wird.
 
 	TimerTask timerTask = new TimerTask() {
 
 		public void run() {
 
 			timeout++;
-			System.out.println("Timer:" + timeout);
+			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
-			if (timeout == 10) {
+			//Sven: Zum testen erstemal auskommentiert
+			/*if (timeout == 10) {
 				running = false;
 				
 				this.cancel();
-			}
+			}*/
 		}
 
 	};
