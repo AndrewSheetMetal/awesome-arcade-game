@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 public class MenuScreen extends Screen{
 	private static final long serialVersionUID = 1L;
 	
+	
 	public MenuScreen(final Main main){
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton highscoreBtn = new JButton("Highscore");
@@ -50,15 +51,18 @@ public class MenuScreen extends Screen{
 		List<Battlefield> fields = new ArrayList<Battlefield>();
 		Battlefield field = new Battlefield();
 		
-		field.addPoint(30,30);
-		field.addPoint(30,170);
-		field.addPoint(220,170);
-		field.addPoint(220,320);
-		field.addPoint(460,320);
-		field.addPoint(460,30);
+		field.addPoint(0, 0);
+		field.addPoint(Main.SIZE,0);
+		field.addPoint(Main.SIZE, Main.SIZE);
+		field.addPoint(Main.SIZE/2, Main.SIZE);
+		field.addPoint(Main.SIZE/2, Main.SIZE/2);
+		field.addPoint(0, Main.SIZE/2);
+		
+		
 		
 		
 		fields.add(field);
+		
 		return fields;
 	}
 }

@@ -21,9 +21,9 @@ public class Ball extends Enemy {
 		
 	public Ball() {
 		
-		// ALEX: Muss später zufällig gewählt werden.
+		// ALEX: Muss spï¿½ter zufï¿½llig gewï¿½hlt werden.
 		setPosition(new Point2D.Double(200,100));
-		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geändert.
+		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geï¿½ndert.
 		setDirection(new Point2D.Double(0, 0));
 		
 		setColor(Color.WHITE);
@@ -42,8 +42,11 @@ public class Ball extends Enemy {
 		double h = size.getHeight();
 		
 		Ellipse2D circle2D = new Ellipse2D.Double();
+
+		
 		g2d.setStroke(new BasicStroke(1));
 		g2d.setColor(getColor());
+		
 		
 		Point2D pos = this.getPosition();
 		
@@ -90,12 +93,12 @@ public class Ball extends Enemy {
 	}
 	
 	// ALEX
-	// Prüfen, ob ein Ball gegen eine Wand stößt und ggf. seine Richtung ändern.
+	// Prï¿½fen, ob ein Ball gegen eine Wand stï¿½ï¿½t und ggf. seine Richtung ï¿½ndern.
 	public void handleIntersection(List<Battlefield> pBattlefields, int pSpeed)
 	{
 		for(Battlefield lBf : pBattlefields)
 		{
-			// Ball befindet sich im aktuellen Spielfeld und berührt eine Wand.
+			// Ball befindet sich im aktuellen Spielfeld und berï¿½hrt eine Wand.
 			if((lBf.intersects(this.getPosition().getX(), this.getPosition().getY(),
 					this.getSize().getWidth(), this.getSize().getHeight()))
 				&& (!lBf.contains(this.getPosition().getX(), this.getPosition().getY(),
@@ -103,7 +106,7 @@ public class Ball extends Enemy {
 			{
 				// X: Abstand; Y: 0 = waagerecht, 1 = senkrecht 
 				Point lNearest = new Point(Integer.MAX_VALUE, 0);	
-				// Alle Wände des Schlachtfeldes durchsuchen und die passende Wand finden.
+				// Alle Wï¿½nde des Schlachtfeldes durchsuchen und die passende Wand finden.
 				for(int i = 0; i < lBf.npoints - 1; i++)
 				{
 					// Wand senkrecht.
