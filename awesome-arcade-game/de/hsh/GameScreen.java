@@ -51,7 +51,6 @@ public class GameScreen extends Screen implements Runnable {
 	
 	private boolean running;
     private int speed = 10;
-	private boolean painting = false;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
@@ -192,7 +191,6 @@ public class GameScreen extends Screen implements Runnable {
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
 		//lines.add(tmp);
 		prototypeWall.addEdge(tmp);
-		painting = true;
 	}
 	
 	/*Verlaesst der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
@@ -209,8 +207,7 @@ public class GameScreen extends Screen implements Runnable {
 		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
 		
 		
-		prototypeWall.clear();
-		painting = false;		
+		prototypeWall.clear();		
 	}
 	
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.

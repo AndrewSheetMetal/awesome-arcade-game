@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 public class Main extends JFrame{
 	private static final long serialVersionUID = 1L;
 	public static final int SIZE = 500;
-	private GameScreen gameScreen;
 	private MenuScreen menuScreen;
 	
 	public static void main(String[] args)  {
@@ -28,12 +27,6 @@ public class Main extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setMinimumSize(new Dimension(SIZE, SIZE));
-		menuScreen = new MenuScreen(this);
-		//gameScreen = new GameScreen(createBattlefields());
-		//setScreen(gameScreen);
-		//gameScreen.setFocusable(true);
-		//gameScreen.requestFocus();
-		setScreen(menuScreen);
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
 		//In der Mitte des Spielfelds anzeigen
