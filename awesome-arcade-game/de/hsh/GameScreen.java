@@ -88,10 +88,10 @@ public class GameScreen extends Screen implements Runnable {
 		for(Ball lBall : mBallList)
 		{
 			lBall.setRandomDirection();
-			//lBall.setDirection(new Point2D.Double(0.3, -0.7));
-			lBall.setSpeed(1);
+			//lBall.setDirection(new Point2D.Double(-0.8, -0.2));
+			lBall.setSpeed(2);
 			// ALEX: Muss später zufällig gewählt werden.
-			lBall.setPosition(new Point2D.Double(150,100));
+			lBall.setPosition(new Point2D.Double(250,150));
 		}		
 
 		this.addKeyListener(new TAdapter());
@@ -286,11 +286,11 @@ public class GameScreen extends Screen implements Runnable {
 			timeout++;
 			System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
-			if (timeout == 10) {
+			/*if (timeout == 10) {
 				running = false;
 				
 				this.cancel();
-			}
+			}*/
 		}
 
 	};
