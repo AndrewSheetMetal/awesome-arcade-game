@@ -47,24 +47,24 @@ public class GameScreen extends Screen implements Runnable {
 	private List<Ball> mBallList;
 	private double scaleX  = 1;
 	private double scaleY = 1;
+	private Point2D.Double center;
 	
 	private boolean running;
-    private int speed = 2;
-	private boolean painting = false;
+    private int speed = 10;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
 	private boolean playerIsInBattlefield = false;
-	//Timer-Objekt für den Countdown
+	//Timer-Objekt fï¿½r den Countdown
 	private Timer timer = new Timer();
 	
 	
 	public GameScreen(List<Battlefield> pBattlefields){
 		
 		battlefields = pBattlefields;
-		
 		player = new de.hsh.Objects.Player();
 		prototypeWall = new PrototypeWall();
+		center = new Point2D.Double();
 
 		// Goldbeck
 		this.setLayout(new BorderLayout());
@@ -77,7 +77,7 @@ public class GameScreen extends Screen implements Runnable {
 		
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
-		player.setPosition(new Point2D.Double(50,50));
+		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 		player.setSpeed(2);		
 		mBallList = new ArrayList<Ball>();
 		// Muss spï¿½ter dynamisch erzeugt werden.
@@ -87,11 +87,11 @@ public class GameScreen extends Screen implements Runnable {
 		
 		for(Ball lBall : mBallList)
 		{
-			lBall.setRandomDirection();
 			//lBall.setDirection(new Point2D.Double(-0.8, -0.2));
-			lBall.setSpeed(2);
 			// ALEX: Muss später zufällig gewählt werden.
 			lBall.setPosition(new Point2D.Double(250,150));
+			lBall.setRandomDirection();
+			lBall.setSpeed(6);
 		}		
 
 		this.addKeyListener(new TAdapter());
@@ -99,10 +99,11 @@ public class GameScreen extends Screen implements Runnable {
 		new Thread(this).start();
 		running = true;
 		addComponentListener(new ComponentListener() {
-
+			
 			@Override
 			public void componentShown(ComponentEvent e) {
 				// TODO Auto-generated method stub
+				
 				
 			}
 			
@@ -110,6 +111,8 @@ public class GameScreen extends Screen implements Runnable {
 			public void componentResized(ComponentEvent e) {
 				scaleX = (double)getWidth()/500;
 				scaleY = (double)getHeight()/500;
+				center.x = getWidth()/2;
+				center.y = getHeight()/2;
 			}
 			@Override
 			public void componentMoved(ComponentEvent e) {
@@ -191,7 +194,6 @@ public class GameScreen extends Screen implements Runnable {
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
 		//lines.add(tmp);
 		prototypeWall.addEdge(tmp);
-		painting = true;
 	}
 	
 	/*Verlaesst der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
@@ -208,8 +210,7 @@ public class GameScreen extends Screen implements Runnable {
 		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
 		
 		
-		prototypeWall.clear();
-		painting = false;		
+		prototypeWall.clear();		
 	}
 	
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
@@ -223,13 +224,24 @@ public class GameScreen extends Screen implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		
+		
 		//Spielfeld skalierbar
+		// VerhÃ¤ltnis wird beibehalten
+		// TODO Spieler, BÃ¤lle und Spielfelder zentrieren
 		Graphics2D gT = (Graphics2D) g;
-		gT.scale(scaleX, scaleY);
+
+		gT.translate(center.x-getBattlefieldWidth()/2 , center.y-getBattlefieldHeight()/2);
+		/*if(scaleY<scaleX){
+			gT.scale(scaleY, scaleY);
+		}else{
+			gT.scale(scaleX,scaleX);
+		}*/
+		
 		
 		this.setBackground(Color.YELLOW);
 		for(Battlefield b : battlefields) {
-			b.draw(g);
+			b.draw(g);	
 		}
 		
 		player.draw(g);
@@ -271,21 +283,26 @@ public class GameScreen extends Screen implements Runnable {
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
     			player.setDirection(new Point2D.Double(-1,0));
-    		}    		
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_C){
+    			System.out.println("ScaleX: "+scaleX+"\nScaleY: "+scaleY);
+    			System.out.println("Breite: "+getWidth()+"\nHÃ¶he: "+getHeight());
+    			
+    		}
         }
     }
 
 	
 
-	//Goldbeck: run() Methode des Timers, mit der im Sekundentakt hochgezählt wird.
+	//Goldbeck: run() Methode des Timers, mit der im Sekundentakt hochgezï¿½hlt wird.
 
 	TimerTask timerTask = new TimerTask() {
 
 		public void run() {
-
 			timeout++;
-			System.out.println("Timer:" + timeout);
+			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
+			//Sven: Zum testen erstemal auskommentiert
 			/*if (timeout == 10) {
 				running = false;
 				
@@ -322,6 +339,29 @@ public class GameScreen extends Screen implements Runnable {
 				delta = 0;
 			}
 		}
+	}
+	private double getBattlefieldWidth(){
+		double w;
+		w = battlefields.get(0).getBounds2D().getWidth();
+		
+		for(int i=1; i<battlefields.size();i++){
+			if(battlefields.get(i).getBounds2D().getWidth()>w){
+				w = battlefields.get(i).getBounds2D().getWidth();
+			}
+		}
+		return w;
+	}
+	private double getBattlefieldHeight(){
+		double h;
+		
+		h = battlefields.get(0).getBounds2D().getHeight();
+		
+		for(int i=1; i<battlefields.size();i++){
+			if(battlefields.get(i).getBounds2D().getHeight()>h){
+				h = battlefields.get(i).getBounds2D().getHeight();
+			}
+		}
+		return h;
 	}
 }
 
