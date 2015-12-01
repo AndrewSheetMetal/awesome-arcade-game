@@ -8,6 +8,7 @@ import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.hsh.Objects.PrototypeWall;
@@ -29,12 +30,17 @@ public class Battlefield extends Polygon{
 			}
 			//Zum Schluss eine Linie vom letzten zum ersten Punkt zeichnen
 			g.drawLine(walls.get(0).x, walls.get(0).y, walls.get(walls.size()-1).x, walls.get(walls.size()-1).y);
-			
 			*/
-			
-			
-			g.setColor(Color.BLUE);
-			g.fillPolygon(this);
+		
+		/*Polygon tmp = new Polygon();
+		for(int i=0; i<xpoints.length;i++){
+			tmp.addPoint((int)(xpoints[i]*scale), (int)(ypoints[i]*scale));
+		}*/
+		
+		//System.out.println("XPoints: "+Arrays.toString(tmp.xpoints));
+		//System.out.println("YPoints: "+Arrays.toString(tmp.ypoints));
+		g.setColor(Color.BLUE);
+		g.fillPolygon(this);
 			
 		
 	}
@@ -199,19 +205,19 @@ public class Battlefield extends Polygon{
 			if(Math.abs(this.xpoints[intersectIndexStart-1] - prototypeWall.getEdge(0).getX()) < Math.abs(this.ypoints[intersectIndexStart-1] - prototypeWall.getEdge(0).getY())) {
 				System.out.println("Startet in Vertikaler Linie");
 				if(this.ypoints[intersectIndexStart-1] < prototypeWall.getEdge(0).getY()) {
-					toReturn.addPoint((int)prototypeWall.getEdge(0).getX(), (int)prototypeWall.getEdge(0).getY()-5);
+					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypeWall.getEdge(0).getY()-5);
 				}
 				else {
-					toReturn.addPoint((int)prototypeWall.getEdge(0).getX(), (int)prototypeWall.getEdge(0).getY()+5);
+					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypeWall.getEdge(0).getY()+5);
 				}
 			}
 			else {
 				System.out.println("Startet in Horizontaler Linie");
 				if(this.xpoints[intersectIndexStart-1] < prototypeWall.getEdge(0).getX()) {
-					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()-5, (int)prototypeWall.getEdge(0).getY());
+					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()-5, this.ypoints[intersectIndexStart-1]);
 				}
 				else {
-					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()+5, (int)prototypeWall.getEdge(0).getY());
+					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()+5, this.ypoints[intersectIndexStart-1]);
 				}
 				
 				//b1.addPoint((int)prototypeWall.getEdge(0).getX()-5, (int)prototypeWall.getEdge(0).getY());
