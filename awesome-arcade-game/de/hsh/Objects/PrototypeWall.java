@@ -8,6 +8,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PrototypeWall extends Unmovable {
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
@@ -59,6 +60,18 @@ public class PrototypeWall extends Unmovable {
 		return lines.get(lines.size()-1);
 	}
 	
+	public Point2D getStart() {
+		return lines.get(0);
+	}
+	
+	public int getEdgeCount() {
+		return lines.size();
+	}
+	
+	public Point2D getEdge(int index) {
+		return lines.get(index);	
+	}
+	
 	public boolean intersects(Rectangle2D rect) {
 		if(lines.size() >= 2) {
 			for(int i = 0; i<lines.size()-2; i++) { // -2 da er die letzte Linie eh nicht schneiden kann und es sonst beim Abbiegen kurz zu einem fehlerhaften true kommt
@@ -70,5 +83,23 @@ public class PrototypeWall extends Unmovable {
 		}
 		
 		return false;
+	}
+	
+	public ArrayList<Point2D> reverse() {
+		ArrayList<Point2D> toReturn = new ArrayList<Point2D>();
+		for(Point2D point : lines) {
+			toReturn.add(0, point);
+			
+			//System.out.println("Punkt: "+point);
+			
+		}
+		//lines = toReturn;
+		
+		/*for(Point2D point : lines) {
+			
+			System.out.println("Punkt: "+point);
+			
+		}*/
+		return toReturn;
 	}
 }

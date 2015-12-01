@@ -46,7 +46,7 @@ public class GameScreen extends Screen implements Runnable {
 
 		// ALEX
 		player.setDirection(new Point2D.Double(0,0));
-		player.setPosition(new Point2D.Double(50,50));
+		player.setPosition(new Point2D.Double(50,150));
 		player.setSpeed(2);		
 		mBallList = new ArrayList<Ball>();
 		// Muss sp�ter dynamisch erzeugt werden.
@@ -90,6 +90,17 @@ public class GameScreen extends Screen implements Runnable {
 		/*Checken, ob Player im Battlefield ist*/
 		player.setColor(Color.BLUE);
 		for(Battlefield b : battlefields) {
+			// Pr�fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
+			for(Ball lBall : mBallList)
+			{
+				// Ball schneidet das Spielfeld.
+				if(!b.contains(lBall.getPosition().getX(), lBall.getPosition().getY(),
+						lBall.getSize().getWidth(), lBall.getSize().getHeight()))
+				{
+					lBall.setDirection(new Point2D.Double(1,0));
+				}
+			}
+			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler ist innerhalb eines Battlefields*/
 				player.setColor(Color.RED);
@@ -106,19 +117,11 @@ public class GameScreen extends Screen implements Runnable {
 				else if(playerIsInBattlefield && !b.contains(player.getCenter())) {
 					playerIsInBattlefield = false;
 					leaveBattlefield(b);
+					break; //Verlässt der Spieler das Battlefield, so ändert sich die Battlefield Liste und die for-each Schleife wird inkonsistent
 				}
 			}
 			
-			// Pr�fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
-			for(Ball lBall : mBallList)
-			{
-				// Ball schneidet das Spielfeld.
-				if(!b.contains(lBall.getPosition().getX(), lBall.getPosition().getY(),
-						lBall.getSize().getWidth(), lBall.getSize().getHeight()))
-				{
-					lBall.setDirection(new Point2D.Double(1,0));
-				}
-			}		
+					
 		}
 		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
@@ -151,8 +154,11 @@ public class GameScreen extends Screen implements Runnable {
 		
 		
 		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen könnte wie das Battlefield schrumpft*/
-		Battlefield newBattlefield = b.splitByPrototypeWall(prototypeWall);
+		/*Battlefield newBattlefield*/
 		
+		b.splitByPrototypeWall(prototypeWall,battlefields);
+		//battlefields.clear();
+		//battlefields.add(b);
 		
 		prototypeWall.clear();
 		painting = false;
