@@ -74,13 +74,12 @@ public class MenuScreen extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
+				//Beim Buttonklick sound abspielen
+				
 				try {
-			         // Open an audio input stream.
 			         URL url = this.getClass().getClassLoader().getResource("sound/doot.wav");
 			         AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-			         // Get a sound clip resource.
 			         Clip clip = AudioSystem.getClip();
-			         // Open audio clip and load samples from the audio input stream.
 			         clip.open(audioIn);
 			         clip.start();
 			      } catch (UnsupportedAudioFileException e) {
