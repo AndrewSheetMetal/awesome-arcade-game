@@ -1,5 +1,6 @@
 package de.hsh;
 
+import java.applet.AudioClip;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -11,10 +12,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -66,6 +74,23 @@ public class MenuScreen extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
+				try {
+			         // Open an audio input stream.
+			         URL url = this.getClass().getClassLoader().getResource("sound/doot.wav");
+			         AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+			         // Get a sound clip resource.
+			         Clip clip = AudioSystem.getClip();
+			         // Open audio clip and load samples from the audio input stream.
+			         clip.open(audioIn);
+			         clip.start();
+			      } catch (UnsupportedAudioFileException e) {
+			         e.printStackTrace();
+			      } catch (IOException e) {
+			         e.printStackTrace();
+			      } catch (LineUnavailableException e) {
+			         e.printStackTrace();
+			      }
+				
 				GameScreen gameScreen = new GameScreen(createBattlefields());
 				main.setScreen(gameScreen);
 				setVisible(false);
