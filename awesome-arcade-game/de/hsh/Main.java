@@ -37,7 +37,6 @@ public class Main extends JFrame {
 	}
 
 	public void setScreen(JPanel pScreen) {
-
 		getContentPane().add(pScreen);
 	}
 
