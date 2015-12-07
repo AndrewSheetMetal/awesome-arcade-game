@@ -50,11 +50,11 @@ public class GameScreen extends Screen implements Runnable {
 	private Point2D.Double center;
 	
 	private boolean running;
-    private int speed = 10;
+    private double speed = 1;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
-	private boolean playerIsInBattlefield = false;
+	private Battlefield playerIsInBattlefield = null;
 	//Timer-Objekt f�r den Countdown
 	private Timer timer = new Timer();
 	
@@ -82,7 +82,7 @@ public class GameScreen extends Screen implements Runnable {
 
 		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 		
-		player.setSpeed(2);		
+		player.setSpeed(1);		
 		mBallList = new ArrayList<Ball>();
 		// Muss sp�ter dynamisch erzeugt werden.
 		mBallList.add(new Ball());
@@ -95,7 +95,7 @@ public class GameScreen extends Screen implements Runnable {
 			// ALEX: Muss sp�ter zuf�llig gew�hlt werden.
 			lBall.setPosition(new Point2D.Double(250,150));
 			lBall.setRandomDirection();
-			lBall.setSpeed(6);
+			lBall.setSpeed(1);
 		}		
 
 		this.addKeyListener(new TAdapter());
@@ -156,7 +156,8 @@ public class GameScreen extends Screen implements Runnable {
 		
 		/*Checken, ob Player im Battlefield ist*/
 		player.setColor(Color.BLUE);
-		for(Battlefield b : battlefields) {
+		for(int i = 0; i<battlefields.size(); i++) {
+			Battlefield b = battlefields.get(i);
 			// Pr�fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
 			// Pr�fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
 			for(Ball lBall : mBallList)
@@ -182,13 +183,17 @@ public class GameScreen extends Screen implements Runnable {
 				/*Der Spieler schneidet das Battlefield*/
 				player.setColor(Color.GREEN);				
 				
-				if(!playerIsInBattlefield && b.contains(player.getCenter())) {
-					playerIsInBattlefield = true;
+				if(!(playerIsInBattlefield==b) && b.contains(player.getCenter())) {
+					playerIsInBattlefield = b;
+					System.out.println("Enter Battlefield  "+battlefields.size());
 					enterBattlefield(b);
+					break;
 				}
-				else if(playerIsInBattlefield && !b.contains(player.getCenter())) {
-					playerIsInBattlefield = false;
+				else if(playerIsInBattlefield==b && !b.contains(player.getCenter())) {
+					playerIsInBattlefield = null;
+					System.out.println("Leave Battlefield  "+battlefields.size());
 					leaveBattlefield(b);
+					System.out.println("Leave Battlefield  "+battlefields.size());
 					break; //Verlässt der Spieler das Battlefield, so ändert sich die Battlefield Liste und die for-each Schleife wird inkonsistent
 				}
 			}
@@ -223,11 +228,69 @@ public class GameScreen extends Screen implements Runnable {
 				
 		/*Erstmal wird er nur in zwei Battlefield zerteilt, da es noch keine Gegner gibt, anhand der man bestimmen koennte wie das Battlefield schrumpft*/
 
-		b.splitByPrototypeWall(prototypeWall,battlefields);
+		//b.splitByPrototypeWall(prototypeWall,battlefields);
+		
+		BattlefieldSeperator bs = new BattlefieldSeperator(b);
+		bs.calculateBattlefieldHalfs(prototypeWall);
+		
+		boolean fillb1 = true;
+		boolean fillb2 = true;
+		
+		for(Ball lBall : mBallList)
+		{
+			if(bs.getB1().contains(lBall.getPosition())) {
+				fillb1 = false;
+			}
+			
+			if(bs.getB2().contains(lBall.getPosition())) {
+				fillb2 = false;
+			}
+		}	
+
+		
+		battlefields.remove(battlefields.indexOf(b));
+		
+		if(fillb1==false && fillb2==false) {
+			bs.calculateSplittedBattlefields();
+
+			battlefields.add(bs.getB1());
+			battlefields.add(bs.getB2());
+		}
+		else if(fillb1 == true) {
+			battlefields.add(bs.getB2());
+		}
+		else if(fillb2 == true) {
+			battlefields.add(bs.getB1());
+		}
+		else {
+			System.out.println("Error filling Battlefields");
+		}
+		
+		/*double totalArea = 0;
+		
+		for(Battlefield bat : battlefields) {
+			totalArea += Math.abs(polygonArea(b));
+			System.out.println("Fläche: "+Math.abs(polygonArea(b)));
+		}
+		
+		System.out.println("Gesamtfläche: "+totalArea);
+		*/
 		//battlefields.clear();
 		//battlefields.add(b);
 		
 		prototypeWall.clear();		
+	}
+	
+	private double polygonArea(Battlefield b) 
+	{ 
+	  double area = 0;         // Accumulates area in the loop
+	  int j = b.npoints-1;  // The last vertex is the 'previous' one to the first
+
+	  for (int i=0; i<b.npoints; i++)
+	    { area = area +  (b.xpoints[j]+b.xpoints[i]) * (b.ypoints[j]-b.ypoints[i]); 
+	      j = i;  //j is previous vertex to i
+	    }
+	  return area/2;
 	}
 	
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
@@ -305,6 +368,15 @@ public class GameScreen extends Screen implements Runnable {
     			System.out.println("ScaleX: "+scaleX+"\nScaleY: "+scaleY);
     			System.out.println("Breite: "+getWidth()+"\nHöhe: "+getHeight());
     			
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_S) {
+    			speed /= 10;
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_PLUS) {
+    			speed *= 2.0;
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
+    			speed /= 2.0;
     		}
         }
     }

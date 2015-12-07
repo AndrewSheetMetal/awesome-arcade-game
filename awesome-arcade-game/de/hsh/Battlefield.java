@@ -10,15 +10,18 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import de.hsh.Objects.PrototypeWall;
 
 public class Battlefield extends Polygon{
-
+	private Color c;
 	
 	
 	public Battlefield() {
 		super();
+		Random rand = new Random();
+		c = Color.getHSBColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 	}	
 	
 	
@@ -39,7 +42,10 @@ public class Battlefield extends Polygon{
 		
 		//System.out.println("XPoints: "+Arrays.toString(tmp.xpoints));
 		//System.out.println("YPoints: "+Arrays.toString(tmp.ypoints));
-		g.setColor(Color.BLUE);
+		//Random rand = new Random();
+		g.setColor(c);
+		
+		//g.setColor(Color.BLUE);
 		g.fillPolygon(this);
 			
 		
@@ -101,18 +107,18 @@ public class Battlefield extends Polygon{
 			b1 = getFirstSplittedBattlefield(intersectIndexStart, intersectIndexEnd, prototypeWall,b1);
 			//b2 = new Battlefield(); //Fürs erste wird b2 beim Alten gelassen
 		}
-		
+	
 		battlefields.remove(this);
 		battlefields.add(b1);
 		battlefields.add(b2);
-		for(int i = 0; i< b1.npoints; i++) {
+		/*for(int i = 0; i< b1.npoints; i++) {
 			System.out.println("b1: x: "+b1.xpoints[i]+" y: "+b1.ypoints[i]);
 		}
 		
 		for(int i = 0; i<b2.npoints; i++) {
 			System.out.println("b2: x: "+b2.xpoints[i]+" y: "+b2.ypoints[i]);
 			
-		}
+		}*/
 		
 		
 	}
@@ -124,7 +130,7 @@ public class Battlefield extends Polygon{
 		Battlefield toReturn = new Battlefield();		
 	
 		if(intersectIndexStart < intersectIndexEnd) {
-			System.out.println("start < end");
+			//System.out.println("start < end");
 			
 			for(int i = 0; i< intersectIndexStart; i++) {
 				toReturn.addPoint(this.xpoints[i], this.ypoints[i]);
@@ -139,7 +145,7 @@ public class Battlefield extends Polygon{
 			}
 		}
 		else {
-			System.out.println("end < start");
+			//System.out.println("end < start");
 			for(int i = 0; i< intersectIndexEnd; i++) {
 				toReturn.addPoint(this.xpoints[i], this.ypoints[i]);
 			}
@@ -163,7 +169,7 @@ public class Battlefield extends Polygon{
 		Battlefield toReturn = new Battlefield();		
 		
 		if(intersectIndexStart < intersectIndexEnd) {
-			System.out.println("start < end");
+			//System.out.println("start < end");
 			for(int i = 0; i<prototypeWall.getEdgeCount(); i++) {
 				toReturn.addPoint((int)prototypeWall.getEdge(i).getX(), (int)prototypeWall.getEdge(i).getY());
 			}
@@ -173,7 +179,7 @@ public class Battlefield extends Polygon{
 			}
 		}
 		else {
-			System.out.println("end < start");
+			//System.out.println("end < start");
 			
 			for(int i = prototypeWall.getEdgeCount()-1; i>=0; i--) {
 				toReturn.addPoint((int)prototypeWall.getEdge(i).getX(), (int)prototypeWall.getEdge(i).getY());
@@ -192,32 +198,34 @@ public class Battlefield extends Polygon{
 	 * Es berücksichtigt die prototypeWall und spendiert dieser eine gewisse Breite, sodass man die beiden Teilbattlefield auseinanderhalten kann
 	 * */
 	private Battlefield getFirstSplittedBattlefield(int intersectIndexStart, int intersectIndexEnd, PrototypeWall prototypeWall, Battlefield original) {
-		System.out.println("Get first splitted Battlefield");
+		int t = 10; //Breite der Linie, die die Battlefields teilt
+		
+		//System.out.println("Get first splitted Battlefield");
 		Battlefield toReturn = new Battlefield();
 		
 		if(intersectIndexStart < intersectIndexEnd) {
-			System.out.println("start < end");
+			//System.out.println("start < end");
 			
 			for(int i = 0; i< intersectIndexStart; i++) {
 				toReturn.addPoint(this.xpoints[i], this.ypoints[i]);
 			}
 			
 			if(Math.abs(this.xpoints[intersectIndexStart-1] - prototypeWall.getEdge(0).getX()) < Math.abs(this.ypoints[intersectIndexStart-1] - prototypeWall.getEdge(0).getY())) {
-				System.out.println("Startet in Vertikaler Linie");
+				//System.out.println("Startet in Vertikaler Linie");
 				if(this.ypoints[intersectIndexStart-1] < prototypeWall.getEdge(0).getY()) {
-					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypeWall.getEdge(0).getY()-5);
+					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypeWall.getEdge(0).getY()-t);
 				}
 				else {
-					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypeWall.getEdge(0).getY()+5);
+					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypeWall.getEdge(0).getY()+t);
 				}
 			}
 			else {
-				System.out.println("Startet in Horizontaler Linie");
+				//System.out.println("Startet in Horizontaler Linie");
 				if(this.xpoints[intersectIndexStart-1] < prototypeWall.getEdge(0).getX()) {
-					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()-5, this.ypoints[intersectIndexStart-1]);
+					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()-t, this.ypoints[intersectIndexStart-1]);
 				}
 				else {
-					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()+5, this.ypoints[intersectIndexStart-1]);
+					toReturn.addPoint((int)prototypeWall.getEdge(0).getX()+t, this.ypoints[intersectIndexStart-1]);
 				}
 				
 				//b1.addPoint((int)prototypeWall.getEdge(0).getX()-5, (int)prototypeWall.getEdge(0).getY());
@@ -235,20 +243,20 @@ public class Battlefield extends Polygon{
 				 * */
 				if((prototypeWall.getEdge(i-1).getX()-prototypeWall.getEdge(i+1).getX()) * (prototypeWall.getEdge(i-1).getY() - prototypeWall.getEdge(i+1).getY()) > 0) {
 					//Entweder x+5 und y+5 oder x-5 und y-5
-					if(original.contains(prototypeWall.getEdge(i).getX()+5, prototypeWall.getEdge(i).getY()-5)) {
-						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()+5, (int)prototypeWall.getEdge(i).getY()-5); 
+					if(original.contains(prototypeWall.getEdge(i).getX()+t, prototypeWall.getEdge(i).getY()-t)) {
+						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()+t, (int)prototypeWall.getEdge(i).getY()-t); 
 					}
 					else {
-						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()-5, (int)prototypeWall.getEdge(i).getY()+5); 
+						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()-t, (int)prototypeWall.getEdge(i).getY()+t); 
 					}
 				}
 				else {
 					//Entweder x+5 und y-5 oder x-5 und y+5
-					if(original.contains(prototypeWall.getEdge(i).getX()+5, prototypeWall.getEdge(i).getY()+5)) {
-						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()+5, (int)prototypeWall.getEdge(i).getY()+5); 
+					if(original.contains(prototypeWall.getEdge(i).getX()+t, prototypeWall.getEdge(i).getY()+t)) {
+						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()+t, (int)prototypeWall.getEdge(i).getY()+t); 
 					}
 					else {
-						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()-5, (int)prototypeWall.getEdge(i).getY()-5); 
+						toReturn.addPoint((int)prototypeWall.getEdge(i).getX()-t, (int)prototypeWall.getEdge(i).getY()-t); 
 					}
 				}
 				
@@ -257,21 +265,21 @@ public class Battlefield extends Polygon{
 			}
 			
 			if(Math.abs(this.xpoints[intersectIndexEnd] - prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX()) < Math.abs(this.ypoints[intersectIndexEnd] - prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY())) {
-				System.out.println("Endet in Vertikaler Linie");
+				//System.out.println("Endet in Vertikaler Linie");
 				if(this.ypoints[intersectIndexEnd] < prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY()) {
-					toReturn.addPoint((int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX(), (int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY()-5);
+					toReturn.addPoint(this.xpoints[intersectIndexEnd], (int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY()-t);
 				}
 				else {
-					toReturn.addPoint((int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX(), (int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY()+5);
+					toReturn.addPoint(this.xpoints[intersectIndexEnd], (int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY()+t);
 				}
 			}
 			else {
-				System.out.println("Endet in Horizontaler Linie");
+				//System.out.println("Endet in Horizontaler Linie");
 				if(this.xpoints[intersectIndexEnd] < prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX()) {
-					toReturn.addPoint((int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX()-5, (int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY());
+					toReturn.addPoint((int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX()-t, this.ypoints[intersectIndexEnd]);
 				}
 				else {
-					toReturn.addPoint((int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX()+5, (int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getY());
+					toReturn.addPoint((int)prototypeWall.getEdge(prototypeWall.getEdgeCount()-1).getX()+t, this.ypoints[intersectIndexEnd]);
 				}
 				
 			}
@@ -280,7 +288,7 @@ public class Battlefield extends Polygon{
 			}
 		}
 		else {
-			System.out.println("end < start");
+			//System.out.println("end < start");
 			ArrayList<Point2D> prototypePoints = prototypeWall.reverse();
 			
 			int tmp = intersectIndexStart;
@@ -295,21 +303,21 @@ public class Battlefield extends Polygon{
 			}
 			
 			if(Math.abs(this.xpoints[intersectIndexStart-1] - prototypePoints.get(0).getX()) < Math.abs(this.ypoints[intersectIndexStart-1] - prototypePoints.get(0).getY())) {
-				System.out.println("Startet in Vertikaler Linie");
+				//System.out.println("Startet in Vertikaler Linie");
 				if(this.ypoints[intersectIndexStart-1] < prototypeWall.getEdge(0).getY()) {
-					toReturn.addPoint((int)prototypePoints.get(0).getX(), (int)prototypePoints.get(0).getY()-5);
+					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypePoints.get(0).getY()-t);
 				}
 				else {
-					toReturn.addPoint((int)prototypePoints.get(0).getX(), (int)prototypePoints.get(0).getY()+5);
+					toReturn.addPoint(this.xpoints[intersectIndexStart-1], (int)prototypePoints.get(0).getY()+t);
 				}
 			}
 			else {
-				System.out.println("Startet in Horizontaler Linie");
+				//System.out.println("Startet in Horizontaler Linie");
 				if(this.xpoints[intersectIndexStart-1] < prototypePoints.get(0).getX()) {
-					toReturn.addPoint((int)prototypePoints.get(0).getX()-5, (int)prototypePoints.get(0).getY());
+					toReturn.addPoint((int)prototypePoints.get(0).getX()-t, this.ypoints[intersectIndexStart-1]);
 				}
 				else {
-					toReturn.addPoint((int)prototypePoints.get(0).getX()+5, (int)prototypePoints.get(0).getY());
+					toReturn.addPoint((int)prototypePoints.get(0).getX()+t, this.ypoints[intersectIndexStart-1]);
 				}
 				
 				//b1.addPoint((int)prototypeWall.getEdge(0).getX()-5, (int)prototypeWall.getEdge(0).getY());
@@ -327,20 +335,20 @@ public class Battlefield extends Polygon{
 				 * */
 				if((prototypePoints.get(i-1).getX()-prototypePoints.get(i+1).getX()) * (prototypePoints.get(i-1).getY() - prototypePoints.get(i+1).getY()) > 0) {
 					//Entweder x+5 und y+5 oder x-5 und y-5
-					if(original.contains(prototypePoints.get(i).getX()+5, prototypePoints.get(i).getY()-5)) {
-						toReturn.addPoint((int)prototypePoints.get(i).getX()+5, (int)prototypePoints.get(i).getY()-5); 
+					if(original.contains(prototypePoints.get(i).getX()+t, prototypePoints.get(i).getY()-t)) {
+						toReturn.addPoint((int)prototypePoints.get(i).getX()+t, (int)prototypePoints.get(i).getY()+t); 
 					}
 					else {
-						toReturn.addPoint((int)prototypePoints.get(i).getX()-5, (int)prototypePoints.get(i).getY()+5); 
+						toReturn.addPoint((int)prototypePoints.get(i).getX()-t, (int)prototypePoints.get(i).getY()-t); 
 					}
 				}
 				else {
 					//Entweder x+5 und y-5 oder x-5 und y+5
-					if(original.contains(prototypePoints.get(i).getX()+5, prototypePoints.get(i).getY()+5)) {
-						toReturn.addPoint((int)prototypePoints.get(i).getX()+5, (int)prototypePoints.get(i).getY()+5); 
+					if(original.contains(prototypePoints.get(i).getX()+t, prototypePoints.get(i).getY()+t)) {
+						toReturn.addPoint((int)prototypePoints.get(i).getX()+t, (int)prototypePoints.get(i).getY()-t); 
 					}
 					else {
-						toReturn.addPoint((int)prototypePoints.get(i).getX()-5, (int)prototypePoints.get(i).getY()-5); 
+						toReturn.addPoint((int)prototypePoints.get(i).getX()-t, (int)prototypePoints.get(i).getY()+t); 
 					}
 				}
 				
@@ -348,22 +356,30 @@ public class Battlefield extends Polygon{
 				//toReturn.addPoint((int)prototypeWall.getEdge(i).getX()-5, (int)prototypeWall.getEdge(i).getY()-5);
 			}
 			
+			intersectIndexEnd = intersectIndexEnd % xpoints.length;
+			/*try {
+				int xyz = xpoints[intersectIndexEnd];
+			}
+			catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("Intersect Index: "+intersectIndexEnd);
+				
+			}*/
 			if(Math.abs(this.xpoints[intersectIndexEnd] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(this.ypoints[intersectIndexEnd] - prototypePoints.get(prototypePoints.size()-1).getY())) {
-				System.out.println("Endet in Vertikaler Linie");
+				//System.out.println("Endet in Vertikaler Linie");
 				if(this.ypoints[intersectIndexEnd] < prototypePoints.get(prototypePoints.size()-1).getY()) {
-					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), (int)prototypePoints.get(prototypePoints.size()-1).getY()-5);
+					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), (int)prototypePoints.get(prototypePoints.size()-1).getY()-t);
 				}
 				else {
-					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), (int)prototypePoints.get(prototypePoints.size()-1).getY()+5);
+					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), (int)prototypePoints.get(prototypePoints.size()-1).getY()+t);
 				}
 			}
 			else {
-				System.out.println("Endet in Horizontaler Linie");
+				//System.out.println("Endet in Horizontaler Linie");
 				if(this.xpoints[intersectIndexEnd] < prototypeWall.getEdge(prototypePoints.size()-1).getX()) {
-					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()-5, (int)prototypePoints.get(prototypePoints.size()-1).getY());
+					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()-t, (int)prototypePoints.get(prototypePoints.size()-1).getY());
 				}
 				else {
-					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()+5, (int)prototypePoints.get(prototypePoints.size()-1).getY());
+					toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()+t, (int)prototypePoints.get(prototypePoints.size()-1).getY());
 				}
 				
 			}

@@ -26,7 +26,7 @@ public class Ball extends Enemy {
 		
 	public Ball() {
 		
-		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geändert.
+		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geï¿½ndert.
 		setDirection(new Point2D.Double(0, 0));
 		
 		setColor(Color.WHITE);
@@ -94,25 +94,25 @@ public class Ball extends Enemy {
 	}
 	
 	// ALEX
-	// Prüfen, ob ein Ball gegen eine Wand stößt und ggf. seine Richtung ändern.
-	public void handleIntersection(List<Battlefield> pBattlefields, int pSpeed)
+	// Prï¿½fen, ob ein Ball gegen eine Wand stï¿½ï¿½t und ggf. seine Richtung ï¿½ndern.
+	public void handleIntersection(List<Battlefield> pBattlefields, double speed)
 	{
 		for(Battlefield lBf : pBattlefields)
 		{
-			// Ball befindet sich im aktuellen Spielfeld und berührt eine Wand.
+			// Ball befindet sich im aktuellen Spielfeld und berï¿½hrt eine Wand.
 			if(intersectsBattlefield(lBf))
 			{
 				// 0: 0 = waagerecht, 1 = senkrecht; 1 : Anzahl Pixel innerhalb
 				double[] lNearest = {0, 0};
-				// Falls der Ball über eine Wand hinausragt, wird hier angegeben, wie weit er hineinragt.
+				// Falls der Ball ï¿½ber eine Wand hinausragt, wird hier angegeben, wie weit er hineinragt.
 				double lDepth = 0;
 				// Der Index des zweiten Punktes einer Wand.
 				int lSecond = 0;
-				// Gibt an, ob der Ball über einen Teil der Mauer hinausragt.
+				// Gibt an, ob der Ball ï¿½ber einen Teil der Mauer hinausragt.
 				boolean lIntersected = false;
 				// Das Wandobjekt, mit dem Kollisionen untersucht werden.
 				Line2D lWall;
-				// Alle Wände des Schlachtfeldes durchsuchen und die passende Wand finden.
+				// Alle Wï¿½nde des Schlachtfeldes durchsuchen und die passende Wand finden.
 				for(int i = 0; i < lBf.npoints; i++)
 				{
 					lSecond = (i == (lBf.npoints - 1)) ? 0 : (i+1);			
@@ -126,7 +126,7 @@ public class Ball extends Enemy {
 						// Wand senkrecht.
 						if(lBf.xpoints[i] == lBf.xpoints[lSecond])
 						{
-							// Ragt der Ball oben etwas über die Mauer hinaus?
+							// Ragt der Ball oben etwas ï¿½ber die Mauer hinaus?
 							if(this.getPosition().getY() < Math.min(lBf.ypoints[i], lBf.ypoints[lSecond]))
 							{
 								// Berechnen, wie weit der Ball von oben innerhalb des Wandbereiches ist.
@@ -134,7 +134,7 @@ public class Ball extends Enemy {
 										- this.getPosition().getY());	
 								lIntersected = true;
 							}
-							// Ragt der Ball unten etwas über die Mauer hinaus?
+							// Ragt der Ball unten etwas ï¿½ber die Mauer hinaus?
 							if((this.getPosition().getY() + this.getSize().getHeight()) > Math.max(lBf.ypoints[i], lBf.ypoints[lSecond]))
 							{
 								// Befindet sich der Ball von unten mehr innerhalb als von oben?
@@ -159,7 +159,7 @@ public class Ball extends Enemy {
 						// Wand waagerecht.
 						else
 						{
-							// Ragt der Ball links etwas über die Mauer hinaus?
+							// Ragt der Ball links etwas ï¿½ber die Mauer hinaus?
 							if(this.getPosition().getX() < Math.min(lBf.xpoints[i], lBf.xpoints[lSecond]))
 							{
 								// Berechnen, wie weit der Ball von links innerhalb des Wandbereiches ist.
@@ -167,7 +167,7 @@ public class Ball extends Enemy {
 										- this.getPosition().getX());	
 								lIntersected = true;
 							}
-							// Ragt der Ball rechts etwas über die Mauer hinaus?
+							// Ragt der Ball rechts etwas ï¿½ber die Mauer hinaus?
 							if((this.getPosition().getX() + this.getSize().getWidth()) > Math.max(lBf.xpoints[i], lBf.xpoints[lSecond]))
 							{
 								// Befindet sich der Ball von rechts mehr innerhalb als von links?
@@ -191,14 +191,14 @@ public class Ball extends Enemy {
 						}
 					}
 				}
-				changeDirectionFromIntersection((int)lNearest[0], pSpeed);				
+				changeDirectionFromIntersection((int)lNearest[0], speed);				
 			}
 		}		
 	}
 	
 	
 	
-	// Liefert true, wenn der Ball den Rand eines Schlachtfeldes berührt.
+	// Liefert true, wenn der Ball den Rand eines Schlachtfeldes berï¿½hrt.
 	private boolean intersectsBattlefield(Battlefield pBattlefield)
 	{
 		return pBattlefield.intersects(this.getPosition().getX(), this.getPosition().getY(),
@@ -209,7 +209,7 @@ public class Ball extends Enemy {
 	
 	
 	
-	// Liefert true, wenn der Ball die Linie berührt.
+	// Liefert true, wenn der Ball die Linie berï¿½hrt.
 	private boolean intersectsWall(Line2D pWall)
 	{
 		return pWall.intersects(this.getPosition().getX(), this.getPosition().getY(),
@@ -218,8 +218,8 @@ public class Ball extends Enemy {
 	
 	
 	
-	// Ändert die Richtung des Balls abhängig von der Art der Wand. (0 = horizontal; 1 = vertikal)
-	private void changeDirectionFromIntersection(int pWallType, int pSpeed)
+	// ï¿½ndert die Richtung des Balls abhï¿½ngig von der Art der Wand. (0 = horizontal; 1 = vertikal)
+	private void changeDirectionFromIntersection(int pWallType, double speed)
 	{
 		// Nahste Wand ist waagerecht.
 		if(pWallType == HORIZONTAL)
@@ -228,13 +228,13 @@ public class Ball extends Enemy {
 			if(this.getDirection().getY() > 0)
 			{
 				this.setPosition(new Point2D.Double(this.getPosition().getX(), 
-						this.getPosition().getY() - pSpeed));
+						this.getPosition().getY() - speed));
 			}
 			// Ball bewegte sich nach oben.
 			else
 			{
 				this.setPosition(new Point2D.Double(this.getPosition().getX(), 
-						this.getPosition().getY() + pSpeed));							
+						this.getPosition().getY() + speed));							
 			}
 			this.setDirection(new Point2D.Double(this.getDirection().getX(), 
 				-this.getDirection().getY()));
@@ -245,13 +245,13 @@ public class Ball extends Enemy {
 			// Ball bewegte sich nach rechts.
 			if(this.getDirection().getX() > 0)
 			{
-				this.setPosition(new Point2D.Double(this.getPosition().getX() - pSpeed, 
+				this.setPosition(new Point2D.Double(this.getPosition().getX() - speed, 
 					this.getPosition().getY()));							
 			}
 			// Ball bewegte sich nach links
 			else
 			{
-				this.setPosition(new Point2D.Double(this.getPosition().getX() + pSpeed, 
+				this.setPosition(new Point2D.Double(this.getPosition().getX() + speed, 
 					this.getPosition().getY()));							
 			}
 			this.setDirection(new Point2D.Double(-this.getDirection().getX(), 
