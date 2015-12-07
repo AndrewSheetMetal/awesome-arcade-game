@@ -41,7 +41,112 @@ public class BattlefieldSeperator {
 	 * */
 	public void calculateSplittedBattlefields() {
 		b1 = calculateFirstSplittedBattlefield();
+		b2 = calculateSecondSplittedBattlefield();
 		
+	}
+	
+	private Battlefield calculateSecondSplittedBattlefield() {
+		int t = 10;
+		Battlefield original = b2;
+		
+		Battlefield toReturn = new Battlefield();
+		/*for(int i = 0; i<=startIndex; i++) {
+			toReturn.addPoint(bat.xpoints[i], bat.ypoints[i]);
+		}*/
+		
+		/*
+		 * Wo beim ersten Pixel hinzugefügt wurden, müssen sie beim zweiten abgezogen werden.
+		 * Habe hier deshalb nur die Vergleichsoperatoren der inneren if-Bedingungen umgedreht
+		 * */
+		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
+			System.out.println("Startet in Vertikaler Linie");
+			if(bat.ypoints[startIndex] > prototypePoints.get(0).getY()) {
+				System.out.println("Ziehe y ab");
+				toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY()-t);
+			}
+			else {
+				System.out.println("füge y hinzu");
+				toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY()+t);
+			}
+		}
+		else {
+			System.out.println("Startet in Horizontaler Linie");
+			if(bat.xpoints[startIndex] > prototypePoints.get(0).getX()) {
+				System.out.println("Ziehe x ab");
+				toReturn.addPoint((int)prototypePoints.get(0).getX()-t, bat.ypoints[startIndex]);
+			}
+			else {
+				System.out.println("Füge x hinzu");
+				toReturn.addPoint((int)prototypePoints.get(0).getX()+t, bat.ypoints[startIndex]);
+			}
+			
+			//b1.addPoint((int)prototypeWall.getEdge(0).getX()-5, (int)prototypeWall.getEdge(0).getY());*/
+		}
+		
+		/*
+		 * Iteriere durch die Knoten der PrototypeWall, die zwischen Start und Ende liegen
+		 * */
+		for(int i = 1; i<prototypePoints.size()-1; i++) {
+			/* Okay, also es gibt vier Möglichkeiten für den neuen Knoten. +5 Pixel bzw. -5 Pixel in X bzw. Y Richtung vom eigentlichen Edge der prototypeWall verschoben.
+			 * Zwei davon kann man ausschließen, wenn man sich den vorangehenden bzw. nächsten Edge der PrototypeWall ansieht. Wenn von einem zum anderen beide Koordinaten sowohl
+			 * in X als auch in Y Richtung größer oder kleiner werden, so liegt der Edge dazwischen entweder -5 in x und +5 y oder -5 in y und +5 in x Richtung vom eigentlichen Edge der PrototypeWall
+			 * entfernt. Ist diese Bedingung nicht gegeben sind es entsprechend +5 in x und +5 in y bzw. -5 in x und -5 in y.
+			 * Welche dieser zwei Optionen dann die richtige ist kann man nur bestimmen, indem man schaut ob der Punkt im originalen Battlefield läge oder nicht
+			 * */
+			if((prototypePoints.get(i-1).getX()-prototypePoints.get(i+1).getX()) * (prototypePoints.get(i-1).getY() - prototypePoints.get(i+1).getY()) > 0) {
+				//Entweder x+5 und y+5 oder x-5 und y-5
+				if(original.contains(prototypePoints.get(i).getX()+t, prototypePoints.get(i).getY()-t)) {
+					toReturn.addPoint((int)prototypePoints.get(i).getX()+t, (int)prototypePoints.get(i).getY()-t); 
+				}
+				else {
+					toReturn.addPoint((int)prototypePoints.get(i).getX()-t, (int)prototypePoints.get(i).getY()+t); 
+				}
+			}
+			else {
+				//Entweder x+5 und y-5 oder x-5 und y+5
+				if(original.contains(prototypePoints.get(i).getX()+t, prototypePoints.get(i).getY()+t)) {
+					toReturn.addPoint((int)prototypePoints.get(i).getX()+t, (int)prototypePoints.get(i).getY()+t); 
+				}
+				else {
+					toReturn.addPoint((int)prototypePoints.get(i).getX()-t, (int)prototypePoints.get(i).getY()-t); 
+				}
+			}
+			
+			
+			//toReturn.addPoint((int)prototypeWall.getEdge(i).getX()-5, (int)prototypeWall.getEdge(i).getY()-5);
+		}
+		
+		/*
+		 * Wo beim ersten Pixel hinzugefügt wurden, müssen sie beim zweiten abgezogen werden.
+		 * Habe hier deshalb nur die Vergleichsoperatoren der inneren if-Bedingungen umgedreht
+		 * */
+		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
+			System.out.println("Endet in Vertikaler Linie");
+			if(bat.ypoints[(endIndex+1)%bat.npoints] > prototypePoints.get(prototypePoints.size()-1).getY()) {
+				System.out.println("Ziehe y ab");
+				toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY()-t);
+			}
+			else {
+				System.out.println("Füge y hinzu");
+				toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY()+t);
+			}
+		}
+		else {
+			System.out.println("Endet in Horizontaler Linie");
+			if(bat.xpoints[(endIndex+1)%bat.npoints] > prototypePoints.get(prototypePoints.size()-1).getX()) {
+				System.out.println("Ziehe x ab");
+				toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()-t, bat.ypoints[(endIndex+1)%bat.npoints]);
+			}
+			else {
+				System.out.println("Füge x hinzu");
+				toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()+t, bat.ypoints[(endIndex+1)%bat.npoints]);
+			}
+			
+		}
+		for(int i = endIndex; i>startIndex; i--) {
+			toReturn.addPoint(bat.xpoints[i], bat.ypoints[i]);
+		}
+		return toReturn;
 		
 	}
 	
@@ -195,9 +300,28 @@ public class BattlefieldSeperator {
 			toReturn.addPoint(bat.xpoints[i], bat.ypoints[i]);
 		}
 		
-		for(int i = 0; i<prototypePoints.size(); i++) {
+		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
+			System.out.println("Startet in Vertikaler Linie");
+			toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY());
+		}
+		else {
+			System.out.println("Startet in Horizontaler Linie");
+			toReturn.addPoint((int)prototypePoints.get(0).getX(), bat.ypoints[startIndex]);
+		}
+		
+		for(int i = 1; i<prototypePoints.size()-1; i++) {
 			toReturn.addPoint((int)prototypePoints.get(i).getX(), (int)prototypePoints.get(i).getY());
 		}
+		
+		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
+			System.out.println("Endet in Vertikaler Linie");
+			toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY());
+		}
+		else {
+			System.out.println("Endet in Horizontaler Linie");
+			toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), bat.ypoints[(endIndex+1)%bat.npoints]);
+		}
+		
 		
 		for(int i = endIndex+1; i<bat.npoints; i++) {
 			toReturn.addPoint(bat.xpoints[i], bat.ypoints[i]);
@@ -209,8 +333,26 @@ public class BattlefieldSeperator {
 	private Battlefield getSecondBattlefield() {
 		Battlefield toReturn = new Battlefield();		
 		
-		for(int i = 0; i<prototypePoints.size(); i++) {
+		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
+			System.out.println("Startet in Vertikaler Linie");
+			toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY());
+		}
+		else {
+			System.out.println("Startet in Horizontaler Linie");
+			toReturn.addPoint((int)prototypePoints.get(0).getX(), bat.ypoints[startIndex]);
+		}
+		
+		for(int i = 1; i<prototypePoints.size()-1; i++) {
 			toReturn.addPoint((int)prototypePoints.get(i).getX(), (int)prototypePoints.get(i).getY());
+		}
+		
+		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
+			System.out.println("Endet in Vertikaler Linie");
+			toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY());
+		}
+		else {
+			System.out.println("Endet in Horizontaler Linie");
+			toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), bat.ypoints[(endIndex+1)%bat.npoints]);
 		}
 		
 		for(int i = endIndex; i > startIndex; i--) {
