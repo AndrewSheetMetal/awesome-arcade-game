@@ -22,11 +22,12 @@ import java.util.List;
 import de.hsh.Objects.PrototypeWall;
 
 // ALEX
-import de.hsh.Objects.Ball;
 import de.hsh.Objects.Player;
+import de.hsh.Objects.Enemy;
+import de.hsh.Objects.Ball;
+import de.hsh.Objects.Porcupine;
 
 import java.util.Random;
-
 
 //Cocken
 import javax.swing.JLabel;
@@ -44,13 +45,15 @@ public class GameScreen extends Screen implements Runnable {
 	private int timeout;
 	private Player player;
 	private JLabel timebox = new JLabel();
-	private List<Ball> mBallList;
+	
+	// ALEX
+	private List<Enemy> mEnemyList;
+	
 	private double scaleX  = 1;
 	private double scaleY = 1;
-	private Point2D.Double center;
-	
+	private Point2D.Double center;	
 	private boolean running;
-    private double speed = 1;
+    private double speed = 2;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	//private Point battlefieldHitPoint; //Koordinate an der der Player das Battlefield betritt. Referenz ist der Mittelpunkt des Players
@@ -83,19 +86,31 @@ public class GameScreen extends Screen implements Runnable {
 		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 		
 		player.setSpeed(1);		
-		mBallList = new ArrayList<Ball>();
+		mEnemyList = new ArrayList<Enemy>();
 		// Muss sp�ter dynamisch erzeugt werden.
-		mBallList.add(new Ball());
-		mBallList.add(new Ball());
-		mBallList.add(new Ball());
+		mEnemyList.add(new Ball());
+		mEnemyList.add(new Ball());
+		mEnemyList.add(new Ball());
+		mEnemyList.add(new Porcupine());
+		mEnemyList.get(0).setPosition(new Point2D.Double(100, 150));
+		mEnemyList.get(1).setPosition(new Point2D.Double(300, 150));
+		mEnemyList.get(2).setPosition(new Point2D.Double(300, 400));
+		mEnemyList.get(3).setPosition(new Point2D.Double(50, 300));
 		
-		for(Ball lBall : mBallList)
+		for(Enemy lEnemy : mEnemyList)
 		{
-			//lBall.setDirection(new Point2D.Double(-0.8, -0.2));
 			// ALEX: Muss sp�ter zuf�llig gew�hlt werden.
-			lBall.setPosition(new Point2D.Double(250,150));
-			lBall.setRandomDirection();
-			lBall.setSpeed(1);
+			/* lBall.setDirection(new Point2D.Double(-0.8, -0.2));
+			if(lEnemy instanceof Ball)
+			{
+				lEnemy.setPosition(new Point2D.Double(250,150));
+			}
+			else
+			{
+				lEnemy.setPosition(new Point2D.Double(50,50));
+			} */			
+			lEnemy.setRandomDirection();
+			lEnemy.setSpeed((int)speed);
 		}		
 
 		this.addKeyListener(new TAdapter());
@@ -142,38 +157,26 @@ public class GameScreen extends Screen implements Runnable {
 		Point2D direction = player.getDirection();
 		pos.setLocation(pos.getX() + speed*(direction.getX()*pDeltaTime), pos.getY() + speed*(direction.getY()*pDeltaTime));
 		player.setPosition(pos);
-		
+				
 		// ALEX
-		// Ballpositionen aktualisieren.
-		for(Ball lBall : mBallList)
-		{
-			pos = lBall.getPosition();
-			direction = lBall.getDirection();
-			pos.setLocation(pos.getX() + lBall.getSpeed()*(direction.getX()*pDeltaTime), 
-					pos.getY() + lBall.getSpeed()*(direction.getY()*pDeltaTime));
-			lBall.setPosition(pos);
-		}		
+		refreshEnemyPositions(pDeltaTime);
 		
 		/*Checken, ob Player im Battlefield ist*/
 		player.setColor(Color.BLUE);
-		for(int i = 0; i<battlefields.size(); i++) {
+		for(int i = 0; i<battlefields.size(); i++) 
+		{
 			Battlefield b = battlefields.get(i);
-			// Pr�fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
-			// Pr�fen, ob ein Ball den Rand eines Schlachtfeldes erreicht hat.
-			for(Ball lBall : mBallList)
-			{
-				lBall.handleIntersection(battlefields, speed);
-			}
 			
-			/*for(Ball lBall : mBallList)
+			// ALEX
+			// Pr�fen, ob ein Gegner den Rand eines Schlachtfeldes erreicht hat.
+			for(Enemy lEnemy : mEnemyList)
 			{
-				// Ball schneidet das Spielfeld.
-				if(!b.contains(lBall.getPosition().getX(), lBall.getPosition().getY(),
-						lBall.getSize().getWidth(), lBall.getSize().getHeight()))
+				lEnemy.handleIntersectionWithWall(battlefields, speed);
+				if(lEnemy instanceof Porcupine)
 				{
-					lBall.setDirection(new Point2D.Double(1,0));
+					((Porcupine) lEnemy).handleIntersectionWithBorder(Main.SIZE, Main.SIZE);
 				}
-			}*/
+			}
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler ist innerhalb eines Battlefields*/
@@ -236,14 +239,19 @@ public class GameScreen extends Screen implements Runnable {
 		boolean fillb1 = true;
 		boolean fillb2 = true;
 		
-		for(Ball lBall : mBallList)
+		// ALEX: Angepasst an Enemy.
+		//for(Ball lBall : mBallList)
+		for(Enemy lEnemy : mEnemyList)
 		{
-			if(bs.getB1().contains(lBall.getPosition())) {
-				fillb1 = false;
-			}
-			
-			if(bs.getB2().contains(lBall.getPosition())) {
-				fillb2 = false;
+			if(lEnemy instanceof Ball)
+			{
+				if(bs.getB1().contains(lEnemy.getPosition())) {
+					fillb1 = false;
+				}
+				
+				if(bs.getB2().contains(lEnemy.getPosition())) {
+					fillb2 = false;
+				}
 			}
 		}	
 
@@ -316,8 +324,7 @@ public class GameScreen extends Screen implements Runnable {
 			gT.scale(scaleY, scaleY);
 		}else{
 			gT.scale(scaleX,scaleX);
-		}*/
-		
+		}*/		
 		
 		this.setBackground(Color.YELLOW);
 		for(Battlefield b : battlefields) {
@@ -327,10 +334,7 @@ public class GameScreen extends Screen implements Runnable {
 		player.draw(g);
 		
 		// ALEX
-		for(Ball lBall : mBallList)
-		{
-			lBall.draw(g);
-		}
+		drawEnemies(g);
 		
 		prototypeWall.draw(g,player.getCenter());			
 	}
@@ -451,6 +455,30 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}
 		return h;
+	}
+	
+	// ALEX
+	// Gegnerpositionen aktualisieren.
+	private void refreshEnemyPositions(float pDeltaTime)
+	{
+		Point2D pos, direction;
+		for(Enemy lEnemy : mEnemyList)
+		{
+			pos = lEnemy.getPosition();
+			direction = lEnemy.getDirection();
+			pos.setLocation(pos.getX() + lEnemy.getSpeed()*(direction.getX()*pDeltaTime), 
+					pos.getY() + lEnemy.getSpeed()*(direction.getY()*pDeltaTime));
+			lEnemy.setPosition(pos);
+		}
+	}			
+
+	// ALEX
+	private void drawEnemies(Graphics g)
+	{
+		for(Enemy lEnemy : mEnemyList)
+		{
+			lEnemy.draw(g);
+		}
 	}
 }
 
