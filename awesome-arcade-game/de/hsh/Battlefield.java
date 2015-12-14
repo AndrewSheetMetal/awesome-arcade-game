@@ -24,7 +24,23 @@ public class Battlefield extends Polygon{
 		c = Color.getHSBColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
 	}	
 	
-	
+	/*
+	 * Komplizierter Algorithmus zum Berechnen der Polygonfläche.
+	 * Nicht selbst entwickelt
+	 * Am besten nichts dran verändern :)
+	 * */
+	public double getArea() {
+		int i, j, n = this.npoints;
+		double area = 0;
+
+		for (i = 0; i < n; i++) {
+			j = (i + 1) % n;
+			area += xpoints[i] * ypoints[j];
+			area -= xpoints[j] * ypoints[i];
+		}
+		area /= 2.0;
+		return (area);
+	}
 	
 	public void draw(Graphics g) {
 		/*if(walls.size() >= 2) {

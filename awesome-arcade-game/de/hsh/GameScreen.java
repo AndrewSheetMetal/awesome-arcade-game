@@ -255,42 +255,40 @@ public class GameScreen extends Screen implements Runnable {
 
 			battlefields.add(bs.getB1());
 			battlefields.add(bs.getB2());
+			
+			//System.out.println("Battlefield 1: "+bs.getB1().getArea());
+			//System.out.println("Battlefield 2: "+bs.getB2().getArea());
+			
 		}
 		else if(fillb1 == true) {
 			battlefields.add(bs.getB2());
+			
+			//System.out.println("Battlefield: "+bs.getB2().getArea());
 		}
 		else if(fillb2 == true) {
 			battlefields.add(bs.getB1());
+			
+			//System.out.println("Battlefield: "+bs.getB1().getArea());
 		}
 		else {
 			System.out.println("Error filling Battlefields");
 		}
 		
-		/*double totalArea = 0;
-		
+		double totalArea = 0;
 		for(Battlefield bat : battlefields) {
-			totalArea += Math.abs(polygonArea(b));
-			System.out.println("Fläche: "+Math.abs(polygonArea(b)));
+			totalArea += Math.abs(bat.getArea());
+			//System.out.println("Fläche: "+Math.abs(polygonArea(b)));
+		}
+		if(totalArea <= 50000) {
+			//TODO Level beendet
 		}
 		
 		System.out.println("Gesamtfläche: "+totalArea);
-		*/
+		
 		//battlefields.clear();
 		//battlefields.add(b);
 		
 		prototypeWall.clear();		
-	}
-	
-	private double polygonArea(Battlefield b) 
-	{ 
-	  double area = 0;         // Accumulates area in the loop
-	  int j = b.npoints-1;  // The last vertex is the 'previous' one to the first
-
-	  for (int i=0; i<b.npoints; i++)
-	    { area = area +  (b.xpoints[j]+b.xpoints[i]) * (b.ypoints[j]-b.ypoints[i]); 
-	      j = i;  //j is previous vertex to i
-	    }
-	  return area/2;
 	}
 	
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
