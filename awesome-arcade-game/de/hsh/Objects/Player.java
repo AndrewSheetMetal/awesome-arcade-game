@@ -10,8 +10,10 @@ import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 
+import de.hsh.GameScreen;
+
 public class Player extends Movable {
-	private int livePoints;
+	private int lifePoints;
 	private Color color;
 	
 	// ALEX
@@ -20,6 +22,7 @@ public class Player extends Movable {
 		
 	public Player() {
 		setColor(Color.RED);
+		lifePoints = 3;
 	}
 	
 	public void setColor(Color c) {
@@ -50,6 +53,7 @@ public class Player extends Movable {
 		Point2D pos = this.getPosition();
 		
 		circle2D.setFrame(pos.getX(), pos.getY(), w, h);
+		
 		
 		//pos.x += 1;
 		//pos.y += 1;
@@ -102,5 +106,11 @@ public class Player extends Movable {
 	public Point2D getDirection()
 	{
 		return mDirection;
+	}
+	public void setLifePoints(int life){
+		lifePoints = life;
+	}
+	public int getLifePoints(){
+		return lifePoints;
 	}
 }

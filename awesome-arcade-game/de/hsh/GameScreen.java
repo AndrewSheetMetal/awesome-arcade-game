@@ -4,17 +4,18 @@ package de.hsh;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,6 @@ import javax.swing.JLabel;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.omg.Messaging.SyncScopeHelper;
 
 public class GameScreen extends Screen implements Runnable {
 	
@@ -45,11 +45,12 @@ public class GameScreen extends Screen implements Runnable {
 	private Player player;
 	private JLabel timebox = new JLabel();
 	private List<Ball> mBallList;
-	private double scaleX  = 1;
-	private double scaleY = 1;
+	public static double scaleX  = 1;
+	public static double scaleY = 1;
 	private Point2D.Double center;
 	private double bfWidth=0;
 	private double bfHight=0;
+	private int level;
 	
 	private boolean running;
     private double speed = 2;
@@ -61,19 +62,35 @@ public class GameScreen extends Screen implements Runnable {
 	private Timer timer = new Timer();
 	
 	
-	public GameScreen(List<Battlefield> pBattlefields){
+	public GameScreen(List<Battlefield> pBattlefields, int level){
+		
+		//SVEN: Zeit, Anzahl Gegner anhand des Levels initialisieren
+		this.level = level;
+		timeout = level*30;
+		mBallList = new ArrayList<Ball>();
+		for(int i=0; i<level*2;i++){
+			mBallList.add(new Ball());
+		}
+		for(Ball lBall : mBallList)
+		{
+			//lBall.setDirection(new Point2D.Double(-0.8, -0.2));
+			// ALEX: Muss sp�ter zuf�llig gew�hlt werden.
+			lBall.setPosition(new Point2D.Double(250,150));
+			lBall.setRandomDirection();
+			lBall.setSpeed(1);
+		}	
+		
+		
 		
 		battlefields = pBattlefields;
 		player = new de.hsh.Objects.Player();
 		prototypeWall = new PrototypeWall();
 		center = new Point2D.Double();
-
 		// Goldbeck
 		this.setLayout(new BorderLayout());
 		this.add(timebox, BorderLayout.PAGE_END);
 		timebox.setVisible(true);
-		timeout = 0;
-
+		
 		// Goldbeck: starten der TimerTask run() methode
 		this.start();
 		
@@ -85,20 +102,7 @@ public class GameScreen extends Screen implements Runnable {
 		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 		
 		player.setSpeed(1);		
-		mBallList = new ArrayList<Ball>();
-		// Muss sp�ter dynamisch erzeugt werden.
-		mBallList.add(new Ball());
-		mBallList.add(new Ball());
-		mBallList.add(new Ball());
-		
-		for(Ball lBall : mBallList)
-		{
-			//lBall.setDirection(new Point2D.Double(-0.8, -0.2));
-			// ALEX: Muss sp�ter zuf�llig gew�hlt werden.
-			lBall.setPosition(new Point2D.Double(250,150));
-			lBall.setRandomDirection();
-			lBall.setSpeed(1);
-		}		
+			
 
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
@@ -123,7 +127,7 @@ public class GameScreen extends Screen implements Runnable {
 					bfWidth = getBattlefieldWidth();
 					bfHight = getBattlefieldHeight();
 				}
-			}
+			}	
 			@Override
 			public void componentMoved(ComponentEvent e) {
 				// TODO Auto-generated method stub
@@ -302,6 +306,7 @@ public class GameScreen extends Screen implements Runnable {
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
 	 * Hier wird er z.B. auf die Startposition gesetzt*/
 	public void lostLife() {
+		player.setLifePoints(player.getLifePoints()-1);
 		prototypeWall.clear();
 		player.setPosition(new Point2D.Double(50,50));
 	}
@@ -316,15 +321,9 @@ public class GameScreen extends Screen implements Runnable {
 		// Verhältnis wird beibehalten
 		// TODO Spieler, Bälle und Spielfelder zentrieren
 		Graphics2D gT = (Graphics2D) g;
-
-		gT.translate(center.x-bfWidth/2 , center.y-bfHight/2);
-		/*if(scaleY<scaleX){
-			gT.scale(scaleY, scaleY);
-			
-		}else{
-			gT.scale(scaleX,scaleX);
-		}*/
 		
+		gT.translate(center.x-bfWidth/2 , center.y-bfHight/2);
+	
 		
 		this.setBackground(Color.YELLOW);
 		for(Battlefield b : battlefields) {
@@ -395,15 +394,15 @@ public class GameScreen extends Screen implements Runnable {
 	TimerTask timerTask = new TimerTask() {
 
 		public void run() {
-			timeout++;
+			timeout--;
 			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
 			//Sven: Zum testen erstemal auskommentiert
-			/*if (timeout == 10) {
+			if (timeout == 0 || player.getLifePoints()<=0) {
 				running = false;
 				
 				this.cancel();
-			}*/
+			}
 		}
 
 	};
@@ -445,7 +444,7 @@ public class GameScreen extends Screen implements Runnable {
 				w = battlefields.get(i).getBounds2D().getWidth();
 			}
 		}
-		return w;
+		return w*scaleX;
 	}
 	private double getBattlefieldHeight(){
 		double h;
@@ -457,7 +456,7 @@ public class GameScreen extends Screen implements Runnable {
 				h = battlefields.get(i).getBounds2D().getHeight();
 			}
 		}
-		return h;
+		return h*scaleY;
 	}
 }
 

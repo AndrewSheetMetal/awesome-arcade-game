@@ -44,8 +44,8 @@ public class Battlefield extends Polygon{
 		//System.out.println("YPoints: "+Arrays.toString(tmp.ypoints));
 		//Random rand = new Random();
 		g.setColor(c);
-		
 		//g.setColor(Color.BLUE);
+
 		g.fillPolygon(this);
 			
 		

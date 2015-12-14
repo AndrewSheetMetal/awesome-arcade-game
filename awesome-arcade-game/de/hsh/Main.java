@@ -28,11 +28,10 @@ public class Main extends JFrame {
 		setMinimumSize(new Dimension(SIZE, SIZE));
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
-		this.getContentPane().add(menuScreen);
-		this.pack();
-		this.setVisible(true);
-		// In der Mitte des Spielfelds anzeigen
+		pack();
 		setLocationRelativeTo(null);
+		setVisible(true);
+		
 
 	}
 

@@ -49,7 +49,8 @@ public class MenuScreen extends Screen {
 		// menu.getContentPane().add(this);
 
 		this.img = new ImageIcon("image/ohrlaub.jpg").getImage();
-		Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+		//Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+		Dimension size = new Dimension(Main.SIZE, Main.SIZE);
 		setPreferredSize(size);
 		setMinimumSize(size);
 		setMaximumSize(size);
@@ -90,7 +91,11 @@ public class MenuScreen extends Screen {
 			         e.printStackTrace();
 			      }
 				*/
-				GameScreen gameScreen = new GameScreen(createBattlefields());
+				
+				
+				
+				//SVEN: GameScreen mit Level 1 inintialisieren
+				GameScreen gameScreen = new GameScreen(createBattlefields(), 5);
 				main.setScreen(gameScreen);
 				setVisible(false);
 				gameScreen.setFocusable(true);
