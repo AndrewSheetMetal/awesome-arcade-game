@@ -145,7 +145,9 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
-		
+		if(player.getLifePoints()<=0){
+			running = false;
+		}
 		time += pDeltaTime;
 		
 		Point2D pos = player.getPosition();
@@ -372,6 +374,7 @@ public class GameScreen extends Screen implements Runnable {
     		else if(e.getKeyCode() == KeyEvent.VK_C){
     			System.out.println("ScaleX: "+scaleX+"\nScaleY: "+scaleY);
     			System.out.println("Breite: "+getWidth()+"\nHöhe: "+getHeight());
+    			System.out.println("Spielerleben:"+player.getLifePoints());
     			
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_S) {
@@ -397,7 +400,7 @@ public class GameScreen extends Screen implements Runnable {
 			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
 			//Sven: Zum testen erstemal auskommentiert
-			if (timeout == 0 || player.getLifePoints()<=0) {
+			if (timeout == 0) {
 				running = false;
 				
 				this.cancel();
