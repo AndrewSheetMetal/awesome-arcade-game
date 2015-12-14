@@ -95,7 +95,7 @@ public class MenuScreen extends Screen {
 				
 				
 				//SVEN: GameScreen mit Level 1 inintialisieren
-				GameScreen gameScreen = new GameScreen(createBattlefields(), 1);
+				GameScreen gameScreen = new GameScreen(main.createBattlefields(), 1, main);
 				main.setScreen(gameScreen);
 				setVisible(false);
 				gameScreen.setFocusable(true);
@@ -105,21 +105,7 @@ public class MenuScreen extends Screen {
 		});
 	}
 
-	public List<Battlefield> createBattlefields() {
-		List<Battlefield> fields = new ArrayList<Battlefield>();
-		Battlefield field = new Battlefield();
-
-		field.addPoint(0, 0);
-		field.addPoint(Main.SIZE, 0);
-		field.addPoint(Main.SIZE, Main.SIZE);
-		field.addPoint(Main.SIZE / 2, Main.SIZE);
-		field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
-		field.addPoint(0, Main.SIZE / 2);
-
-		fields.add(field);
-
-		return fields;
-	}
+	
 
 	public void paintComponent(Graphics g) {
 		g.drawImage(img, 0, 0, null);

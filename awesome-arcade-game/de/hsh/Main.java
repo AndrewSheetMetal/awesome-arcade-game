@@ -38,5 +38,19 @@ public class Main extends JFrame {
 	public void setScreen(JPanel pScreen) {
 		getContentPane().add(pScreen);
 	}
+	public List<Battlefield> createBattlefields() {
+		List<Battlefield> fields = new ArrayList<Battlefield>();
+		Battlefield field = new Battlefield();
 
+		field.addPoint(0, 0);
+		field.addPoint(Main.SIZE, 0);
+		field.addPoint(Main.SIZE, Main.SIZE);
+		field.addPoint(Main.SIZE / 2, Main.SIZE);
+		field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
+		field.addPoint(0, Main.SIZE / 2);
+
+		fields.add(field);
+
+		return fields;
+	}
 }

@@ -51,6 +51,7 @@ public class GameScreen extends Screen implements Runnable {
 	private double bfWidth=0;
 	private double bfHight=0;
 	private int level;
+	private Main main;
 	
 	private boolean running;
     private double speed = 2;
@@ -62,11 +63,11 @@ public class GameScreen extends Screen implements Runnable {
 	private Timer timer = new Timer();
 	
 	
-	public GameScreen(List<Battlefield> pBattlefields, int level){
-		
+	public GameScreen(List<Battlefield> pBattlefields, int level, Main main){
+		this.main = main;
 		//SVEN: Zeit, Anzahl Gegner anhand des Levels initialisieren
 		this.level = level;
-		timeout = level*30;
+		timeout = level*40;
 		mBallList = new ArrayList<Ball>();
 		for(int i=0; i<level*2;i++){
 			mBallList.add(new Ball());
@@ -112,9 +113,6 @@ public class GameScreen extends Screen implements Runnable {
 			
 			@Override
 			public void componentShown(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-				
 			}
 			
 			@Override
@@ -294,6 +292,12 @@ public class GameScreen extends Screen implements Runnable {
 		if(totalArea <= 50000) {
 			//TODO Level beendet
 			System.out.println("Spiel gewonnen!!!");
+			GameScreen newLevel = new GameScreen(main.createBattlefields(), level+1, main);
+			main.setScreen(newLevel);
+	
+			main.remove(this);
+			newLevel.setFocusable(true);
+			newLevel.requestFocus();
 		}
 		
 		System.out.println("Gesamtfläche: "+totalArea);
