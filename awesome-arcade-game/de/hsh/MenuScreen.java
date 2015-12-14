@@ -49,7 +49,8 @@ public class MenuScreen extends Screen {
 		// menu.getContentPane().add(this);
 
 		this.img = new ImageIcon("image/ohrlaub.jpg").getImage();
-		Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+		//Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
+		Dimension size = new Dimension(Main.SIZE, Main.SIZE);
 		setPreferredSize(size);
 		setMinimumSize(size);
 		setMaximumSize(size);
@@ -90,7 +91,11 @@ public class MenuScreen extends Screen {
 			         e.printStackTrace();
 			      }
 				*/
-				GameScreen gameScreen = new GameScreen(createBattlefields());
+				
+				
+				
+				//SVEN: GameScreen mit Level 1 inintialisieren
+				GameScreen gameScreen = new GameScreen(main.createBattlefields(), 1, main);
 				main.setScreen(gameScreen);
 				setVisible(false);
 				gameScreen.setFocusable(true);
@@ -100,21 +105,7 @@ public class MenuScreen extends Screen {
 		});
 	}
 
-	public List<Battlefield> createBattlefields() {
-		List<Battlefield> fields = new ArrayList<Battlefield>();
-		Battlefield field = new Battlefield();
-
-		field.addPoint(0, 0);
-		field.addPoint(Main.SIZE, 0);
-		field.addPoint(Main.SIZE, Main.SIZE);
-		field.addPoint(Main.SIZE / 2, Main.SIZE);
-		field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
-		field.addPoint(0, Main.SIZE / 2);
-
-		fields.add(field);
-
-		return fields;
-	}
+	
 
 	public void paintComponent(Graphics g) {
 		g.drawImage(img, 0, 0, null);

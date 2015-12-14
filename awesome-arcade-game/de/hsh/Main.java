@@ -28,16 +28,29 @@ public class Main extends JFrame {
 		setMinimumSize(new Dimension(SIZE, SIZE));
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
-		this.getContentPane().add(menuScreen);
-		this.pack();
-		this.setVisible(true);
-		// In der Mitte des Spielfelds anzeigen
+		pack();
 		setLocationRelativeTo(null);
+		setVisible(true);
+		
 
 	}
 
 	public void setScreen(JPanel pScreen) {
 		getContentPane().add(pScreen);
 	}
+	public List<Battlefield> createBattlefields() {
+		List<Battlefield> fields = new ArrayList<Battlefield>();
+		Battlefield field = new Battlefield();
 
+		field.addPoint(0, 0);
+		field.addPoint(Main.SIZE, 0);
+		field.addPoint(Main.SIZE, Main.SIZE);
+		field.addPoint(Main.SIZE / 2, Main.SIZE);
+		field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
+		field.addPoint(0, Main.SIZE / 2);
+
+		fields.add(field);
+
+		return fields;
+	}
 }

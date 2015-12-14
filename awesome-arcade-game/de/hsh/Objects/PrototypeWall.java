@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Line2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +76,26 @@ public class PrototypeWall extends Unmovable {
 	public boolean intersects(Rectangle2D rect) {
 		if(lines.size() >= 2) {
 			for(int i = 0; i<lines.size()-2; i++) { // -2 da er die letzte Linie eh nicht schneiden kann und es sonst beim Abbiegen kurz zu einem fehlerhaften true kommt
+				Line2D line = new Line2D.Double(lines.get(i),lines.get(i+1));
+				if(rect.intersectsLine(line)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean intersects(Rectangle2D rect, Point2D playerCenter) {
+		if(lines.size() >= 2) {
+			if(lines.size() >= 1) {
+				Line2D lastLine = new Line2D.Double(lines.get(lines.size()-1),playerCenter);
+				if(rect.intersectsLine(lastLine)) {
+					return true;
+				}
+			}
+			
+			for(int i = 0; i<lines.size()-1; i++) { // -2 da er die letzte Linie eh nicht schneiden kann und es sonst beim Abbiegen kurz zu einem fehlerhaften true kommt
 				Line2D line = new Line2D.Double(lines.get(i),lines.get(i+1));
 				if(rect.intersectsLine(line)) {
 					return true;
