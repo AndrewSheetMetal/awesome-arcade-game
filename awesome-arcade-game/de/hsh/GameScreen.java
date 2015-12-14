@@ -287,6 +287,7 @@ public class GameScreen extends Screen implements Runnable {
 		}
 		if(totalArea <= 50000) {
 			//TODO Level beendet
+			System.out.println("Spiel gewonnen!!!");
 		}
 		
 		System.out.println("Gesamtfläche: "+totalArea);
