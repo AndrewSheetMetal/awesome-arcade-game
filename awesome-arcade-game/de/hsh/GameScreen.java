@@ -30,6 +30,7 @@ import java.util.Random;
 
 //Cocken
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -207,8 +208,16 @@ public class GameScreen extends Screen implements Runnable {
 		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
 		if(prototypeWall.intersects(player.getBounds())) {
+			JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 			lostLife();
 			//player.setColor(Color.PINK);
+		}
+		for(Ball lBall : mBallList)
+		{
+			if(prototypeWall.intersects(lBall.getBounds())) {
+				JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
+				lostLife();
+			}
 		}
 		
 		updateUI();

@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.awt.Polygon;
 
@@ -68,6 +69,11 @@ public class Ball extends Enemy {
 		return new Point((int)getPosition().getX()+getSize().width/2,
 				(int)getPosition().getY()+getSize().height/2);
 	}
+	
+	public Rectangle2D getBounds() {
+		return new Rectangle2D.Double(getPosition().getX(), getPosition().getY(), getSize().getWidth(), getSize().getHeight());
+	}
+		
 	
 	public Dimension getSize() {
 		Dimension toReturn = new Dimension();
