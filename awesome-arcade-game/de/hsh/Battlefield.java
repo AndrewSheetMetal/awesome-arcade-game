@@ -45,8 +45,8 @@ public class Battlefield extends Polygon{
 	public void draw(Graphics g) {
 		
 		g.setColor(c);
-		
 		//g.setColor(Color.BLUE);
+
 		g.fillPolygon(this);
 			
 		
