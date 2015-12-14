@@ -210,8 +210,7 @@ public class GameScreen extends Screen implements Runnable {
 					break; //Verlässt der Spieler das Battlefield, so ändert sich die Battlefield Liste und die for-each Schleife wird inkonsistent
 				}
 			}
-		}
-		
+		}		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
 		if(prototypeWall.intersects(player.getBounds())) {
 			JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
@@ -220,7 +219,7 @@ public class GameScreen extends Screen implements Runnable {
 		}
 		for(Ball lBall : mBallList)
 		{
-			if(prototypeWall.intersects(lBall.getBounds())) {
+			if(prototypeWall.intersects(lBall.getBounds(),player.getCenter())) {
 				JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 				lostLife();
 			}

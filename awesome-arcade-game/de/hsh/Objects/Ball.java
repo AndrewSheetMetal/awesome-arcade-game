@@ -71,7 +71,7 @@ public class Ball extends Enemy {
 	}
 	
 	public Rectangle2D getBounds() {
-		return new Rectangle2D.Double(getPosition().getX(), getPosition().getY(), getSize().getWidth(), getSize().getHeight());
+		return new Rectangle2D.Double(getPosition().getX(), getPosition().getY(), getSize().width, getSize().height);
 	}
 		
 	
