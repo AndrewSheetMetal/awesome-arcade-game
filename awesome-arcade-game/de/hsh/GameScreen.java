@@ -51,7 +51,10 @@ public class GameScreen extends Screen implements Runnable {
 	
 	private double scaleX  = 1;
 	private double scaleY = 1;
-	private Point2D.Double center;	
+	private Point2D.Double center;
+	private double bfWidth=0;
+	private double bfHight=0;
+	
 	private boolean running;
     private double speed = 2;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
@@ -132,6 +135,10 @@ public class GameScreen extends Screen implements Runnable {
 				scaleY = (double)getHeight()/500;
 				center.x = getWidth()/2;
 				center.y = getHeight()/2;
+				if(bfHight==0){
+					bfWidth = getBattlefieldWidth();
+					bfHight = getBattlefieldHeight();
+				}
 			}
 			@Override
 			public void componentMoved(ComponentEvent e) {
@@ -319,9 +326,10 @@ public class GameScreen extends Screen implements Runnable {
 		// TODO Spieler, Bälle und Spielfelder zentrieren
 		Graphics2D gT = (Graphics2D) g;
 
-		gT.translate(center.x-getBattlefieldWidth()/2 , center.y-getBattlefieldHeight()/2);
+		gT.translate(center.x-bfWidth/2 , center.y-bfHight/2);
 		/*if(scaleY<scaleX){
 			gT.scale(scaleY, scaleY);
+			
 		}else{
 			gT.scale(scaleX,scaleX);
 		}*/		
