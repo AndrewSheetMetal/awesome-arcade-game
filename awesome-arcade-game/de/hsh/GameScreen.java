@@ -47,7 +47,7 @@ public class GameScreen extends Screen implements Runnable {
 	private JLabel timebox = new JLabel();
 	
 	// ALEX
-	private List<Enemy> mEnemyList;
+	public static List<Enemy> EnemyList;
 	
 	private double scaleX  = 1;
 	private double scaleY = 1;
@@ -89,32 +89,19 @@ public class GameScreen extends Screen implements Runnable {
 		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 		
 		player.setSpeed(1);		
-		mEnemyList = new ArrayList<Enemy>();
+		EnemyList = new ArrayList<Enemy>();
 		// Muss sp�ter dynamisch erzeugt werden.
-		mEnemyList.add(new Ball());
-		mEnemyList.add(new Ball());
-		mEnemyList.add(new Ball());
-		mEnemyList.add(new Porcupine());
-		mEnemyList.get(0).setPosition(new Point2D.Double(100, 150));
-		mEnemyList.get(1).setPosition(new Point2D.Double(300, 150));
-		mEnemyList.get(2).setPosition(new Point2D.Double(300, 400));
-		mEnemyList.get(3).setPosition(new Point2D.Double(50, 300));
+		EnemyList.add(new Ball());
+		EnemyList.add(new Ball());
+		EnemyList.add(new Ball()); 
+		EnemyList.add(new Porcupine());
+		EnemyList.add(new Porcupine());
 		
-		for(Enemy lEnemy : mEnemyList)
+		for(Enemy lEnemy : EnemyList)
 		{
-			// ALEX: Muss sp�ter zuf�llig gew�hlt werden.
-			/* lBall.setDirection(new Point2D.Double(-0.8, -0.2));
-			if(lEnemy instanceof Ball)
-			{
-				lEnemy.setPosition(new Point2D.Double(250,150));
-			}
-			else
-			{
-				lEnemy.setPosition(new Point2D.Double(50,50));
-			} */			
-			lEnemy.setRandomDirection();
+			lEnemy.spawn(battlefields);
 			lEnemy.setSpeed((int)speed);
-		}		
+		}	
 
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
@@ -176,7 +163,7 @@ public class GameScreen extends Screen implements Runnable {
 			
 			// ALEX
 			// Pr�fen, ob ein Gegner den Rand eines Schlachtfeldes erreicht hat.
-			for(Enemy lEnemy : mEnemyList)
+			for(Enemy lEnemy : EnemyList)
 			{
 				lEnemy.handleIntersectionWithWall(battlefields, speed);
 				if(lEnemy instanceof Porcupine)
@@ -248,7 +235,7 @@ public class GameScreen extends Screen implements Runnable {
 		
 		// ALEX: Angepasst an Enemy.
 		//for(Ball lBall : mBallList)
-		for(Enemy lEnemy : mEnemyList)
+		for(Enemy lEnemy : EnemyList)
 		{
 			if(lEnemy instanceof Ball)
 			{
@@ -470,7 +457,7 @@ public class GameScreen extends Screen implements Runnable {
 	private void refreshEnemyPositions(float pDeltaTime)
 	{
 		Point2D pos, direction;
-		for(Enemy lEnemy : mEnemyList)
+		for(Enemy lEnemy : EnemyList)
 		{
 			pos = lEnemy.getPosition();
 			direction = lEnemy.getDirection();
@@ -483,7 +470,7 @@ public class GameScreen extends Screen implements Runnable {
 	// ALEX
 	private void drawEnemies(Graphics g)
 	{
-		for(Enemy lEnemy : mEnemyList)
+		for(Enemy lEnemy : EnemyList)
 		{
 			lEnemy.draw(g);
 		}

@@ -2,15 +2,19 @@ package de.hsh.Objects;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.List;
+
+import de.hsh.Battlefield;
 
 public class Porcupine extends Enemy 
 {
 	// ALEX
 	public Porcupine() 
 	{		
-		// Muss am Anfang 0 sein. Wird in GameScreen automatisch geï¿½ndert.
-		setDirection(new Point2D.Double(0, 0));		
+		super();
 		setColor(Color.BLUE);
+		// TODO: Unschön?
+		this.mType = this.getClass();
 	}
 	
 	// Lässt das Stachelschwein ggf. vom Spielfeldrand abprallen.
@@ -36,5 +40,12 @@ public class Porcupine extends Enemy
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public void spawn(List<Battlefield> pBattlefields) 
+	{
+		this.createSpawnPosition(pBattlefields, 1);
+		this.setRandomDirection();
 	}
 }
