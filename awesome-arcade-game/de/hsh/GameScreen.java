@@ -99,12 +99,22 @@ public class GameScreen extends Screen implements Runnable {
 		player.setSpeed(1);		
 		EnemyList = new ArrayList<Enemy>();
 		// Muss spï¿½ter dynamisch erzeugt werden.
+		/*Ball b1 = new Ball();
+		Ball b2 = new Ball();
+		b1.setPosition(new Point2D.Double(400,200));
+		b2.setPosition(new Point2D.Double(350,300));
+		b1.setDirection(new Point2D.Double(-1,0));
+		b2.setDirection(new Point2D.Double(-0.5,-0.5));
+		EnemyList.add(b1);
+		EnemyList.add(b2);*/
+		
+		
 		EnemyList.add(new Ball());
 		EnemyList.add(new Ball());
 		EnemyList.add(new Ball()); 
 		EnemyList.add(new Porcupine());
 		EnemyList.add(new Porcupine());
-		
+				
 		for(Enemy lEnemy : EnemyList)
 		{
 			lEnemy.spawn(battlefields);
@@ -169,7 +179,7 @@ public class GameScreen extends Screen implements Runnable {
 			Battlefield b = battlefields.get(i);
 			
 			// ALEX
-			// Prï¿½fen, ob ein Gegner den Rand eines Schlachtfeldes erreicht hat.
+			// Kollisionen der Gegner mit Wänden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
 				lEnemy.handleIntersectionWithWall(battlefields, speed);
@@ -177,6 +187,8 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					((Porcupine) lEnemy).handleIntersectionWithBorder(Main.SIZE, Main.SIZE);
 				}
+				// TODO: Überlagerung?
+				lEnemy.handleIntersectionWithFriends();
 			}
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {

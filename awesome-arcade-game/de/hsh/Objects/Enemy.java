@@ -23,6 +23,8 @@ public abstract class Enemy extends Movable
 	private int mSpeed;
 	private Point2D mDirection;
 	protected Class mType;
+	// Gibt an, ob bereits auf Kollision für diesen Zyklus überprüft wurde. 
+	private boolean mHandled;
 	
 	// Konstruktor.
 	public Enemy()
@@ -139,31 +141,9 @@ public abstract class Enemy extends Movable
 		Random lRandom = new Random();
 		// Zufälligen Winkel erzeugen.
 		double lDir = 360 * lRandom.nextDouble();
-		// Passenden Quadranten bestimmen.
-		int lQuarter = (int)(lDir / 90);
-		lDir -= lQuarter * 90;
-		lDir /= 90;
-		switch(lQuarter)
-		{
-			// Gegner bewegt sich nach oben rechts.
-			case 0:
-				setDirection(new Point2D.Double(lDir, -(1 - lDir)));
-				break;
-			// Gegner bewegt sich nach unten rechts.
-			case 1:
-				setDirection(new Point2D.Double(1 - lDir, lDir));
-				break;
-			// Gegner bewegt sich nach unten links.
-			case 2:
-				setDirection(new Point2D.Double(-lDir, 1 - lDir));
-				break;
-			// Gegner bewegt sich nach oben links.
-			case 3:
-				setDirection(new Point2D.Double(-(1 - lDir), -lDir));
-				break;
-		}
+		// Winkel in Richtung umwandeln und setzen.
+		setDirection(angleToDirection(lDir));
 	}	
-
 	
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -320,21 +300,26 @@ public abstract class Enemy extends Movable
 			lInBattlefield = false;
 			this.setPosition(getRandomSpawnPoint());
 			
-			boolean test1, test2;
+			//boolean test1, test2;
 			
-			for(Battlefield lBf : pBattlefields)
+			if(this.intersectsFriend() == null)
 			{
-				if(this.insideBattlefield(lBf))
+				for(Battlefield lBf : pBattlefields)
 				{
-					lInBattlefield = true;
+					if(this.insideBattlefield(lBf))
+					{
+						lInBattlefield = true;
+					}
+					if(this.hitsBattlefieldBorder(lBf))
+					{
+						lCorrectSpawn = false;
+						break;
+					}
 				}
-				test1 = this.hitsBattlefieldBorder(lBf);
-				test2 = false;//this.intersectsFriend(); 
-				if(test1 || test2)
-				{
-					lCorrectSpawn = false;
-					break;
-				}
+			}
+			else
+			{
+				lCorrectSpawn = false;
 			}
 		}while(!lCorrectSpawn || (lInBattlefield != lInsideArea));
 	}
@@ -355,11 +340,11 @@ public abstract class Enemy extends Movable
 		return lRandom.nextDouble() * (Main.SIZE - lDiff);
 	}
 
-	// Liefert true, wenn der Gegner seinesgleichen trifft.
-	protected boolean intersectsFriend() 
+	// Liefert ggf. einen Gegner, der vom aktuellen Gegner berührt wird.
+	protected Enemy intersectsFriend() 
 	{
-		Ellipse2D lThisObject = new Ellipse2D.Double(this.getSize().getWidth(), this.getSize().getHeight(),
-				this.getPosition().getX(), this.getPosition().getY());
+		Ellipse2D lThisObject = new Ellipse2D.Double(this.getPosition().getX(), this.getPosition().getY(),
+				this.getSize().getWidth(), this.getSize().getHeight());
 		
 		for(Enemy lEnemy : GameScreen.EnemyList)
 		{
@@ -368,9 +353,108 @@ public abstract class Enemy extends Movable
 					&& (lThisObject.intersects(lEnemy.getPosition().getX(), lEnemy.getPosition().getY(), 
 					lEnemy.getSize().getWidth(), lEnemy.getSize().getHeight())))
 			{
-				return true;
+				return lEnemy;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	public void setHandled(boolean pHandled)
+	{
+		mHandled = pHandled;
+	}
+	
+	public boolean getHandled()
+	{
+		return mHandled;
+	}
+	
+	// Prüft, 
+	public void handleIntersectionWithFriends()
+	{
+		// Alle Handles auf false setzen.
+		for(Enemy lEnemy : GameScreen.EnemyList)
+		{
+			lEnemy.setHandled(false);
+		}
+		// Auf Kollisionen überprüfen.
+		Enemy lEnemy = this.intersectsFriend();
+		if((lEnemy != null) && (!this.getHandled() || !lEnemy.getHandled()))
+		{
+			double lX, lY, lAngle;
+			lX = Math.abs(lEnemy.getPosition().getX() - this.getPosition().getX());
+			lY = Math.abs(lEnemy.getPosition().getY() - this.getPosition().getY());
+			lAngle = getAngle(lX, lY);
+			// Zwischen 0° und 180°.
+			if(lX > 0)
+			{
+				// Zwischen 0° und 90°.
+				if(lY < 0)
+				{
+					lAngle = 90 - lAngle;
+				}
+				// Zwischen 90° und 180°.
+				else
+				{
+					lAngle += 90;
+				}
+			}
+			// Zwischen 180° und 360°
+			else
+			{
+				// Zwischen 180° und 270°.
+				if(lY > 0)
+				{
+					lAngle = 270 - lAngle;
+				}
+				// Zwischen 270° und 360°.
+				else
+				{
+					lAngle += 270;
+				}
+			}
+			// Diesen Gegner auf aktuellen Winkel setzen.
+			this.setDirection(angleToDirection(lAngle));
+			// Anderen Gegner auf gegenüberliegenden Winkel setzen.
+			lAngle += 180;
+			lAngle -= (int)(lAngle / 360);
+			lEnemy.setDirection(angleToDirection(lAngle));
+			
+			this.setHandled(true);
+			lEnemy.setHandled(true);
+		}
+	}
+	
+	// Berechnet den Winkel zwischen Gegen- und Ankathete.
+	private double getAngle(double lAn, double lGeg)
+	{
+		return (Math.atan(lGeg / lAn) * 360) / (2*Math.PI);
+	}
+		
+	// Wandelt einen übergebenen Winkel in einen Punkt-Richtung um.
+	private Point2D angleToDirection(double pAngle)
+	{
+		// Passenden Quadranten bestimmen.
+		int lQuarter = (int)(pAngle / 90);
+		pAngle -= lQuarter * 90;
+		pAngle /= 90;
+		switch(lQuarter)
+		{
+			// Bewegung nach oben rechts.
+			case 0:
+				return new Point2D.Double(pAngle, -(1 - pAngle));
+			// Bewegung nach unten rechts.
+			case 1:
+				return new Point2D.Double(1 - pAngle, pAngle);
+			// Bewegung nach unten links.
+			case 2:
+				return new Point2D.Double(-pAngle, 1 - pAngle);
+			// Bewegung nach oben links.
+			case 3:
+				return new Point2D.Double(-(1 - pAngle), -pAngle);
+			// Sollte nie erreicht werden.
+			default:
+				return new Point2D.Double(pAngle, -(1 - pAngle));
+		}
 	}
 }
