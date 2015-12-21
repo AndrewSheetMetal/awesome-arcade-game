@@ -52,7 +52,6 @@ public class GameScreen extends Screen implements Runnable {
 	
 	private double scaleX  = 1;
 	private double scaleY = 1;
-	private List<Ball> mBallList;
 	private Point2D.Double center;
 	private double bfWidth=0;
 	private double bfHight=0;
@@ -75,18 +74,6 @@ public class GameScreen extends Screen implements Runnable {
 		//SVEN: Zeit, Anzahl Gegner anhand des Levels initialisieren
 		this.level = level;
 		timeout = level*40;
-		mBallList = new ArrayList<Ball>();
-		for(int i=0; i<level*2;i++){
-			mBallList.add(new Ball());
-		}
-		for(Ball lBall : mBallList)
-		{
-			//lBall.setDirection(new Point2D.Double(-0.8, -0.2));
-			// ALEX: Muss sp�ter zuf�llig gew�hlt werden.
-			lBall.setPosition(new Point2D.Double(250,150));
-			lBall.setRandomDirection();
-			lBall.setSpeed(1);
-		}	
 		
 		
 		
@@ -221,11 +208,15 @@ public class GameScreen extends Screen implements Runnable {
 			lostLife();
 			//player.setColor(Color.PINK);
 		}
-		for(Ball lBall : mBallList)
+		// ALEX: An Enemy angepasst.
+		for(Enemy lEnemy : EnemyList)
 		{
-			if(prototypeWall.intersects(lBall.getBounds(),player.getCenter())) {
-				JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
-				lostLife();
+			if(lEnemy instanceof Ball)
+			{
+				if(prototypeWall.intersects(((Ball)lEnemy).getBounds(),player.getCenter())) {
+					JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
+					lostLife();
+				}
 			}
 		}
 		
