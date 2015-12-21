@@ -218,10 +218,12 @@ public class GameScreen extends Screen implements Runnable {
 		for(Ball lBall : mBallList)
 		{
 			if(prototypeWall.intersects(lBall.getBounds(),player.getCenter())) {
-				JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
-				lostLife();
+				//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
+				//lostLife();
 			}
 		}
+		
+		prototypeWall.update(pDeltaTime);
 		
 		updateUI();
 	}
