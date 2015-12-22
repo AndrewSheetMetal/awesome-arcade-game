@@ -54,7 +54,7 @@ public class GameScreen extends Screen implements Runnable {
 	
 	// ALEX
 	public static List<Enemy> EnemyList;
-	private Polygon bg = new Polygon();
+	private Polygon gamearea = new Polygon();
 	
 	private int level;
 	private Main main;
@@ -88,6 +88,9 @@ public class GameScreen extends Screen implements Runnable {
 			e.spawn(battlefields);
 			e.setSpeed((int)speed);
 		}
+		
+		
+		
 		//SVEN: Größe des Felds abspeichern
 		bfInitialSize.x = battlefields.get(0).getBounds().getWidth();
 		bfInitialSize.y = battlefields.get(0).getBounds().getHeight();
@@ -140,9 +143,15 @@ public class GameScreen extends Screen implements Runnable {
 			
 			@Override
 			public void componentResized(ComponentEvent e) {
+				//bg 
 				center.x = getWidth()/2;
 				center.y = getHeight()/2;
-				System.out.println(center);
+				gamearea.reset();
+				gamearea.addPoint((int)center.x-((Main.MARGIN+Main.SIZE)/2), (int)center.y-((Main.MARGIN+Main.SIZE)/2));
+				gamearea.addPoint((int)center.x+((Main.MARGIN+Main.SIZE)/2), (int)center.y-((Main.MARGIN+Main.SIZE)/2));
+				gamearea.addPoint((int)center.x+((Main.MARGIN+Main.SIZE)/2), (int)center.y+((Main.MARGIN+Main.SIZE)/2));
+				gamearea.addPoint((int)center.x-((Main.MARGIN+Main.SIZE)/2), (int)center.y+((Main.MARGIN+Main.SIZE)/2));
+				
 			}
 			
 			@Override
@@ -384,6 +393,7 @@ public class GameScreen extends Screen implements Runnable {
 		// Verhältnis wird beibehalten
 		// TODO Spieler, Bälle und Spielfelder zentrieren
 		Graphics2D gT = (Graphics2D) g;
+
 		
 		
 
@@ -391,7 +401,11 @@ public class GameScreen extends Screen implements Runnable {
 		
 		
 		if(center.x != 0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
-
+		g.setColor(Color.YELLOW);
+		g.fillPolygon(gamearea);
+		if(center.x !=0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
+		
+		//(getWidth()-500)/2, (getHeight()-500)/2
 	
 		
 		this.setBackground(Color.BLACK);

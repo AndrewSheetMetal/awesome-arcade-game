@@ -5,16 +5,24 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.geom.*;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import de.hsh.GameScreen;
 
 public class Player extends Movable {
 	private int lifePoints;
 	private Color color;
+	private BufferedImage img;
 	
 	// ALEX
 	private int mSpeed;
@@ -23,6 +31,12 @@ public class Player extends Movable {
 	public Player() {
 		setColor(Color.RED);
 		lifePoints = 3;
+		try {
+			img=ImageIO.read(new File("image/stand.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setColor(Color c) {
@@ -62,9 +76,8 @@ public class Player extends Movable {
 		//System.out.println("Position: "+pos);
 		
 		this.setPosition(pos);
-		
 		g2d.draw(circle2D);
-		
+		g.drawImage(img, (int)pos.getX()+img.getWidth()/2,(int)pos.getY()+img.getHeight()/2, null);
 
 	}
 	
