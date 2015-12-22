@@ -75,25 +75,6 @@ public class MenuScreen extends Screen {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				//Beim Buttonklick sound abspielen
-				
-				/*try {
-			         URL url = this.getClass().getClassLoader().getResource("sound/doot.wav");
-			         AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-			         Clip clip = AudioSystem.getClip();
-			         clip.open(audioIn);
-			         clip.start();
-			      } catch (UnsupportedAudioFileException e) {
-			         e.printStackTrace();
-			      } catch (IOException e) {
-			         e.printStackTrace();
-			      } catch (LineUnavailableException e) {
-			         e.printStackTrace();
-			      }
-				*/
-				
-				
-				
 				//SVEN: GameScreen mit Level 1 initialisieren
 				GameScreen gameScreen = new GameScreen(main.createBattlefields(), 1, main);
 				main.setScreen(gameScreen);
@@ -103,6 +84,22 @@ public class MenuScreen extends Screen {
 
 			}
 		});
+		
+		highscoreBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				HighscoreScreen highscoreScreen = new HighscoreScreen(main);
+			
+				main.setScreen(highscoreScreen);
+				setVisible(false);
+				highscoreScreen.setFocusable(true);
+				highscoreScreen.requestFocus();
+				
+			}
+			
+		});
+		
+		
 	}
 
 	
