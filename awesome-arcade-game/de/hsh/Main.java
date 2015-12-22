@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final int SIZE = 500;
+	public static final int MARGIN = 200;
 	private MenuScreen menuScreen;
 
 	public static void main(String[] args) {
@@ -25,7 +26,7 @@ public class Main extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		// setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setMinimumSize(new Dimension(SIZE, SIZE));
+		setMinimumSize(new Dimension(SIZE+MARGIN, SIZE+MARGIN));
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
 		pack();

@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -49,15 +50,12 @@ public class GameScreen extends Screen implements Runnable {
 	
 	// ALEX
 	public static List<Enemy> EnemyList;
-	
-	private double scaleX  = 1;
-	private double scaleY = 1;
-	private Point2D.Double center;
-	private double bfWidth=0;
-	private double bfHight=0;
+	private Polygon bg = new Polygon();
 	
 	private int level;
 	private Main main;
+	private Point2D.Double center = new Point2D.Double(0, 0);
+	private Point2D.Double bfInitialSize = new Point2D.Double();
 	
 	private boolean running;
     private double speed = 2;
@@ -73,14 +71,25 @@ public class GameScreen extends Screen implements Runnable {
 		this.main = main;
 		//SVEN: Zeit, Anzahl Gegner anhand des Levels initialisieren
 		this.level = level;
-		timeout = level*40;
-		
-		
-		
+		timeout = 60+level*10;
 		battlefields = pBattlefields;
+		EnemyList = new ArrayList<Enemy>();
+		for(int i=0; i< level;i++){
+			EnemyList.add(new Ball());
+			if(i%2 == 0){
+				EnemyList.add(new Porcupine());
+			}
+		}
+		for(Enemy e : EnemyList){
+			e.spawn(battlefields);
+			e.setSpeed((int)speed);
+		}
+		//SVEN: Größe des Felds abspeichern
+		bfInitialSize.x = battlefields.get(0).getBounds().getWidth();
+		bfInitialSize.y = battlefields.get(0).getBounds().getHeight();
+		
 		player = new de.hsh.Objects.Player();
 		prototypeWall = new PrototypeWall();
-		center = new Point2D.Double();
 		// Goldbeck
 		this.setLayout(new BorderLayout());
 		this.add(timebox, BorderLayout.PAGE_END);
@@ -97,7 +106,7 @@ public class GameScreen extends Screen implements Runnable {
 		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 		
 		player.setSpeed(1);		
-		EnemyList = new ArrayList<Enemy>();
+		
 		// Muss sp�ter dynamisch erzeugt werden.
 		/*Ball b1 = new Ball();
 		Ball b2 = new Ball();
@@ -109,17 +118,7 @@ public class GameScreen extends Screen implements Runnable {
 		EnemyList.add(b2);*/
 		
 		
-		EnemyList.add(new Ball());
-		EnemyList.add(new Ball());
-		EnemyList.add(new Ball()); 
-		EnemyList.add(new Porcupine());
-		EnemyList.add(new Porcupine());
-				
-		for(Enemy lEnemy : EnemyList)
-		{
-			lEnemy.spawn(battlefields);
-			lEnemy.setSpeed((int)speed);
-		}	
+			
 
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
@@ -129,19 +128,17 @@ public class GameScreen extends Screen implements Runnable {
 			
 			@Override
 			public void componentShown(ComponentEvent e) {
+				
+				
 			}
 			
 			@Override
 			public void componentResized(ComponentEvent e) {
-				scaleX = (double)getWidth()/500;
-				scaleY = (double)getHeight()/500;
 				center.x = getWidth()/2;
 				center.y = getHeight()/2;
-				if(bfHight==0){
-					bfWidth = getBattlefieldWidth();
-					bfHight = getBattlefieldHeight();
-				}
-			}	
+				System.out.println(center);
+			}
+			
 			@Override
 			public void componentMoved(ComponentEvent e) {
 				// TODO Auto-generated method stub
@@ -179,7 +176,7 @@ public class GameScreen extends Screen implements Runnable {
 			Battlefield b = battlefields.get(i);
 			
 			// ALEX
-			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
+			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
 				lEnemy.handleIntersectionWithWall(battlefields, speed);
@@ -187,7 +184,7 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					((Porcupine) lEnemy).handleIntersectionWithBorder(Main.SIZE, Main.SIZE);
 				}
-				// TODO: �berlagerung?
+				// TODO: �berlagerung?
 				lEnemy.handleIntersectionWithFriends();
 			}
 			
@@ -337,7 +334,7 @@ public class GameScreen extends Screen implements Runnable {
 	public void lostLife() {
 		player.setLifePoints(player.getLifePoints()-1);
 		prototypeWall.clear();
-		player.setPosition(new Point2D.Double(50,50));
+		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
 	}
 	
 	@Override
@@ -350,17 +347,12 @@ public class GameScreen extends Screen implements Runnable {
 		// Verhältnis wird beibehalten
 		// TODO Spieler, Bälle und Spielfelder zentrieren
 		Graphics2D gT = (Graphics2D) g;
+		if(center.x != 0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
 
-		gT.translate(center.x-bfWidth/2 , center.y-bfHight/2);
-		/*if(scaleY<scaleX){
-			gT.scale(scaleY, scaleY);
-			
-		}else{
-			gT.scale(scaleX,scaleX);
-		}*/		
 	
 		
-		this.setBackground(Color.YELLOW);
+		this.setBackground(Color.BLACK);
+		
 		for(Battlefield b : battlefields) {
 			b.draw(g);	
 		}
@@ -403,7 +395,6 @@ public class GameScreen extends Screen implements Runnable {
     			player.setDirection(new Point2D.Double(-1,0));
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_C){
-    			System.out.println("ScaleX: "+scaleX+"\nScaleY: "+scaleY);
     			System.out.println("Breite: "+getWidth()+"\nHöhe: "+getHeight());
     			System.out.println("Spielerleben:"+player.getLifePoints());
     			
@@ -468,30 +459,6 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}
 	}
-	private double getBattlefieldWidth(){
-		double w;
-		w = battlefields.get(0).getBounds2D().getWidth();
-		
-		for(int i=1; i<battlefields.size();i++){
-			if(battlefields.get(i).getBounds2D().getWidth()>w){
-				w = battlefields.get(i).getBounds2D().getWidth();
-			}
-		}
-		return w*scaleX;
-	}
-	private double getBattlefieldHeight(){
-		double h;
-		
-		h = battlefields.get(0).getBounds2D().getHeight();
-		
-		for(int i=1; i<battlefields.size();i++){
-			if(battlefields.get(i).getBounds2D().getHeight()>h){
-				h = battlefields.get(i).getBounds2D().getHeight();
-			}
-		}
-		return h*scaleY;
-	}
-	
 	// ALEX
 	// Gegnerpositionen aktualisieren.
 	private void refreshEnemyPositions(float pDeltaTime)
