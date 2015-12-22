@@ -127,12 +127,10 @@ public class GameScreen extends Screen implements Runnable {
 		EnemyList.add(b2);*/
 		
 		
-			
-
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
-		new Thread(this).start();
-		running = true;
+		
+		
 		addComponentListener(new ComponentListener() {
 			
 			@Override
@@ -167,6 +165,9 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		});
 		
+		
+		running = true;
+		new Thread(this).start();
 		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
@@ -254,7 +255,7 @@ public class GameScreen extends Screen implements Runnable {
 			
 		}
 		
-		updateUI();
+		//updateUI();
 	}
 	
 	public void enterBattlefield(Battlefield b) {
@@ -335,7 +336,7 @@ public class GameScreen extends Screen implements Runnable {
 			
 			double totalArea = getTotalArea();
 			restflaeche = totalArea;
-			if(totalArea <= 150000) {
+			if(totalArea <= zielflaeche) {
 				//TODO Level beendet
 				System.out.println("Spiel gewonnen!!!");
 				
@@ -394,15 +395,16 @@ public class GameScreen extends Screen implements Runnable {
 		// TODO Spieler, Bälle und Spielfelder zentrieren
 		Graphics2D gT = (Graphics2D) g;
 
-		
-		
 
-		drawHUD(gT);
-		
 		
 		//if(center.x != 0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
 		g.setColor(Color.YELLOW);
 		g.fillPolygon(gamearea);
+		
+		drawHUD(gT);
+		
+		
+		//gT.translate((getWidth()-700)/2, (getHeight()-700)/2);
 		if(center.x !=0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
 		
 		//(getWidth()-500)/2, (getHeight()-500)/2
@@ -548,8 +550,13 @@ public class GameScreen extends Screen implements Runnable {
 			lastTime = now;			
 			
 			if(delta >= 1) {
-				update(delta);
+				//if(running) {
+					update(delta);
+
+				//}
+				updateUI();
 				delta = 0;
+
 			}
 		}
 	}
