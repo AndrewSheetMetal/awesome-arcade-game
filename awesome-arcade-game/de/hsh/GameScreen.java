@@ -400,7 +400,7 @@ public class GameScreen extends Screen implements Runnable {
 		drawHUD(gT);
 		
 		
-		if(center.x != 0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
+		//if(center.x != 0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
 		g.setColor(Color.YELLOW);
 		g.fillPolygon(gamearea);
 		if(center.x !=0)gT.translate(center.x-bfInitialSize.x/2 , center.y-bfInitialSize.y/2);
