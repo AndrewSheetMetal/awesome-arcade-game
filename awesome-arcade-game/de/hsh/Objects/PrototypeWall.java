@@ -16,12 +16,42 @@ import java.util.List;
 public class PrototypeWall extends Unmovable {
 	private ArrayList<Point2D> lines = new ArrayList<Point2D>();
 	
-	private ArrayList<Point2D> collisionPoints = new ArrayList<Point2D>(); //Der Punkt, an dem die PrototypeWall von einem Ball berührt wurde. Das muss und sollte nicht passieren
-	private ArrayList<Integer> collisionIndexs = new ArrayList<Integer>(); //Index des Anfangspunkt der Linie, die vom Ball berührt wurde
-	private ArrayList<Float>  collisionTimes = new ArrayList<Float>(); //Speichert die Zeiten seit dem die Kollisionen passiert sind
-	//private double collisionDistanceToStart = 0;
-	//private double collisionDistanceToEnd = 0;
 	
+	private class Collision {
+		//Public, da die Klasse nur der internen Strukturierung dient
+		public Point2D collisionPoint; //Der Punkt, an dem die PrototypeWall von einem Ball berührt wurde
+		public int index; //Der Index des Anfangspunkts der Linie, die vom Ball berührt wurde.
+		public float radius; //Der Radius des Kreises, der sich um den Kollisionspunkt ausbreitet
+		
+		Collision(int index, Point2D collPoint) {
+			this.index = index;
+			this.collisionPoint = collPoint;
+			radius = 0.0f;
+		}
+		
+		public void update(float deltaTime) {
+			radius += deltaTime;
+		}
+		
+		public void draw(Graphics2D g) {
+			//Ein kleiner Kreis
+			g.drawOval((int)collisionPoint.getX()-3, (int)collisionPoint.getY()-3, 6, 6);
+			
+			
+			g.draw(getCollisionImpact());
+			//Ein großer Kreis, der sich vergrößert
+			g.drawOval((int)(collisionPoint.getX()-radius), (int)(collisionPoint.getY()-radius), (int)radius*2, (int)radius*2);
+		}
+		
+		//Liefert einen Umkreis um den Collisionpoint, der immer größer wird
+		public Ellipse2D getCollisionImpact() {
+			Ellipse2D e = new Ellipse2D.Double(collisionPoint.getX()-radius, collisionPoint.getY()-radius, radius*2, radius*2);
+			return e;
+		}
+		
+	}
+	
+	private ArrayList<Collision> collisions = new ArrayList<Collision>();	
 	
 	public PrototypeWall() {
 		lines = new ArrayList<Point2D>();
@@ -30,34 +60,19 @@ public class PrototypeWall extends Unmovable {
 	public void draw(Graphics g, Point2D p) { //Der Punkt p ist der Teil der prototypeWall, der sich noch ändert. Also die aktuelle Position des Player
 		Graphics2D g2d = (Graphics2D) g;
 		
-		/* Point of Collision zeichnen, falls er existiert
+		/* Point of Collision zeichnen, falls er existierts
 		 * */
+		Area outside = new Area(new Rectangle2D.Double(0, 0, 500, 500));
 		g2d.setColor(Color.MAGENTA);
-		for(int i=0; i<collisionPoints.size(); i++) {
+		for(int i=0; i<collisions.size(); i++) {
+			collisions.get(i).draw(g2d);
 			
-			float radius = collisionTimes.get(i);
-			
-			g2d.drawOval((int)(collisionPoints.get(i).getX()-radius), (int)(collisionPoints.get(i).getY()-radius), (int)radius*2, (int)radius*2);
-			
-		}
-		
-		for(Point2D collPoint : collisionPoints) {
-			g2d.setColor(Color.MAGENTA);
-			
-			g2d.drawOval((int)collPoint.getX()-3, (int)collPoint.getY()-3, 6, 6);
-			
-		}
-		
-		if(collisionPoints.size() >= 1) {
-			Ellipse2D e = new Ellipse2D.Double(collisionPoints.get(0).getX()-collisionTimes.get(0), collisionPoints.get(0).getY()-collisionTimes.get(0), collisionTimes.get(0)*2, collisionTimes.get(0)*2);
-			Area inside = new Area(e);
-			
-			
-			Area outside = new Area(new Rectangle2D.Double(0, 0, 500, 500));
+			Area inside = new Area(collisions.get(i).getCollisionImpact());
 			outside.subtract(inside);
-			
-			g2d.setClip(outside);
 		}
+		g2d.setClip(outside);
+		
+		
 		float dash[] = { 10.0f };
 		g2d.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
 		        BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
@@ -94,9 +109,7 @@ public class PrototypeWall extends Unmovable {
 		lines.clear();
 		
 		//Auch die Kollisionspunkte müssen zurückgesetzt werden
-		collisionPoints.clear();
-		collisionIndexs.clear();
-		collisionTimes.clear();
+		collisions.clear();
 	}
 	
 	public Point2D getEnd() {
@@ -132,14 +145,12 @@ public class PrototypeWall extends Unmovable {
 	 * Es wird nur etwas kalkuliert, wenn die PrototypeWall zuvor noch nie berührt wurde
 	 * */
 	public boolean intersects(Rectangle2D rect, Point2D playerCenter) {
-		if(lines.size() >= 1 && collisionPoints.size() == 0) {
+		if(lines.size() >= 1 && collisions.size() == 0) {
 			
 			Line2D lastLine = new Line2D.Double(lines.get(lines.size()-1),playerCenter);
 			if(rect.intersectsLine(lastLine)) {
-				
-				collisionIndexs.add(lines.size()-1); //Merken, an welcher Stelle die PrototypeWall berührt wurde
-				collisionPoints.add(getPointOfCollision(rect,lastLine));
-				collisionTimes.add(0.0f);
+				Collision e = new Collision(lines.size()-1,getPointOfCollision(rect,lastLine));
+				collisions.add(e);
 				return true;
 			}
 			
@@ -147,9 +158,8 @@ public class PrototypeWall extends Unmovable {
 				for(int i = 0; i<lines.size()-1; i++) {
 					Line2D line = new Line2D.Double(lines.get(i),lines.get(i+1));
 					if(rect.intersectsLine(line)) {
-						collisionIndexs.add(i); //Merken, an welcher Stelle die PrototypeWall berührt wurde
-						collisionPoints.add(getPointOfCollision(rect,line)); 
-						collisionTimes.add(0.0f);
+						Collision e = new Collision(i,getPointOfCollision(rect,line));
+						collisions.add(e);
 						return true;
 					}
 				}
@@ -158,22 +168,6 @@ public class PrototypeWall extends Unmovable {
 		
 		return false;
 	}
-	
-	//Berechnet die Distanz des Collision Points zum Start der PrototypeWall.
-	//Verfolgt dabei den Verlauf der PrototypeWall, also nicht Fluglinie
-	/*private double calculateCollisionDistanceToStart() {
-		if(collisionIndex < 0) {
-			throw new IllegalArgumentException("Der CollisionIndex wurde noch nicht gesetzt");
-		}
-	}*/
-	
-	//Berechnet die Distanz des Collision Points zum Start der PrototypeWall.
-		//Verfolgt dabei den Verlauf der PrototypeWall, also nicht Fluglinie
-	/*private double calculateCollisionDistanceToEnd() {
-		if(collisionIndex < 0) {
-			throw new IllegalArgumentException("Der CollisionIndex wurde noch nicht gesetzt");
-		}
-	}*/
 	
 	private Point2D getPointOfCollision(Rectangle2D rect, Line2D line) {
 		if(Math.abs(line.getX1() - line.getX2()) < Math.abs(line.getY1() -line.getY2())) {
@@ -192,32 +186,25 @@ public class PrototypeWall extends Unmovable {
 		}
 	}
 	
+	/*
+	 * Gibt eine ArrayList mit der umgekehrten Reihenfolge der Punkt aus
+	 * */
 	public ArrayList<Point2D> reverse() {
 		ArrayList<Point2D> toReturn = new ArrayList<Point2D>();
 		for(Point2D point : lines) {
 			toReturn.add(0, point);
-			
-			//System.out.println("Punkt: "+point);
-			
 		}
-		//lines = toReturn;
-		
-		/*for(Point2D point : lines) {
-			
-			System.out.println("Punkt: "+point);
-			
-		}*/
 		return toReturn;
 	}
 
+	
+	/*
+	 * Aktualisiert die Zeiten/Radien der CollisionPoints
+	 * */
 	public void update(float pDeltaTime) {
-		for(int i = 0; i<collisionTimes.size(); i++) 
+		for(int i = 0; i<collisions.size(); i++) 
 		{
-			Float d = collisionTimes.get(i);
-			
-			Float f = new Float(d+pDeltaTime);
-			
-			collisionTimes.set(i,f);
+			collisions.get(i).update(pDeltaTime);
 		}
 		// TODO Auto-generated method stub
 		

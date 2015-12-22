@@ -154,11 +154,9 @@ public class GameScreen extends Screen implements Runnable {
 		}
 		time += pDeltaTime;
 		
-		Point2D pos = player.getPosition();
-		Point2D direction = player.getDirection();
-		pos.setLocation(pos.getX() + speed*(direction.getX()*pDeltaTime), pos.getY() + speed*(direction.getY()*pDeltaTime));
-		player.setPosition(pos);
-				
+		//Andreas
+		player.updatePosition(speed,pDeltaTime);
+		
 		// ALEX
 		refreshEnemyPositions(pDeltaTime);
 		

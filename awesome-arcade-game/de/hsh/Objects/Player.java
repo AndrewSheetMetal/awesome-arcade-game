@@ -113,4 +113,11 @@ public class Player extends Movable {
 	public int getLifePoints(){
 		return lifePoints;
 	}
+
+	public void updatePosition(double speed, float pDeltaTime) {
+		Point2D pos = getPosition();
+		//Point2D direction = getDirection();
+		pos.setLocation(pos.getX() + speed*(getDirection().getX()*pDeltaTime), pos.getY() + speed*(getDirection().getY()*pDeltaTime));
+		setPosition(pos);
+	}
 }
