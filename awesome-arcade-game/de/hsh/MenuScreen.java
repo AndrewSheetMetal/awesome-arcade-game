@@ -94,7 +94,7 @@ public class MenuScreen extends Screen {
 				
 				
 				
-				//SVEN: GameScreen mit Level 1 inintialisieren
+				//SVEN: GameScreen mit Level 1 initialisieren
 				GameScreen gameScreen = new GameScreen(main.createBattlefields(), 1, main);
 				main.setScreen(gameScreen);
 				setVisible(false);
