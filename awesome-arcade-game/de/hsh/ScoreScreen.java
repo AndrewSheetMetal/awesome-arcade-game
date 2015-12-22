@@ -77,7 +77,9 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		 * Nach einer kurzen Wartezeit wird nun das nächste Level gestartet
 		 * */
 		
-		main.remove(this);
+		//main.remove(this);
+		main.getContentPane().removeAll();
+		
 		
 		GameScreen newLevel = new GameScreen(main.createBattlefields(), level+1, main);
 		main.setScreen(newLevel);
@@ -90,8 +92,8 @@ public class ScoreScreen  extends Screen implements Runnable  {
 	}
 	
 	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		
+		//super.paintComponent(g);
+		g.clearRect(0, 0, 700, 500);
 		
 		g.translate((getWidth()-700)/2, (getHeight()-700)/2);
 		
