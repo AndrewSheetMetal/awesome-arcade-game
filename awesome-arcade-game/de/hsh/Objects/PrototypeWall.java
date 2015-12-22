@@ -202,11 +202,30 @@ public class PrototypeWall extends Unmovable {
 	 * Aktualisiert die Zeiten/Radien der CollisionPoints
 	 * */
 	public void update(float pDeltaTime) {
+		pDeltaTime *= 2f;
+		
 		for(int i = 0; i<collisions.size(); i++) 
 		{
 			collisions.get(i).update(pDeltaTime);
 		}
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean isValid() {
+		return collisions.size()==0;
+	}
+
+	public boolean isPlayerCatched(Player player) {
+		for(int i=0; i<collisions.size(); i++) {
+			if(collisions.get(i).collisionPoint.distance(player.getPosition()) < collisions.get(i).radius + player.getBounds().getWidth()) {
+				return true;
+				
+			}
+			
+		}
+		
+		
+		return false;
 	}
 }

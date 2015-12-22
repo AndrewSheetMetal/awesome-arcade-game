@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -177,7 +178,7 @@ public class GameScreen extends Screen implements Runnable {
 			Battlefield b = battlefields.get(i);
 			
 			// ALEX
-			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
+			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
 				lEnemy.handleIntersectionWithWall(battlefields, speed);
@@ -185,7 +186,7 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					((Porcupine) lEnemy).handleIntersectionWithBorder(Main.SIZE, Main.SIZE);
 				}
-				// TODO: �berlagerung?
+				// TODO: �berlagerung?
 				lEnemy.handleIntersectionWithFriends();
 			}
 			
@@ -232,6 +233,16 @@ public class GameScreen extends Screen implements Runnable {
 		
 		prototypeWall.update(pDeltaTime);
 		
+		/*Wurde die PrototypeWall von einem Ball berührt, so bilden sich Kreise um den
+		Berührungspunkt. Ist der Player zu langsam, so fängt ihn der Kreis ein und er verliert ein Leben
+		*/
+		if(!prototypeWall.isValid()) {
+			if(prototypeWall.isPlayerCatched(player)) {
+				lostLife();
+			}
+			
+		}
+		
 		updateUI();
 	}
 	
@@ -257,72 +268,79 @@ public class GameScreen extends Screen implements Runnable {
 
 		//b.splitByPrototypeWall(prototypeWall,battlefields);
 		
-		BattlefieldSeperator bs = new BattlefieldSeperator(b);
-		bs.calculateBattlefieldHalfs(prototypeWall);
 		
-		boolean fillb1 = true;
-		boolean fillb2 = true;
+		//Nur wenn die prototypeWall nicht von Bällen berührt wurde, darf das Battlefield verkleinert werden
+		if(prototypeWall.isValid()) {
 		
-		// ALEX: Angepasst an Enemy.
-		//for(Ball lBall : mBallList)
-		for(Enemy lEnemy : EnemyList)
-		{
-			if(lEnemy instanceof Ball)
+			
+			BattlefieldSeperator bs = new BattlefieldSeperator(b);
+			bs.calculateBattlefieldHalfs(prototypeWall);
+			
+			boolean fillb1 = true;
+			boolean fillb2 = true;
+			
+			// ALEX: Angepasst an Enemy.
+			//for(Ball lBall : mBallList)
+			for(Enemy lEnemy : EnemyList)
 			{
-				if(bs.getB1().contains(lEnemy.getPosition())) {
-					fillb1 = false;
+				if(lEnemy instanceof Ball)
+				{
+					if(bs.getB1().contains(lEnemy.getPosition())) {
+						fillb1 = false;
+					}
+					
+					if(bs.getB2().contains(lEnemy.getPosition())) {
+						fillb2 = false;
+					}
 				}
-				
-				if(bs.getB2().contains(lEnemy.getPosition())) {
-					fillb2 = false;
-				}
-			}
-		}	
-
-		
-		battlefields.remove(battlefields.indexOf(b));
-		
-		if(fillb1==false && fillb2==false) {
-			bs.calculateSplittedBattlefields();
-
-			battlefields.add(bs.getB1());
-			battlefields.add(bs.getB2());
-			
-			//System.out.println("Battlefield 1: "+bs.getB1().getArea());
-			//System.out.println("Battlefield 2: "+bs.getB2().getArea());
-			
-		}
-		else if(fillb1 == true) {
-			battlefields.add(bs.getB2());
-			
-			//System.out.println("Battlefield: "+bs.getB2().getArea());
-		}
-		else if(fillb2 == true) {
-			battlefields.add(bs.getB1());
-			
-			//System.out.println("Battlefield: "+bs.getB1().getArea());
-		}
-		else {
-			System.out.println("Error filling Battlefields");
-		}
-		
-		double totalArea = 0;
-		for(Battlefield bat : battlefields) {
-			totalArea += Math.abs(bat.getArea());
-			//System.out.println("Fläche: "+Math.abs(polygonArea(b)));
-		}
-		if(totalArea <= 50000) {
-			//TODO Level beendet
-			System.out.println("Spiel gewonnen!!!");
-			GameScreen newLevel = new GameScreen(main.createBattlefields(), level+1, main);
-			main.setScreen(newLevel);
+			}	
 	
-			main.remove(this);
-			newLevel.setFocusable(true);
-			newLevel.requestFocus();
-		}
+			
+			battlefields.remove(battlefields.indexOf(b));
+			
+			if(fillb1==false && fillb2==false) {
+				bs.calculateSplittedBattlefields();
+	
+				battlefields.add(bs.getB1());
+				battlefields.add(bs.getB2());
+				
+				//System.out.println("Battlefield 1: "+bs.getB1().getArea());
+				//System.out.println("Battlefield 2: "+bs.getB2().getArea());
+				
+			}
+			else if(fillb1 == true) {
+				battlefields.add(bs.getB2());
+				
+				//System.out.println("Battlefield: "+bs.getB2().getArea());
+			}
+			else if(fillb2 == true) {
+				battlefields.add(bs.getB1());
+				
+				//System.out.println("Battlefield: "+bs.getB1().getArea());
+			}
+			else {
+				System.out.println("Error filling Battlefields");
+			}
+			
+			double totalArea = 0;
+			for(Battlefield bat : battlefields) {
+				totalArea += Math.abs(bat.getArea());
+				//System.out.println("Fläche: "+Math.abs(polygonArea(b)));
+			}
+			if(totalArea <= 50000) {
+				//TODO Level beendet
+				System.out.println("Spiel gewonnen!!!");
+				GameScreen newLevel = new GameScreen(main.createBattlefields(), level+1, main);
+				main.setScreen(newLevel);
 		
-		System.out.println("Gesamtfläche: "+totalArea);
+				main.remove(this);
+				newLevel.setFocusable(true);
+				newLevel.requestFocus();
+			}
+			
+			System.out.println("Gesamtfläche: "+totalArea);
+			
+		}
 		
 		//battlefields.clear();
 		//battlefields.add(b);
@@ -335,7 +353,7 @@ public class GameScreen extends Screen implements Runnable {
 	public void lostLife() {
 		player.setLifePoints(player.getLifePoints()-1);
 		prototypeWall.clear();
-		player.setPosition(new Point2D.Double(50,50));
+		player.setPosition(new Point2D.Double(400,400));
 	}
 	
 	@Override
@@ -368,9 +386,38 @@ public class GameScreen extends Screen implements Runnable {
 		// ALEX
 		drawEnemies(g);
 		
-		prototypeWall.draw(g,player.getCenter());			
+		prototypeWall.draw(g,player.getCenter());
+		
+		drawHUD(gT);
+		
 	}
 		
+
+	private void drawHUD(Graphics2D gT) {
+		gT.setColor(Color.GREEN);
+		
+		Polygon background = new Polygon();
+		background.addPoint(0, getHeight()-50);
+		background.addPoint(50, getHeight() -50);
+		background.addPoint(100,getHeight() -25);
+		background.addPoint(getWidth()-100, getHeight()-25);
+		background.addPoint(getWidth()-50, getHeight()-50);
+		background.addPoint(getWidth(), getHeight()-50);
+		background.addPoint(getWidth(), getHeight());
+		background.addPoint(0, getHeight());
+		
+		gT.fillPolygon(background);
+		
+		gT.setColor(Color.BLACK);
+		
+		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-20);
+		
+		
+		gT.drawString("Leben: "+player.getLifePoints(), getWidth()-70, getHeight()-20);
+	
+		//gT.drawPolygon(background);
+	}
+
 
 	private class TAdapter extends KeyAdapter {
         @Override
