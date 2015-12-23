@@ -184,7 +184,7 @@ public class GameScreen extends Screen implements Runnable {
 		refreshEnemyPositions(pDeltaTime);
 		
 		/*Checken, ob Player im Battlefield ist*/
-		player.setColor(Color.BLUE);
+		//player.setColor(Color.BLUE);
 		for(int i = 0; i<battlefields.size(); i++) 
 		{
 			Battlefield b = battlefields.get(i);
@@ -204,11 +204,11 @@ public class GameScreen extends Screen implements Runnable {
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler ist innerhalb eines Battlefields*/
-				player.setColor(Color.RED);
+				//player.setColor(Color.RED);
 			}
 			else if(b.intersects(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
 				/*Der Spieler schneidet das Battlefield*/
-				player.setColor(Color.GREEN);				
+				//player.setColor(Color.GREEN);				
 				
 				if(!(playerIsInBattlefield==b) && b.contains(player.getCenter())) {
 					playerIsInBattlefield = b;
@@ -259,7 +259,7 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	public void enterBattlefield(Battlefield b) {
-		player.setColor(Color.BLACK);
+		//player.setColor(Color.BLACK);
 		lines.clear();
 		Point2D tmp = (Point2D) player.getPosition().clone();
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);
@@ -269,7 +269,7 @@ public class GameScreen extends Screen implements Runnable {
 	
 	/*Verlaesst der Spieler das Spielfeld, so wird entweder das Battlefield kleiner, oder es wird in zwei Battlefield zerteilt.*/   
 	public void leaveBattlefield(Battlefield b) {
-		player.setColor(Color.BLACK);
+		//player.setColor(Color.BLACK);
 		
 		Point2D tmp = (Point2D) player.getPosition().clone();
 		tmp.setLocation(tmp.getX()+player.getSize().getWidth()/2, tmp.getY()+player.getSize().getHeight()/2);

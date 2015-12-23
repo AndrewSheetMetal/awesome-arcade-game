@@ -23,7 +23,7 @@ public abstract class Enemy extends Movable
 	private int mSpeed;
 	private Point2D mDirection;
 	protected Class mType;
-	// Gibt an, ob bereits auf Kollision für diesen Zyklus überprüft wurde. 
+	// Gibt an, ob bereits auf Kollision fï¿½r diesen Zyklus ï¿½berprï¿½ft wurde. 
 	private boolean mHandled;
 	
 	// Konstruktor.
@@ -135,11 +135,11 @@ public abstract class Enemy extends Movable
 		}		
 	}
 	
-	// ALEX: setDirection gelöscht und in Player und Enemy eingefügt.	
+	// ALEX: setDirection gelï¿½scht und in Player und Enemy eingefï¿½gt.	
 	public void setRandomDirection()
 	{
 		Random lRandom = new Random();
-		// Zufälligen Winkel erzeugen.
+		// Zufï¿½lligen Winkel erzeugen.
 		double lDir = 360 * lRandom.nextDouble();
 		// Winkel in Richtung umwandeln und setzen.
 		setDirection(angleToDirection(lDir));
@@ -173,7 +173,7 @@ public abstract class Enemy extends Movable
 		
 		this.setPosition(pos);
 		
-		g2d.draw(circle2D);	
+		g2d.fill(circle2D);	
 
 	}
 	
@@ -194,7 +194,7 @@ public abstract class Enemy extends Movable
 		return intersectsBattlefield(pBattlefield) && !insideBattlefield(pBattlefield);
 	}
 	
-	// Liefert true, wenn der Gegner das Schlachtfeld berührt.
+	// Liefert true, wenn der Gegner das Schlachtfeld berï¿½hrt.
 	private boolean intersectsBattlefield(Battlefield pBattlefield)
 	{
 		return pBattlefield.intersects(this.getPosition().getX(), this.getPosition().getY(),
@@ -285,8 +285,8 @@ public abstract class Enemy extends Movable
 	
 	public abstract void spawn(List<Battlefield> pBattlefields);
 	
-	// Erzeugt eine zufällig gewählte gültitge Position. 
-	// TODO: Ohne zweiten Parameter lösen.
+	// Erzeugt eine zufï¿½llig gewï¿½hlte gï¿½ltitge Position. 
+	// TODO: Ohne zweiten Parameter lï¿½sen.
 	public void createSpawnPosition(List<Battlefield> pBattlefields, int pType)
 	{
 		boolean lCorrectSpawn, lInBattlefield, lInsideArea;
@@ -324,7 +324,7 @@ public abstract class Enemy extends Movable
 		}while(!lCorrectSpawn || (lInBattlefield != lInsideArea));
 	}
 		
-	// Liefert einen zufällig erzeugten Spawnpoint.
+	// Liefert einen zufï¿½llig erzeugten Spawnpoint.
 	protected Point2D getRandomSpawnPoint()
 	{
 		Point2D lCoordinates = new Point2D.Double();
@@ -332,7 +332,7 @@ public abstract class Enemy extends Movable
 		return lCoordinates;
 	}
 	
-	// Liefert eine zufällige Koordinate innerhalb des Spielfeldes.
+	// Liefert eine zufï¿½llige Koordinate innerhalb des Spielfeldes.
 	private double getRandomCoordinate(boolean pWidth)
 	{
 		Random lRandom = new Random();
@@ -340,7 +340,7 @@ public abstract class Enemy extends Movable
 		return lRandom.nextDouble() * (Main.SIZE - lDiff);
 	}
 
-	// Liefert ggf. einen Gegner, der vom aktuellen Gegner berührt wird.
+	// Liefert ggf. einen Gegner, der vom aktuellen Gegner berï¿½hrt wird.
 	protected Enemy intersectsFriend() 
 	{
 		Ellipse2D lThisObject = new Ellipse2D.Double(this.getPosition().getX(), this.getPosition().getY(),
@@ -348,7 +348,7 @@ public abstract class Enemy extends Movable
 		
 		for(Enemy lEnemy : GameScreen.EnemyList)
 		{
-			// TODO: Auf Typgleichheit prüfen.
+			// TODO: Auf Typgleichheit prï¿½fen.
 			if((lEnemy != this) && (lEnemy.getPosition() != null) 
 					&& (lThisObject.intersects(lEnemy.getPosition().getX(), lEnemy.getPosition().getY(), 
 					lEnemy.getSize().getWidth(), lEnemy.getSize().getHeight())))
@@ -369,7 +369,7 @@ public abstract class Enemy extends Movable
 		return mHandled;
 	}
 	
-	// Prüft, 
+	// Prï¿½ft, 
 	public void handleIntersectionWithFriends()
 	{
 		// Alle Handles auf false setzen.
@@ -377,7 +377,7 @@ public abstract class Enemy extends Movable
 		{
 			lEnemy.setHandled(false);
 		}
-		// Auf Kollisionen überprüfen.
+		// Auf Kollisionen ï¿½berprï¿½fen.
 		Enemy lEnemy = this.intersectsFriend();
 		if((lEnemy != null) && (!this.getHandled() || !lEnemy.getHandled()))
 		{
@@ -385,29 +385,29 @@ public abstract class Enemy extends Movable
 			lX = Math.abs(lEnemy.getPosition().getX() - this.getPosition().getX());
 			lY = Math.abs(lEnemy.getPosition().getY() - this.getPosition().getY());
 			lAngle = getAngle(lX, lY);
-			// Zwischen 0° und 180°.
+			// Zwischen 0ï¿½ und 180ï¿½.
 			if(lX > 0)
 			{
-				// Zwischen 0° und 90°.
+				// Zwischen 0ï¿½ und 90ï¿½.
 				if(lY < 0)
 				{
 					lAngle = 90 - lAngle;
 				}
-				// Zwischen 90° und 180°.
+				// Zwischen 90ï¿½ und 180ï¿½.
 				else
 				{
 					lAngle += 90;
 				}
 			}
-			// Zwischen 180° und 360°
+			// Zwischen 180ï¿½ und 360ï¿½
 			else
 			{
-				// Zwischen 180° und 270°.
+				// Zwischen 180ï¿½ und 270ï¿½.
 				if(lY > 0)
 				{
 					lAngle = 270 - lAngle;
 				}
-				// Zwischen 270° und 360°.
+				// Zwischen 270ï¿½ und 360ï¿½.
 				else
 				{
 					lAngle += 270;
@@ -415,7 +415,7 @@ public abstract class Enemy extends Movable
 			}
 			// Diesen Gegner auf aktuellen Winkel setzen.
 			this.setDirection(angleToDirection(lAngle));
-			// Anderen Gegner auf gegenüberliegenden Winkel setzen.
+			// Anderen Gegner auf gegenï¿½berliegenden Winkel setzen.
 			lAngle += 180;
 			lAngle -= (int)(lAngle / 360);
 			lEnemy.setDirection(angleToDirection(lAngle));
@@ -431,7 +431,7 @@ public abstract class Enemy extends Movable
 		return (Math.atan(lGeg / lAn) * 360) / (2*Math.PI);
 	}
 		
-	// Wandelt einen übergebenen Winkel in einen Punkt-Richtung um.
+	// Wandelt einen ï¿½bergebenen Winkel in einen Punkt-Richtung um.
 	private Point2D angleToDirection(double pAngle)
 	{
 		// Passenden Quadranten bestimmen.

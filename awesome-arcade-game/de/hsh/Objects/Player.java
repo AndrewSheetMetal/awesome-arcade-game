@@ -76,8 +76,9 @@ public class Player extends Movable {
 		//System.out.println("Position: "+pos);
 		
 		this.setPosition(pos);
-		g2d.draw(circle2D);
-		g.drawImage(img, (int)pos.getX()+img.getWidth()/2,(int)pos.getY()+img.getHeight()/2, null);
+		g2d.setColor(getColor());
+		g2d.fill(circle2D);
+		//g.drawImage(img, (int)pos.getX()+img.getWidth()/2,(int)pos.getY()+img.getHeight()/2, null);
 
 	}
 	

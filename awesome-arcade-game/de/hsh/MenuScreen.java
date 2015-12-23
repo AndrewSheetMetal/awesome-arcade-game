@@ -2,6 +2,7 @@ package de.hsh;
 
 import java.applet.AudioClip;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -33,6 +34,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import de.hsh.Objects.CircleButton;
+
 public class MenuScreen extends Screen {
 	private static final long serialVersionUID = 1L;
 	private Image img;
@@ -57,7 +60,9 @@ public class MenuScreen extends Screen {
 		setMaximumSize(size);
 		setSize(size);
 		setLayout(null);
-
+		
+		CircleButton bsp = new CircleButton("Start", 50, 50, 100,100, Color.RED, Color.WHITE);
+		add(bsp);
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton highscoreBtn = new JButton("Highscore");
 		JButton creditsBtn = new JButton("Credits");

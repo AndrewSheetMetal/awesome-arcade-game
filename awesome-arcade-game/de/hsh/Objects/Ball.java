@@ -18,7 +18,7 @@ public class Ball extends Enemy
 	{		
 		super();
 		setColor(Color.WHITE);
-		// TODO: Unschön?
+		// TODO: Unschï¿½n?
 		this.mType = this.getClass();
 	}
 	
@@ -50,7 +50,7 @@ public class Ball extends Enemy
 		
 		this.setPosition(pos);
 		
-		g2d.draw(circle2D);	
+		g2d.fill(circle2D);	
 
 	}
 	
