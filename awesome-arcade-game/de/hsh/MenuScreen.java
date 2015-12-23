@@ -30,6 +30,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class MenuScreen extends Screen {
@@ -60,17 +61,38 @@ public class MenuScreen extends Screen {
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton highscoreBtn = new JButton("Highscore");
 		JButton creditsBtn = new JButton("Credits");
+		JButton hilfeBtn = new JButton("Hilfe/Steuerung");
+		JButton endeBtn = new JButton("Beenden");
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(Box.createRigidArea(new Dimension(0, 200)));
+		
+		
 		add(newGameBtn);
 		newGameBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		add(Box.createRigidArea(new Dimension(0, 50)));
 		add(Box.createHorizontalGlue());
+		
 		add(highscoreBtn);
 		highscoreBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(Box.createRigidArea(new Dimension(0, 50)));
+		
 		add(creditsBtn);
 		creditsBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		add(Box.createRigidArea(new Dimension(0, 50)));
+		add(Box.createHorizontalGlue());
+		
+		add(hilfeBtn);
+		hilfeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		add(Box.createRigidArea(new Dimension(0, 50)));
+		add(Box.createHorizontalGlue());
+		
+		add(endeBtn);
+		endeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		newGameBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -113,8 +135,33 @@ public class MenuScreen extends Screen {
 			
 		});
 		
+		endeBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				beendenDialog();
+			}
+		});
+		
 	}
 
+	public void beendenDialog() {
+		Object[] options = {"Ohhhh, jaa",
+                "Nein, noch nicht"};
+		int n = JOptionPane.showOptionDialog(null,
+		    "Möchten Sie das Spiel wirklich beenden?",
+		    "Beenden?",
+		    JOptionPane.YES_NO_CANCEL_OPTION,
+		    JOptionPane.QUESTION_MESSAGE,
+		    null,
+		    options,
+		    options[1]);
+		
+		System.out.println(n);
+		if(n == 0) {
+			System.exit(0);
+		}
+	}
+	
 	
 
 	public void paintComponent(Graphics g) {
