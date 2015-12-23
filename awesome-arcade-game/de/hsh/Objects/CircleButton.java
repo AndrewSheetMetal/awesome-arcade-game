@@ -38,14 +38,4 @@ public class CircleButton extends JComponent{
 		g2d.setColor(cText);
 		g2d.drawString(text, (int)(x+width/2-(g2d.getFontMetrics().getStringBounds(text, g2d).getWidth()/2)), (int) (y+heigth/2+(g2d.getFontMetrics().getStringBounds(text, g2d).getHeight()/2)));
 	}
-	public void setPosition(double x, double y){
-		setX(x);
-		setY(y);
-	}
-	public void setX(double x){
-		this.x =x;
-	}
-	public void setY(double y){
-		this.y = y;
-	}
 }
