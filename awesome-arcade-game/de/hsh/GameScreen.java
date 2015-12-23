@@ -110,7 +110,7 @@ public class GameScreen extends Screen implements Runnable {
 
 		//player.setPosition(new Point2D.Double(50,150));
 
-		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
+		player.setPosition(new Point2D.Double(-75, Main.SIZE/2-player.getSize().height/2));
 		
 		player.setSpeed(1);		
 		

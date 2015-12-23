@@ -76,7 +76,7 @@ public class MenuScreen extends Screen {
 			public void actionPerformed(ActionEvent arg0) {
 
 				//SVEN: GameScreen mit Level 1 initialisieren
-				GameScreen gameScreen = new GameScreen(main.createBattlefields(), 1, main);
+				GameScreen gameScreen = new GameScreen(main.createBattlefields(1), 1, main);
 				main.setScreen(gameScreen);
 				setVisible(false);
 				gameScreen.setFocusable(true);
@@ -99,6 +99,19 @@ public class MenuScreen extends Screen {
 			
 		});
 		
+		creditsBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CreditsScreen creditsScreen = new CreditsScreen(main);
+				
+				main.setScreen(creditsScreen);
+				setVisible(false);
+				creditsScreen.setFocusable(true);
+				creditsScreen.requestFocus();
+				
+			}
+			
+		});
 		
 	}
 

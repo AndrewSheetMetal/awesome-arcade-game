@@ -81,7 +81,7 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		main.getContentPane().removeAll();
 		
 		
-		GameScreen newLevel = new GameScreen(main.createBattlefields(), level+1, main);
+		GameScreen newLevel = new GameScreen(main.createBattlefields(level+1), level+1, main);
 		main.setScreen(newLevel);
 		
 		newLevel.setFocusable(true);
@@ -134,25 +134,11 @@ public class ScoreScreen  extends Screen implements Runnable  {
 			
 		}
 		
-		
-		
 		if(aktuelleWartezeit > 0) {
 			drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 400, g2d);
 			
 		}
 		
-		//drawCenteredString("Lifepoints: "+100504+" XP", 350, 250, g2d);
-		
-		//g2d.setFont(font)
-		
-		
-		//g2d.fillRoundRect(100, 100, 500, 500, 50, 50);
-		
-		
-		
-		
-		//g2d.drawString("Score: "+score, 200, 200);
-		//g.drawImage(img, 0, 0, null);
 	}
 	
 	/*

@@ -42,19 +42,111 @@ public class Main extends JFrame {
 		System.out.println("Screens: "+getContentPane().getComponentCount());
 		//getContentPane().getComponentCount()
 	}
-	public List<Battlefield> createBattlefields() {
+	public List<Battlefield> createBattlefields(int level) {
 		List<Battlefield> fields = new ArrayList<Battlefield>();
-		Battlefield field = new Battlefield();
-
-		field.addPoint(0, 0);
-		field.addPoint(Main.SIZE, 0);
-		field.addPoint(Main.SIZE, Main.SIZE);
-		field.addPoint(Main.SIZE / 2, Main.SIZE);
-		field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
-		field.addPoint(0, Main.SIZE / 2);
-
-		fields.add(field);
-
+		
+		switch(level) {
+			case 5: 
+			{
+				Battlefield field = new Battlefield();
+		
+				field.addPoint(0, 0);
+				field.addPoint(Main.SIZE, 0);
+				field.addPoint(Main.SIZE, Main.SIZE);
+				field.addPoint(Main.SIZE / 2, Main.SIZE);
+				field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
+				field.addPoint(0, Main.SIZE / 2);
+		
+				fields.add(field); }
+				break;
+			case 2:
+			{
+				Battlefield field = new Battlefield();
+				
+				field.addPoint(0, 0);
+				field.addPoint(Main.SIZE, 0);
+				field.addPoint(Main.SIZE, Main.SIZE);
+				field.addPoint(2*Main.SIZE / 3, Main.SIZE);
+				field.addPoint(2*Main.SIZE / 3, Main.SIZE / 2);
+				field.addPoint(Main.SIZE / 3, Main.SIZE / 2);
+				field.addPoint(Main.SIZE / 3, Main.SIZE);
+				field.addPoint(0, Main.SIZE);
+		
+				fields.add(field); }
+				break;
+			case 3:
+			{
+				Battlefield field = new Battlefield();
+				
+				field.addPoint(0, 0);
+				field.addPoint(Main.SIZE, 0);
+				field.addPoint(Main.SIZE, Main.SIZE/2);
+				field.addPoint(2*Main.SIZE / 3, Main.SIZE/2);
+				field.addPoint(2*Main.SIZE / 3, Main.SIZE);
+				field.addPoint(Main.SIZE / 3, Main.SIZE);
+				field.addPoint(Main.SIZE / 3, Main.SIZE/2);
+				field.addPoint(0, Main.SIZE/2);
+		
+				fields.add(field); }
+				break;
+			case 4:
+			{
+				Battlefield field = new Battlefield();
+				
+				field.addPoint(Main.SIZE/3, 0);
+				field.addPoint(2*Main.SIZE/3, 0);
+				field.addPoint(2*Main.SIZE/3, Main.SIZE/3);
+				field.addPoint(Main.SIZE, Main.SIZE/3);
+				field.addPoint(Main.SIZE, 2*Main.SIZE/3);
+				field.addPoint(2*Main.SIZE / 3, 2*Main.SIZE/3);
+				field.addPoint(2*Main.SIZE / 3, Main.SIZE);
+				field.addPoint(Main.SIZE / 3, Main.SIZE);
+				field.addPoint(Main.SIZE / 3, 2*Main.SIZE/3);
+				field.addPoint(0, 2*Main.SIZE/3);
+				field.addPoint(0, Main.SIZE/3);
+				field.addPoint(Main.SIZE/3, Main.SIZE/3);
+				
+				
+				
+				//field.addPoint(0, Main.SIZE/2);
+		
+				fields.add(field); }
+				break;
+			case 1:
+			{
+				Battlefield field = new Battlefield();
+				
+				field.addPoint(0, 0);
+				field.addPoint(Main.SIZE/3, 0);
+				field.addPoint(Main.SIZE/3, Main.SIZE/3);
+				field.addPoint(2*Main.SIZE/3, Main.SIZE/3);
+				field.addPoint(2*Main.SIZE/3, 0);
+				field.addPoint(Main.SIZE, 0);
+				field.addPoint(Main.SIZE, Main.SIZE);
+				field.addPoint(2*Main.SIZE/3, Main.SIZE);
+				field.addPoint(2*Main.SIZE / 3, 2*Main.SIZE/3);
+				field.addPoint(Main.SIZE/3, 2*Main.SIZE/3);
+				field.addPoint(Main.SIZE/3, Main.SIZE);
+				field.addPoint(0, Main.SIZE);
+				
+				
+				
+				//field.addPoint(0, Main.SIZE/2);
+		
+				fields.add(field); }
+				break;
+			default:
+			{	Battlefield field = new Battlefield();
+				
+				field.addPoint(0, 0);
+				field.addPoint(Main.SIZE, 0);
+				field.addPoint(Main.SIZE, Main.SIZE);
+				field.addPoint(Main.SIZE / 2, Main.SIZE);
+				field.addPoint(Main.SIZE / 2, Main.SIZE / 2);
+				field.addPoint(0, Main.SIZE / 2);
+		
+				fields.add(field);}
+		}
 		return fields;
 	}
 }
