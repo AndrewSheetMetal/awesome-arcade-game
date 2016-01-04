@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
@@ -430,6 +431,8 @@ public class GameScreen extends Screen implements Runnable {
 		
 
 	private void drawHUD(Graphics2D gT) {
+		gT.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 		gT.setColor(Color.GREEN);
 		
 		Polygon background = new Polygon();
