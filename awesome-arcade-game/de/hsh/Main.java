@@ -15,6 +15,7 @@ public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final int SIZE = 500;
 	public static final int MARGIN = 200;
+	public int score;
 	private MenuScreen menuScreen;
 
 	public static void main(String[] args) {
@@ -32,8 +33,8 @@ public class Main extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		score = 0;
 		
-
 	}
 
 	public void setScreen(JPanel pScreen) {

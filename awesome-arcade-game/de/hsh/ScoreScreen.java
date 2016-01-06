@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class ScoreScreen  extends Screen implements Runnable  {
 	private int level;
@@ -14,7 +16,7 @@ public class ScoreScreen  extends Screen implements Runnable  {
 	private int oldHighscore = 10000;
 	private int aktuelleWartezeit = -1; //Die aktuelle Wartezeit bis zum nächsten Level, wird runtergezählt
 	
-	private final int wartezeit = 5; //Die gesamt Wartezeit bis zum nächsten Level, nachdem der Score kalkuliert wurde
+	private final int WARTEZEIT = 5; //Die gesamt Wartezeit bis zum nächsten Level, nachdem der Score kalkuliert wurde
 	
 	public ScoreScreen(Main main, int level, double prozentGefuellt) {
 		this.main = main;
@@ -55,7 +57,10 @@ public class ScoreScreen  extends Screen implements Runnable  {
 			}
 		}
 		
-		aktuelleWartezeit = wartezeit;
+		aktuelleWartezeit = WARTEZEIT;
+		
+		//Gesamtscore
+		main.score += (int)score;
 		
 		while(aktuelleWartezeit > 0) {
 			long now = System.nanoTime();
@@ -125,18 +130,19 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		//drawCenteredString("Level completed: ", w, h, g2d)
 		
 		//g2d.drawString("Level completed: ",350,200);
-		drawCenteredString("Level "+level+" completed: "+((int)(10*prozentGefuellt))/10.f+"%", 350, 200, g2d);
+		drawCenteredString("Level "+level+" completed: "+((int)(10*prozentGefuellt))/10.f+"%", 350, 150, g2d);
 		
-		drawCenteredString("Score: "+(int)score+" XP", 350, 250, g2d);
+		drawCenteredString("Score: "+(int)score+" XP", 350, 220, g2d);
 		
 		if(oldHighscore < score) {
-			drawCenteredString("New Highscore!!! ", 350, 300, g2d);
+			drawCenteredString("New Highscore!!! ", 350, 280, g2d);
 			
 		}
 		
+		drawCenteredString("Total Score: "+main.score, 350, 370, g2d);
+		
 		if(aktuelleWartezeit > 0) {
-			drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 400, g2d);
-			
+			drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 480, g2d);
 		}
 		
 	}

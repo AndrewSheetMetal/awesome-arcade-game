@@ -173,9 +173,9 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
-		if(player.getLifePoints()<=0){
+		/*if(player.getLifePoints()<=0){
 			running = false;
-		}
+		}*/
 		time += pDeltaTime;
 		
 		//Andreas
@@ -381,9 +381,27 @@ public class GameScreen extends Screen implements Runnable {
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
 	 * Hier wird er z.B. auf die Startposition gesetzt*/
 	public void lostLife() {
-		player.setLifePoints(player.getLifePoints()-1);
-		prototypeWall.clear();
-		player.setPosition(new Point2D.Double(Main.SIZE/4, Main.SIZE*3/4));
+		
+		if(player.getLifePoints() == 0) {
+			//Game over - keine Leben mehr
+			System.out.println("Game over :(");
+			GameoverScreen gameoverScreen = new GameoverScreen(main, level);
+			
+			this.running = false;
+			
+			main.setScreen(gameoverScreen);
+			
+			gameoverScreen.setFocusable(true);
+			gameoverScreen.requestFocus();
+		}
+		else {
+			System.out.println("Leben verloren");
+			//Spieler wird zurückgesetzt und ein Leben wird abgezogen
+			player.setLifePoints(player.getLifePoints()-1);
+			prototypeWall.clear();
+			player.setPosition(new Point2D.Double(-75, Main.SIZE/2-player.getSize().height/2));	
+			System.out.println("Leben verloren");
+		}
 	}
 	
 	@Override
