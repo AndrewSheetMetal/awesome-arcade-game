@@ -16,6 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
@@ -145,7 +146,6 @@ public class GameScreen extends Screen implements Runnable {
 			@Override
 			public void componentHidden(ComponentEvent e) {}
 		});
-		
 		
 		running = true;
 		new Thread(this).start();
@@ -508,6 +508,9 @@ public class GameScreen extends Screen implements Runnable {
     		else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
     			speed /= 2.0;
     		}
+    		else if(e.getKeyCode() == KeyEvent.VK_P) {
+    			running = !running;
+    		}
         }
     }
 
@@ -548,26 +551,31 @@ public class GameScreen extends Screen implements Runnable {
 		double nsPerTick = 1000000000D/60D;
 		float delta = 0;
 		
-		while(running){
-			long now = System.nanoTime();
-			delta +=  (now-lastTime)/nsPerTick;
-			lastTime = now;			
-			
-			if(delta >= 1) {
-				//if(running) {
-					update(delta);
-
-				//}
-				updateUI();
-				delta = 0;
-
-			}
-			else {
-				try {
-					Thread.sleep(1, 0);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		while(true) {
+			System.out.println("Spielläuft: "+running);
+			delta = 0;
+			lastTime = System.nanoTime();
+			while(running){
+				long now = System.nanoTime();
+				delta +=  (now-lastTime)/nsPerTick;
+				lastTime = now;			
+				
+				if(delta >= 1) {
+					//if(running) {
+						update(delta);
+	
+					//}
+					updateUI();
+					delta = 0;
+	
+				}
+				else {
+					try {
+						Thread.sleep(1, 0);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
