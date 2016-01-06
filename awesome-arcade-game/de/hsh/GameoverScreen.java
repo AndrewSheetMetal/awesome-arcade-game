@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import de.hsh.Objects.HighscoreEntry;
+
 public class GameoverScreen  extends Screen implements Runnable  {
 	private int level;
 	private Main main;
@@ -39,7 +41,7 @@ public class GameoverScreen  extends Screen implements Runnable  {
 				else if(arg0.getKeyCode() == KeyEvent.VK_ENTER){
 					//TODO Speichern falls unter den Top Ten
 					//Beim Betätigen von Enter wird der HighscoreScreen angezeigt 
-					resetTotalScore();
+					
 					showHighscoreScreen();
 				}
 			}
@@ -61,8 +63,13 @@ public class GameoverScreen  extends Screen implements Runnable  {
 	
 	private void showHighscoreScreen() {
 		System.out.println("Show HighscoreScreen");
+		HighscoreEntry entry = new HighscoreEntry(name, main.score);
+		main.highscore.addEntry(entry);
+		resetTotalScore();
+		main.highscore.save();
 		HighscoreScreen highscoreScreen = new HighscoreScreen(main);
 
+		main.remove(this);
 		main.setScreen(highscoreScreen);
 
 		highscoreScreen.setVisible(true);

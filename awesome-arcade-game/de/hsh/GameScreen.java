@@ -333,7 +333,7 @@ public class GameScreen extends Screen implements Runnable {
 				ScoreScreen scoreScreen = new ScoreScreen(main, level, prozentGefuellt);
 				
 				this.running = false;
-				
+				main.remove(this);
 				main.setScreen(scoreScreen);
 				
 				scoreScreen.setFocusable(true);
@@ -367,6 +367,7 @@ public class GameScreen extends Screen implements Runnable {
 			GameoverScreen gameoverScreen = new GameoverScreen(main, level);
 			
 			this.running = false;
+			main.remove(this);
 			
 			main.setScreen(gameoverScreen);
 			

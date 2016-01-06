@@ -61,13 +61,14 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		
 		//Gesamtscore
 		main.score += (int)score;
-		
+		delta = 0;
+		lastTime = System.currentTimeMillis();
 		while(aktuelleWartezeit > 0) {
-			long now = System.nanoTime();
-			delta +=  (now-lastTime)/nsPerTick;
+			long now = System.currentTimeMillis();
+			delta +=  (now-lastTime);
 			lastTime = now;	
 			
-			if(delta > 60) {
+			if(delta > 1000) {
 				aktuelleWartezeit -= 1;
 				
 				System.out.println("Wartezeit: "+aktuelleWartezeit);

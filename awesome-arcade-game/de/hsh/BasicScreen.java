@@ -17,7 +17,7 @@ import java.util.Random;
  * 
  * */
 public abstract class BasicScreen extends Screen {
-	private Main main;
+	public Main main;
 	
 	
 	public BasicScreen(Main main) {
