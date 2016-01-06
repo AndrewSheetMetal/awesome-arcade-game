@@ -33,6 +33,7 @@ public class Highscore implements Serializable{
 			list = tmp;
 		}
 	}
+	@SuppressWarnings("unchecked")
 	public void restore(){
 		try{
 			File f = new File("hs.dat");
