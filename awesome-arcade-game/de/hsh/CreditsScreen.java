@@ -48,7 +48,7 @@ public class CreditsScreen extends BasicScreen implements Runnable {
 		g2d.drawString("- Alexander Gauggel", left, moveup(top+1*distance));
 		g2d.drawString("- Andreas Blech", left, moveup(top+2*distance));
 		g2d.drawString("- Alexander Grunewald", left, moveup(top+3*distance));
-		g2d.drawString("- Bastian Goldbeck", left, moveup(top+4*distance));
+		g2d.drawString("- Bastian Goldbeck(Cocken)", left, moveup(top+4*distance));
 		g2d.drawString("- Philipp Gottschalk", left, moveup(top+5*distance));
 		
 		

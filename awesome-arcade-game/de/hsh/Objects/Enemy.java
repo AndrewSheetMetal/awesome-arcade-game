@@ -16,12 +16,16 @@ import de.hsh.Battlefield;
 import de.hsh.GameScreen;
 import de.hsh.Main;
 
+
+
 public abstract class Enemy extends Movable 
 {	
+	private final int DEBUG = 1;
+	
+	private static int sColCounter = 0;
+	
 	private final int HORIZONTAL = 0, VERTICAL = 1;	
-	private Color mColor;
 	private int mSpeed;
-	private Point2D mDirection;
 	protected Class mType;
 	// Gibt an, ob bereits auf Kollision fï¿½r diesen Zyklus ï¿½berprï¿½ft wurde. 
 	private boolean mHandled;
@@ -177,11 +181,13 @@ public abstract class Enemy extends Movable
 
 	}
 	
+	@Override
 	public Point getCenter() {
 		return new Point((int)getPosition().getX()+getSize().width/2,
 				(int)getPosition().getY()+getSize().height/2);
 	}
 	
+	@Override
 	public Dimension getSize() {
 		Dimension toReturn = new Dimension();
 		toReturn.setSize(50, 50);
@@ -255,23 +261,6 @@ public abstract class Enemy extends Movable
 				this.getDirection().getY()));								
 		}
 	}
-	
-	public Point2D getDirection()
-	{
-		return mDirection;
-	}
-	
-	public void setDirection(Point2D pDirection) {
-		mDirection = pDirection;		
-	}
-
-	public Color getColor() {
-		return mColor;
-	}
-	
-	public void setColor(Color pColor) {
-		mColor = pColor;
-	}
 
 	public void setSpeed(int pSpeed)
 	{
@@ -343,20 +332,33 @@ public abstract class Enemy extends Movable
 	// Liefert ggf. einen Gegner, der vom aktuellen Gegner berï¿½hrt wird.
 	protected Enemy intersectsFriend() 
 	{
-		Ellipse2D lThisObject = new Ellipse2D.Double(this.getPosition().getX(), this.getPosition().getY(),
-				this.getSize().getWidth(), this.getSize().getHeight());
-		
 		for(Enemy lEnemy : GameScreen.EnemyList)
 		{
 			// TODO: Auf Typgleichheit prï¿½fen.
 			if((lEnemy != this) && (lEnemy.getPosition() != null) 
-					&& (lThisObject.intersects(lEnemy.getPosition().getX(), lEnemy.getPosition().getY(), 
-					lEnemy.getSize().getWidth(), lEnemy.getSize().getHeight())))
+					&& intersectsWithObject(lEnemy.getPosition(), 
+							new Point2D.Double(lEnemy.getSize().getWidth(), lEnemy.getSize().getHeight())))
 			{
+				if (DEBUG == 1)
+				{
+					sColCounter++;
+					System.out.println("Collision #" + sColCounter + "\nthis.position.x = " + this.getPosition().getX() + " this.position.y = "
+							+ this.getPosition().getY() + "\nother.position.x = " + lEnemy.getPosition().getX()
+							+ " other.position.y = " + lEnemy.getPosition().getY() + "\n");
+				}
 				return lEnemy;
 			}
 		}
 		return null;
+	}
+	
+	// Liefert true, wenn der Gegner den übergebenen Gegner berührt.
+	// Vorsicht: Hier wird angenommen, dass die Objekte kreisrund sind.
+	public boolean intersectsWithObject(Point2D pPosition, Point2D pSize)
+	{
+		Point2D lCenter = new Point2D.Double(pPosition.getX() + (pSize.getX() / 2), pPosition.getY() + (pSize.getY() / 2));
+		return (this.getCenter().distance(lCenter) 
+				<= ((this.getSize().getWidth() / 2) + (pSize.getX() / 2)));
 	}
 	
 	public void setHandled(boolean pHandled)
@@ -369,7 +371,7 @@ public abstract class Enemy extends Movable
 		return mHandled;
 	}
 	
-	// Prï¿½ft, 
+	// Prüft, ob sich Gegner berühren und lässt sie ggf. abprallen.
 	public void handleIntersectionWithFriends()
 	{
 		// Alle Handles auf false setzen.
@@ -422,6 +424,22 @@ public abstract class Enemy extends Movable
 			
 			this.setHandled(true);
 			lEnemy.setHandled(true);
+			
+			// TODO: Zum Testen eingebaut.
+			/*
+			while(intersectsWithFriend(lEnemy))
+			{
+				this.setPosition(new Point2D.Double(this.getPosition().getX() + (0.1 * this.getDirection().getX()),
+					this.getPosition().getY() + (0.1 * this.getDirection().getY())));
+				lEnemy.setPosition(new Point2D.Double(lEnemy.getPosition().getX() + (0.1 * lEnemy.getDirection().getX()),
+					lEnemy.getPosition().getY() + (0.1 * lEnemy.getDirection().getY())));
+			}
+			*/
+			// Positionen der Gegner um den Geschwindigkeitsfaktor auseinander schieben.
+			this.setPosition(new Point2D.Double(this.getPosition().getX() + (this.getSpeed() * this.getDirection().getX()),
+				this.getPosition().getY() + (this.getSpeed() * this.getDirection().getY())));
+			lEnemy.setPosition(new Point2D.Double(lEnemy.getPosition().getX() + (lEnemy.getSpeed() * lEnemy.getDirection().getX()),
+				lEnemy.getPosition().getY() + (lEnemy.getSpeed() * lEnemy.getDirection().getY())));
 		}
 	}
 	

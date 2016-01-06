@@ -16,6 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
@@ -52,6 +53,13 @@ public class GameScreen extends Screen implements Runnable {
 	private double restflaeche;
 	private double anfangsflaeche;
 	private double zielflaeche = 50000;
+	
+	private int playerAdditionalSpeedTime = 0; //Zeit, in der der Spieler noch erhöhte Geschwindigkeit hat.
+	private int enemyAdditionalSpeedTime = 0; //Zeit, in der die Enemys noch erhöhte Geschwindigkeit haben.
+	private int enemyReducedSpeedTime = 0; //Zeit, in der der Spieler noch verringerte Geschwindigkeit hat.
+	private int playerReducedSpeedTime = 0; //Siehe enemyReducedSpeedTime nur für Player
+	private double playerNormalSpeed = 1;
+	private double enemyNormalSpeed = 1;
 	
 	// ALEX
 	public static List<Enemy> EnemyList;
@@ -146,7 +154,6 @@ public class GameScreen extends Screen implements Runnable {
 			public void componentHidden(ComponentEvent e) {}
 		});
 		
-		
 		running = true;
 		new Thread(this).start();
 		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
@@ -156,6 +163,10 @@ public class GameScreen extends Screen implements Runnable {
 		time += pDeltaTime;
 		
 		//Andreas
+		/*double realPlayerSpeed = 
+		if(playerAdditionalSpeedTime > 0) {
+			playerAdditionalSpeedTime -= pDeltaTime;
+		}*/
 		player.updatePosition(speed,pDeltaTime);
 		
 		// ALEX
@@ -179,6 +190,10 @@ public class GameScreen extends Screen implements Runnable {
 				}
 				// TODO: �berlagerung?
 				lEnemy.handleIntersectionWithFriends();
+				/*if(lEnemy.intersectsWithMovable(player))
+				{
+					lostLife("Spieler hat Gegner ber�hrt");
+				}*/
 			}
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
@@ -205,7 +220,8 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
-		if(prototypeWall.intersects(player.getBounds())) {
+		//if(prototypeWall.intersects(player.getBounds()) >= 0) {
+		if(prototypeWall.playerHitsPrototypeWall(player)) {
 			//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 			lostLife("Player hat PrototypeWall geschnitten");
 			//player.setColor(Color.PINK);
@@ -222,6 +238,7 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}
 		
+		
 		prototypeWall.update(pDeltaTime);
 		
 		/*Wurde die PrototypeWall von einem Ball berührt, so bilden sich Kreise um den
@@ -232,6 +249,10 @@ public class GameScreen extends Screen implements Runnable {
 				lostLife("PrototypeWall wurde zerstört");
 			}
 			
+		}
+		
+		if(timeout <= 0) {
+			lostLife("Zeit abgelaufen");
 		}
 		
 		//updateUI();
@@ -324,7 +345,7 @@ public class GameScreen extends Screen implements Runnable {
 				ScoreScreen scoreScreen = new ScoreScreen(main, level, prozentGefuellt);
 				
 				this.running = false;
-				
+				main.remove(this);
 				main.setScreen(scoreScreen);
 				
 				scoreScreen.setFocusable(true);
@@ -358,6 +379,7 @@ public class GameScreen extends Screen implements Runnable {
 			GameoverScreen gameoverScreen = new GameoverScreen(main, level);
 			
 			this.running = false;
+			main.remove(this);
 			
 			main.setScreen(gameoverScreen);
 			
@@ -435,8 +457,6 @@ public class GameScreen extends Screen implements Runnable {
 		
 		gT.setColor(Color.BLACK);
 		
-		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
-		
 		
 		gT.drawString("Leben: "+player.getLifePoints(), getWidth()-75, getHeight()-10);
 	
@@ -446,6 +466,13 @@ public class GameScreen extends Screen implements Runnable {
 		double prozentGefuellt = ((int)(((anfangsflaeche-restflaeche)/(anfangsflaeche-zielflaeche))*1000)/10.0);
 		
 		gT.drawString("Fortschritt: "+ prozentGefuellt,10,getHeight()-10);
+		
+		if(timeout <= 5) {
+			gT.setColor(Color.RED);
+			gT.setFont(gT.getFont().deriveFont(gT.getFont().getSize() * 1.5F));
+		}
+		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
+
 		
 		//gT.drawPolygon(background);
 	}
@@ -493,6 +520,9 @@ public class GameScreen extends Screen implements Runnable {
     		else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
     			speed /= 2.0;
     		}
+    		else if(e.getKeyCode() == KeyEvent.VK_P) {
+    			running = !running;
+    		}
         }
     }
 
@@ -507,11 +537,11 @@ public class GameScreen extends Screen implements Runnable {
 			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
 			//Sven: Zum testen erstemal auskommentiert
-			if (timeout == 0) {
+			/*if (timeout == 0) {
 				running = false;
 				
 				this.cancel();
-			}
+			}*/
 		}
 
 	};
@@ -533,19 +563,29 @@ public class GameScreen extends Screen implements Runnable {
 		double nsPerTick = 1000000000D/60D;
 		float delta = 0;
 		
-		while(running){
-			long now = System.nanoTime();
-			delta +=  (now-lastTime)/nsPerTick;
-			lastTime = now;			
-			
-			if(delta >= 1) {
-				//if(running) {
+		while(true) { //Während der Pause loopt er hier drin rum
+			System.out.println("Spielläuft: "+running);
+			delta = 0;
+			lastTime = System.nanoTime();
+			while(running){
+				long now = System.nanoTime();
+				delta +=  (now-lastTime)/nsPerTick;
+				lastTime = now;			
+				
+				if(delta >= 1) {
 					update(delta);
-
-				//}
-				updateUI();
-				delta = 0;
-
+					updateUI();
+					delta = 0;
+	
+				}
+				else {
+					try {
+						Thread.sleep(1, 0);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}

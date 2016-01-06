@@ -61,13 +61,14 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		
 		//Gesamtscore
 		main.score += (int)score;
-		
+		delta = 0;
+		lastTime = System.currentTimeMillis();
 		while(aktuelleWartezeit > 0) {
-			long now = System.nanoTime();
-			delta +=  (now-lastTime)/nsPerTick;
+			long now = System.currentTimeMillis();
+			delta +=  (now-lastTime);
 			lastTime = now;	
 			
-			if(delta > 60) {
+			if(delta > 1000) {
 				aktuelleWartezeit -= 1;
 				
 				System.out.println("Wartezeit: "+aktuelleWartezeit);
@@ -117,12 +118,12 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		drawCenteredString("Level "+level+" completed: "+((int)(10*prozentGefuellt))/10.f+"%", 350, 150, g2d);
 		
 		drawCenteredString("Score: "+(int)score+" XP", 350, 220, g2d);
-		
+		/*
 		if(oldHighscore < score) {
 			drawCenteredString("New Highscore!!! ", 350, 280, g2d);	
-		}
+		}*/
 		
-		drawCenteredString("Total Score: "+main.score, 350, 370, g2d);
+		drawCenteredString("Total Score: "+main.score, 350, 290, g2d);
 		
 		if(aktuelleWartezeit > 0) {
 			drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 480, g2d);

@@ -128,17 +128,44 @@ public class PrototypeWall extends Unmovable {
 		return lines.get(index);	
 	}
 	
-	public boolean intersects(Rectangle2D rect) {
+	public boolean playerHitsPrototypeWall(Player player) {
+		int ind = intersects(player.getBounds());
+		if(ind < 0) {
+			return false;
+		}
+		
+		//Line2D line = new Line2D.Double(lines.get(ind), lines.get(ind+1));
+		Point2D linedirection = new Point2D.Double(lines.get(ind+1).getX()-lines.get(ind).getX(),lines.get(ind+1).getY()-lines.get(ind).getY());
+		
+		System.out.println("Line: "+linedirection.toString());
+		
+		/*
+		 * Falls die Richtung des Players (die neuste Linie der PrototypeWall) senkrecht 
+		 * zur Linie der PrototypeWall ist, die der Player schneidet, dann ist er im Begriff sie PrototypeWall
+		 * zu schneiden, was nicht erlaubt ist -> LostLife
+		 * */
+		//Statt auf Orthogonalität zu prüfen, wird nur geschaut, ob die Vektoren stark von einandander unterschiedliche Richtungen haben
+		if((Math.abs(linedirection.getX()) < Math.abs(linedirection.getY())) ^ (Math.abs(player.getDirection().getX()) < Math.abs(player.getDirection().getY()))) {
+			return true;
+		}
+		return false;
+		
+	}
+	
+	/*
+	 * Liefert den Startindex der Linie, die von Rectangle geschnitten wird
+	 * */
+	public int intersects(Rectangle2D rect) {
 		if(lines.size() >= 2) {
 			for(int i = 0; i<lines.size()-2; i++) { // -2 da er die letzte Linie eh nicht schneiden kann und es sonst beim Abbiegen kurz zu einem fehlerhaften true kommt
 				Line2D line = new Line2D.Double(lines.get(i),lines.get(i+1));
 				if(rect.intersectsLine(line)) {
-					return true;
+					return i;
 				}
 			}
 		}
 		
-		return false;
+		return -1;
 	}
 	
 	/*Gibt zurück, ob das Rectangle die PrototypeWall überschneidet und speichert an welchem Punkt dies war.
