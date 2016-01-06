@@ -205,7 +205,8 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
-		if(prototypeWall.intersects(player.getBounds())) {
+		//if(prototypeWall.intersects(player.getBounds()) >= 0) {
+		if(prototypeWall.playerHitsPrototypeWall(player)) {
 			//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 			lostLife("Player hat PrototypeWall geschnitten");
 			//player.setColor(Color.PINK);
