@@ -19,9 +19,15 @@ public class Highscore implements Serializable{
 		list = new ArrayList<HighscoreEntry>();
 	}
 	public void addEntry(HighscoreEntry entry){
-		if(list.size()<9)list.add(entry);
+		list.add(entry);
 		Collections.sort(list, new EntryCompare());
-		
+		if(list.size()>9){
+			List<HighscoreEntry> tmp = new ArrayList<HighscoreEntry>();
+			for(int i=0; i<10;i++){
+				tmp.add(list.get(i));
+			}
+			list = tmp;
+		}
 	}
 	public void restore(){
 		try{
