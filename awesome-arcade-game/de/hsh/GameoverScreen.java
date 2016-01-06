@@ -63,8 +63,9 @@ public class GameoverScreen  extends Screen implements Runnable  {
 	
 	private void showHighscoreScreen() {
 		System.out.println("Show HighscoreScreen");
+		if(name.equals("")) name = "Player";
 		HighscoreEntry entry = new HighscoreEntry(name, main.score);
-		main.highscore.addEntry(entry);
+		if(main.score!=0)main.highscore.addEntry(entry);
 		resetTotalScore();
 		main.highscore.save();
 		HighscoreScreen highscoreScreen = new HighscoreScreen(main);
@@ -101,11 +102,11 @@ public class GameoverScreen  extends Screen implements Runnable  {
 	
 	public void paintComponent(Graphics g) {
 		//super.paintComponent(g);
-		g.clearRect(0, 0, 700, 500);
+		//g.clearRect(0, 0, 700, 700);
 		g.translate((getWidth()-700)/2, (getHeight()-700)/2);
 		Graphics2D g2d = (Graphics2D)g;
 		
-		Color c = new Color(0.3f,0.5f,0.3f,0.5f);
+		Color c = new Color(0.2f,0.5f,0.3f,0.5f);
 		g2d.setColor(c);
 		g2d.fillRect(0, 0, 700, 700);
 		g2d.setColor(Color.RED);

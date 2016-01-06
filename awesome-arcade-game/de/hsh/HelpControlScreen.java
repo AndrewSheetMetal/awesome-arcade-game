@@ -68,28 +68,28 @@ public class HelpControlScreen extends Screen  {
 		drawCenteredString("Hilfe / Steuerung", 350, 100, g2d);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.6F));
 		drawCenteredString(
-				"image/ball.png",
+				"image/Ball.png",
 				"Die Spielfigur muss das Spielfeld mittels gezogener Mauern auf einen",
 				350, 200, g2d);
 		drawCenteredString(
-				"Prozentsatz reduzieren um ein Level erfolgreich abzuschlie�en",
+				"Prozentsatz reduzieren um ein Level erfolgreich abzuschliessen",
 				350, 220, g2d);
 		drawCenteredString(
 				"image/Gegner.png",
 				" Diese Gegner bewegen sich innerhalb des Spielfeldes und ziehen dem",
 				350, 300, g2d);
 		drawCenteredString(
-				" Spieler bei Ber�hrung ein Leben ab. Au�erdem zerst�ren sie die gezogenen",
+				" Spieler bei Beruehrung ein Leben ab. Ausserdem zerstoeren sie die ",
 				350, 320, g2d);
 		drawCenteredString(
-				"Mauern solange diese noch nicht komplett errichtet wurden ",
+				"gezogenen Mauern solange diese noch nicht komplett errichtet wurden ",
 				350, 340, g2d);
 		drawCenteredString("image/Stachelschwein.png",
-				"Stachelschweine bewegen sich nur auf der Fl�che au�erhalb ",
+				"Stachelschweine bewegen sich nur auf der Flaeche ausserhalb ",
 				350, 400, g2d);
 		drawCenteredString("des Spielfeldes und ziehen dem Spieler ebenfalls",
 				350, 420, g2d);
-		drawCenteredString("bei Ber�hrung ein Leben ab", 350, 440, g2d);
+		drawCenteredString("bei Beruehrung ein Leben ab", 350, 440, g2d);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 1.15F));
 		drawCenteredString("Seite 1 von 3", 350, 650, g2d);
 
