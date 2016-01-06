@@ -21,7 +21,11 @@ public class GameoverScreen  extends Screen implements Runnable  {
 		this.level = level;
 		name = "";
 		
-
+		/*
+		 * Zahlen und Buchstaben gehören zum Namen
+		 * Backspace führt dazu, dass das letzt Zeichen vom Spielernamen gelöscht wird
+		 * Enter setzt den TotalScore zurück und zeigt den HighscoreScreen an.
+		 * */
 		this.addKeyListener(new KeyListener (){
 			@Override
 			public void keyPressed(KeyEvent arg0) {
@@ -37,10 +41,9 @@ public class GameoverScreen  extends Screen implements Runnable  {
 				else if(arg0.getKeyCode() == KeyEvent.VK_ENTER){
 					//TODO Speichern falls unter den Top Ten
 					//Beim Betätigen von Enter wird der HighscoreScreen angezeigt 
+					
 					showHighscoreScreen();
 				}
-				//System.out.println("Return to Main menü");
-				//returnToMainMenu();
 			}
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -54,16 +57,21 @@ public class GameoverScreen  extends Screen implements Runnable  {
 		new Thread(this).start();
 	}
 	
+	private void resetTotalScore() {
+		main.score = 0;
+	}
+	
 	private void showHighscoreScreen() {
 		System.out.println("Show HighscoreScreen");
 		HighscoreEntry entry = new HighscoreEntry(name, main.score);
 		main.highscore.addEntry(entry);
+		resetTotalScore();
+		main.highscore.save();
 		HighscoreScreen highscoreScreen = new HighscoreScreen(main);
-		//main.getContentPane().removeAll();
-		//main.removeAll();
+
 		main.remove(this);
 		main.setScreen(highscoreScreen);
-		//setVisible(false);
+
 		highscoreScreen.setVisible(true);
 		highscoreScreen.setFocusable(true);
 		highscoreScreen.requestFocus();
@@ -84,32 +92,10 @@ public class GameoverScreen  extends Screen implements Runnable  {
 			lastTime = now;			
 			
 			if(delta >= 1) {
-				//prozentGefuellt += 0.1f;
-				
-				//score = Math.pow(score, 1.0015+level*0.00002);
-				
 				updateUI();
 				delta = 0;
-
 			}
 		}
-		
-		
-		/*
-		 * Nach einer kurzen Wartezeit wird nun das nächste Level gestartet
-		 * */
-		
-		//main.remove(this);
-/*		main.getContentPane().removeAll();
-		
-		
-		GameScreen newLevel = new GameScreen(main.createBattlefields(level+1), level+1, main);
-		main.setScreen(newLevel);
-		
-		newLevel.setFocusable(true);
-		newLevel.requestFocus();
-	*/	
-		//main.remove(this);
 		
 	}
 	
@@ -133,9 +119,7 @@ public class GameoverScreen  extends Screen implements Runnable  {
 		
 		drawCenteredString("Enter Name: "+name, 350, 250, g2d);
 		
-		//if(aktuelleWartezeit > 0) {
-			//drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 480, g2d);
-		//}
+		drawCenteredString("Press \"Enter\" zu continue",350,400,g2d);
 		
 	}
 	
@@ -143,11 +127,8 @@ public class GameoverScreen  extends Screen implements Runnable  {
 	 * Schreibt horizontalzentrierten Text
 	 * */
 	private void drawCenteredString(String s, int w, int h, Graphics2D g2d) {
-			    //FontMetrics fm = g.getFontMetrics();
-		
 		int x = (int)(w - g2d.getFontMetrics().getStringBounds(s, g2d).getWidth()/2);
 		
-		//int x = w;//(w - fm.stringWidth(s)) / 2;
 		int y = h;//(fm.getAscent() + (h - (fm.getAscent() + fm.getDescent())) / 2);
 		    g2d.drawString(s, x, y);
 	}

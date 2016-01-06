@@ -29,7 +29,7 @@ public class Main extends JFrame {
 
 	private void start() {
 		highscore = new Highscore();
-		//highscore.restore();
+		highscore.restore();
 		setTitle("Field$");
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -50,6 +50,7 @@ public class Main extends JFrame {
 		getContentPane().add(pScreen);
 		System.out.println("Screens: "+getContentPane().getComponentCount());
 		//getContentPane().getComponentCount()
+		pScreen.updateUI();
 	}
 	public List<Battlefield> createBattlefields(int level) {
 		List<Battlefield> fields = new ArrayList<Battlefield>();

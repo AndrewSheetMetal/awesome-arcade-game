@@ -32,7 +32,9 @@ public class Highscore implements Serializable{
 			}
 			FileInputStream fi = new FileInputStream(f);
 			ObjectInputStream oi = new ObjectInputStream(fi);
-			list = (ArrayList<HighscoreEntry>) oi.readObject();
+			list = (List<HighscoreEntry>) oi.readObject();
+			fi.close();
+			oi.close();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -43,6 +45,8 @@ public class Highscore implements Serializable{
 			FileOutputStream fo = new FileOutputStream(f);
 			ObjectOutputStream ou = new ObjectOutputStream(fo);
 			ou.writeObject(list);
+			fo.close();
+			ou.close();
 		}catch(Exception e){
 			e.printStackTrace();
 		}

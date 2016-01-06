@@ -60,7 +60,7 @@ public class HighscoreScreen extends BasicScreen {
 			g2d.drawString(i+". "+start, 270, 150+i*40);
 		}*/
 		for(int i=0; i<main.highscore.getList().size();i++){
-			g2d.drawString(i+" "+main.highscore.getList().get(i).getName()+" "+main.highscore.getList().get(i).getPoints(), 270, 150+i*40);
+			g2d.drawString(i+1+" "+main.highscore.getList().get(i).getName()+" "+main.highscore.getList().get(i).getPoints(), 270, 150+i*40);
 		}
 		
 		
