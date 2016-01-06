@@ -181,7 +181,7 @@ public class GameScreen extends Screen implements Runnable {
 				lEnemy.handleIntersectionWithFriends();
 				if(lEnemy.intersectsWithMovable(player))
 				{
-					lostLife("Spieler hat Gegner berührt");
+					lostLife("Spieler hat Gegner berï¿½hrt");
 				}
 			}
 			
@@ -237,6 +237,10 @@ public class GameScreen extends Screen implements Runnable {
 				lostLife("PrototypeWall wurde zerstÃ¶rt");
 			}
 			
+		}
+		
+		if(timeout <= 0) {
+			lostLife("Zeit abgelaufen");
 		}
 		
 		//updateUI();
@@ -440,8 +444,6 @@ public class GameScreen extends Screen implements Runnable {
 		
 		gT.setColor(Color.BLACK);
 		
-		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
-		
 		
 		gT.drawString("Leben: "+player.getLifePoints(), getWidth()-75, getHeight()-10);
 	
@@ -451,6 +453,13 @@ public class GameScreen extends Screen implements Runnable {
 		double prozentGefuellt = ((int)(((anfangsflaeche-restflaeche)/(anfangsflaeche-zielflaeche))*1000)/10.0);
 		
 		gT.drawString("Fortschritt: "+ prozentGefuellt,10,getHeight()-10);
+		
+		if(timeout <= 5) {
+			gT.setColor(Color.RED);
+			gT.setFont(gT.getFont().deriveFont(gT.getFont().getSize() * 1.5F));
+		}
+		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
+
 		
 		//gT.drawPolygon(background);
 	}
@@ -512,11 +521,11 @@ public class GameScreen extends Screen implements Runnable {
 			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
 			//Sven: Zum testen erstemal auskommentiert
-			if (timeout == 0) {
+			/*if (timeout == 0) {
 				running = false;
 				
 				this.cancel();
-			}
+			}*/
 		}
 
 	};
@@ -551,6 +560,14 @@ public class GameScreen extends Screen implements Runnable {
 				updateUI();
 				delta = 0;
 
+			}
+			else {
+				try {
+					Thread.sleep(1, 0);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
