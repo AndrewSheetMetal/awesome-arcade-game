@@ -40,7 +40,7 @@ public class HelpControlScreen3 extends BasicScreen {
 				350, 200, g2d);
 		drawCenteredString(
 				"image/stand.png",
-				"Dieses Symbol sorgt dafür das der Spieler ein zufällig gewähltes Power-Up bekommt",
+				"Dieses Symbol sorgt dafür das der Spieler ein zufaellig gewaehltes Power-Up bekommt",
 				350, 300, g2d);
 		drawCenteredString("image/stand.png",
 				"Dieses Power-Up sogt dafür das der Spieler sich für kurze Zeit schneller bewegt",
