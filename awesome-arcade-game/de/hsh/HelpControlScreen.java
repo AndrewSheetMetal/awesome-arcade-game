@@ -1,27 +1,51 @@
 package de.hsh;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-public class HelpControlScreen extends BasicScreen {
+public class HelpControlScreen extends Screen  {
+	private static final long serialVersionUID = 1L;
 	private Main main;
-	private Image img;
 	public HelpControlScreen(Main main) {
-		super(main);
+		this.main = main;
+		
+		//Falls irgend eine Taste gedrÃ¼ckt wird, so wird zum MainMenÃ¼ zurÃ¼ckgekehrt.
+		this.addKeyListener(new KeyListener (){
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				System.out.println("gott next page");
+				gotoNextPage();
+			}
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+
+			}
+		});
+
+	}
+	
+	private void gotoNextPage() {
+		HelpControlScreen2 sc2 = new HelpControlScreen2(main);
+		main.getContentPane().removeAll();
+		
+		main.setScreen(sc2);
+		
+		sc2.setVisible(true);
+		sc2.setFocusable(true);
+		sc2.requestFocus();
+		
+		sc2.updateUI();
 		
 	}
 
@@ -39,19 +63,40 @@ public class HelpControlScreen extends BasicScreen {
 
 		g2d.setColor(Color.RED);
 
-		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 1.4F));
+		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 2.4F));
 
 		drawCenteredString("Hilfe / Steuerung", 350, 100, g2d);
-		drawCenteredString("image/ball.png","Die Spielfigur wird mit Hilfe der Pfeiltasten in alle Himmelsrichtungen bewegt",350, 200, g2d);
-		drawCenteredString("image/Gegner.png","Gegner der dem Spieler bei berührung ein Leben abzieht", 350, 300, g2d);
-		drawCenteredString("image/Stachelschwein.png","Stachelschweine spawnen außerhalb des Spielfeldes", 350, 400, g2d);
-		
-		drawCenteredString("Press any Key to exit", 350, 650, g2d);
-		
+		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.6F));
+		drawCenteredString(
+				"image/ball.png",
+				"Die Spielfigur muss das Spielfeld mittels gezogener Mauern auf einen",
+				350, 200, g2d);
+		drawCenteredString(
+				"Prozentsatz reduzieren um ein Level erfolgreich abzuschließen",
+				350, 220, g2d);
+		drawCenteredString(
+				"image/Gegner.png",
+				" Diese Gegner bewegen sich innerhalb des Spielfeldes und ziehen dem",
+				350, 300, g2d);
+		drawCenteredString(
+				" Spieler bei Berührung ein Leben ab. Außerdem zerstören sie die gezogenen",
+				350, 320, g2d);
+		drawCenteredString(
+				"Mauern solange diese noch nicht komplett errichtet wurden ",
+				350, 340, g2d);
+		drawCenteredString("image/Stachelschwein.png",
+				"Stachelschweine bewegen sich nur auf der Fläche außerhalb ",
+				350, 400, g2d);
+		drawCenteredString("des Spielfeldes und ziehen dem Spieler ebenfalls",
+				350, 420, g2d);
+		drawCenteredString("bei Berührung ein Leben ab", 350, 440, g2d);
+		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 1.15F));
+		drawCenteredString("Seite 1 von 3", 350, 650, g2d);
 
 	}
 
-	protected void drawCenteredString(String imgName,String s, int w, int h, Graphics2D g2d) {
+	protected void drawCenteredString(String imgName, String s, int w, int h,
+			Graphics2D g2d) {
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(new File(imgName));
@@ -65,10 +110,8 @@ public class HelpControlScreen extends BasicScreen {
 
 		int y = h;
 		g2d.drawString(s, x, y);
-		g2d.drawImage(img, x-imgW, (int)(y-g2d.getFontMetrics().getStringBounds(s, g2d).getHeight()), null);
+		g2d.drawImage(img, x - imgW, (int) (y - g2d.getFontMetrics()
+				.getStringBounds(s, g2d).getHeight()), null);
 	}
-
-	
-	
 
 }

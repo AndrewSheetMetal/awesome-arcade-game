@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>image/Tastatur.png</name>
-			<type>1</type>
-			<location>C:/Users/Alex/Desktop/Tastatur.png</location>
-		</link>
-	</linkedResources>
 </projectDescription>
