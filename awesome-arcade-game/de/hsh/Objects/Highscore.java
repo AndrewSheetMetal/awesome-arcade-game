@@ -38,7 +38,7 @@ public class Highscore implements Serializable{
 		try{
 			File f = new File("hs.dat");
 			if(!f.exists()){
-				f.createNewFile();
+				//f.createNewFile();
 				return;
 			}
 			FileInputStream fi = new FileInputStream(f);
@@ -53,6 +53,10 @@ public class Highscore implements Serializable{
 	public void save(){
 		try{
 			File f = new File("hs.dat");
+			if(!f.exists()){
+				f.createNewFile();
+				//return;
+			}
 			FileOutputStream fo = new FileOutputStream(f);
 			ObjectOutputStream ou = new ObjectOutputStream(fo);
 			ou.writeObject(list);
