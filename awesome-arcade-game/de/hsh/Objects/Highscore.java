@@ -14,20 +14,31 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Highscore implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<HighscoreEntry> list;
 	public Highscore(){
 		list = new ArrayList<HighscoreEntry>();
 	}
 	public void addEntry(HighscoreEntry entry){
-		if(list.size()<9)list.add(entry);
+		list.add(entry);
 		Collections.sort(list, new EntryCompare());
-		
+		if(list.size()>9){
+			List<HighscoreEntry> tmp = new ArrayList<HighscoreEntry>();
+			for(int i=0; i<10;i++){
+				tmp.add(list.get(i));
+			}
+			list = tmp;
+		}
 	}
+	@SuppressWarnings("unchecked")
 	public void restore(){
 		try{
 			File f = new File("hs.dat");
 			if(!f.exists()){
-				f.createNewFile();
+				//f.createNewFile();
 				return;
 			}
 			FileInputStream fi = new FileInputStream(f);
@@ -42,6 +53,10 @@ public class Highscore implements Serializable{
 	public void save(){
 		try{
 			File f = new File("hs.dat");
+			if(!f.exists()){
+				f.createNewFile();
+				//return;
+			}
 			FileOutputStream fo = new FileOutputStream(f);
 			ObjectOutputStream ou = new ObjectOutputStream(fo);
 			ou.writeObject(list);

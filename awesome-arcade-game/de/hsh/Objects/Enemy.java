@@ -25,7 +25,6 @@ public abstract class Enemy extends Movable
 	private static int sColCounter = 0;
 	
 	private final int HORIZONTAL = 0, VERTICAL = 1;	
-	private Color mColor;
 	private int mSpeed;
 	protected Class mType;
 	// Gibt an, ob bereits auf Kollision fï¿½r diesen Zyklus ï¿½berprï¿½ft wurde. 
@@ -262,14 +261,6 @@ public abstract class Enemy extends Movable
 				this.getDirection().getY()));								
 		}
 	}
-	
-	public Color getColor() {
-		return mColor;
-	}
-	
-	public void setColor(Color pColor) {
-		mColor = pColor;
-	}
 
 	public void setSpeed(int pSpeed)
 	{
@@ -344,9 +335,9 @@ public abstract class Enemy extends Movable
 		for(Enemy lEnemy : GameScreen.EnemyList)
 		{
 			// TODO: Auf Typgleichheit prï¿½fen.
-			// Vorsicht: Hier wird angenommen, dass die Gegner kreisrund sind.
 			if((lEnemy != this) && (lEnemy.getPosition() != null) 
-					&& intersectsWithMovable(lEnemy))
+					&& intersectsWithObject(lEnemy.getPosition(), 
+							new Point2D.Double(lEnemy.getSize().getWidth(), lEnemy.getSize().getHeight())))
 			{
 				if (DEBUG == 1)
 				{
@@ -362,10 +353,12 @@ public abstract class Enemy extends Movable
 	}
 	
 	// Liefert true, wenn der Gegner den übergebenen Gegner berührt.
-	public boolean intersectsWithMovable(Movable pMovable)
+	// Vorsicht: Hier wird angenommen, dass die Objekte kreisrund sind.
+	public boolean intersectsWithObject(Point2D pPosition, Point2D pSize)
 	{
-		return (this.getCenter().distance(pMovable.getCenter()) 
-				<= ((this.getSize().getWidth() / 2) + (pMovable.getSize().getWidth() / 2)));
+		Point2D lCenter = new Point2D.Double(pPosition.getX() + (pSize.getX() / 2), pPosition.getY() + (pSize.getY() / 2));
+		return (this.getCenter().distance(lCenter) 
+				<= ((this.getSize().getWidth() / 2) + (pSize.getX() / 2)));
 	}
 	
 	public void setHandled(boolean pHandled)
@@ -442,10 +435,11 @@ public abstract class Enemy extends Movable
 					lEnemy.getPosition().getY() + (0.1 * lEnemy.getDirection().getY())));
 			}
 			*/
+			// Positionen der Gegner um den Geschwindigkeitsfaktor auseinander schieben.
 			this.setPosition(new Point2D.Double(this.getPosition().getX() + (this.getSpeed() * this.getDirection().getX()),
-					this.getPosition().getY() + (this.getSpeed() * this.getDirection().getY())));
-				lEnemy.setPosition(new Point2D.Double(lEnemy.getPosition().getX() + (lEnemy.getSpeed() * lEnemy.getDirection().getX()),
-					lEnemy.getPosition().getY() + (lEnemy.getSpeed() * lEnemy.getDirection().getY())));
+				this.getPosition().getY() + (this.getSpeed() * this.getDirection().getY())));
+			lEnemy.setPosition(new Point2D.Double(lEnemy.getPosition().getX() + (lEnemy.getSpeed() * lEnemy.getDirection().getX()),
+				lEnemy.getPosition().getY() + (lEnemy.getSpeed() * lEnemy.getDirection().getY())));
 		}
 	}
 	

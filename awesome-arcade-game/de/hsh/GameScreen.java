@@ -190,10 +190,10 @@ public class GameScreen extends Screen implements Runnable {
 				}
 				// TODO: �berlagerung?
 				lEnemy.handleIntersectionWithFriends();
-				if(lEnemy.intersectsWithMovable(player))
+				/*if(lEnemy.intersectsWithMovable(player))
 				{
 					lostLife("Spieler hat Gegner ber�hrt");
-				}
+				}*/
 			}
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
