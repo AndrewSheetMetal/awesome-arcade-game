@@ -29,8 +29,10 @@ import de.hsh.Objects.Player;
 import de.hsh.Objects.Enemy;
 import de.hsh.Objects.Ball;
 import de.hsh.Objects.Porcupine;
+import de.hsh.Objects.PowerUp;
 
 import java.util.Random;
+
 
 //Cocken
 import javax.swing.JLabel;
@@ -55,6 +57,7 @@ public class GameScreen extends Screen implements Runnable {
 	
 	// ALEX
 	public static List<Enemy> EnemyList;
+	public List<PowerUp> mPowerUpList;
 	private Polygon gamearea = new Polygon();
 	
 	private int level;
@@ -90,7 +93,8 @@ public class GameScreen extends Screen implements Runnable {
 			e.setSpeed((int)speed);
 		}
 		
-		
+		// ALEX
+		mPowerUpList = new ArrayList<PowerUp>();
 		
 		//SVEN: GrÃ¶ÃŸe des Felds abspeichern
 		bfInitialSize.x = battlefields.get(0).getBounds().getWidth();
@@ -152,14 +156,18 @@ public class GameScreen extends Screen implements Runnable {
 		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
-	private void update(float pDeltaTime){
+	private void update(float pDeltaTime)
+	{
 		time += pDeltaTime;
 		
 		//Andreas
 		player.updatePosition(speed,pDeltaTime);
 		
 		// ALEX
+		// Gegner bewegen.
 		refreshEnemyPositions(pDeltaTime);
+		// Power-Up ggf. spawnen oder verschwinden lassen.
+		randomSpawnPowerUps();
 		
 		/*Checken, ob Player im Battlefield ist*/
 		//player.setColor(Color.BLUE);
@@ -167,8 +175,7 @@ public class GameScreen extends Screen implements Runnable {
 		{
 			Battlefield b = battlefields.get(i);
 			
-			// ALEX
-			
+			// ALEX			
 			// Kollisionen der Gegner mit Wï¿½nden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
@@ -176,12 +183,6 @@ public class GameScreen extends Screen implements Runnable {
 				if(lEnemy instanceof Porcupine)
 				{
 					((Porcupine) lEnemy).handleIntersectionWithBorder(Main.SIZE, Main.SIZE);
-				}
-				// TODO: ï¿½berlagerung?
-				lEnemy.handleIntersectionWithFriends();
-				if(lEnemy.intersectsWithMovable(player))
-				{
-					lostLife("Spieler hat Gegner berührt");
 				}
 			}
 			
@@ -215,17 +216,50 @@ public class GameScreen extends Screen implements Runnable {
 			lostLife("Player hat PrototypeWall geschnitten");
 			//player.setColor(Color.PINK);
 		}
-		// ALEX: An Enemy angepasst.
+		
+		// ALEX: Kollisionen managen.
 		for(Enemy lEnemy : EnemyList)
 		{
-			if(lEnemy instanceof Ball)
+			// Kollisionen mit Prototyp-Wand.
+			if(lEnemy instanceof  Ball)
 			{
-				if(prototypeWall.intersects(((Ball)lEnemy).getBounds(),player.getCenter())) {
+				if(prototypeWall.intersects((( Ball)lEnemy).getBounds(),player.getCenter())) {
 					//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 					//lostLife();
 				}
 			}
+			// Kollisionen mit Spieler.
+			if(lEnemy.intersectsWithObject(player.getPosition(), 
+					new Point2D.Double(player.getSize().getWidth(),  player.getSize().getHeight())))
+			{
+				lostLife("Spieler hat Gegner berührt");
+			}
+			// Kollisionen mit anderen Gegnern.
+			lEnemy.handleIntersectionWithFriends();
+			// Kollisionen mit Power-Ups.
+			for(int i = 0; i < mPowerUpList.size(); i++)
+			{
+			 	if(lEnemy.intersectsWithObject(mPowerUpList.get(i).getPosition(), 
+						new Point2D.Double(mPowerUpList.get(i).getSize().getWidth(), 
+								mPowerUpList.get(i).getSize().getHeight())))
+				{
+					 mPowerUpList.remove(i);
+					i--;
+				}
+			}
 		}
+		// Kollision von Spieler und Power-Up.
+		for(int i = 0; i < mPowerUpList.size();  i++)
+		{
+			if(player.intersectsWithPowerUp(mPowerUpList.get(i)))
+			{
+				System.out.println("Spieler hat Power-Up eingesammelt.");
+				// TODO: Andi kann hier einfügen.
+				mPowerUpList.remove(i);
+				i--;
+			}
+		}
+		
 		
 		prototypeWall.update(pDeltaTime);
 		
@@ -416,6 +450,7 @@ public class GameScreen extends Screen implements Runnable {
 		
 		// ALEX
 		drawEnemies(g);
+		drawPowerUps(g);
 		
 		prototypeWall.draw(g,player.getCenter());
 		
@@ -578,5 +613,28 @@ public class GameScreen extends Screen implements Runnable {
 			lEnemy.draw(g);
 		}
 	}
+	
+	// ALEX
+	private void drawPowerUps(Graphics g)
+	{
+		for(PowerUp lPowerUp : mPowerUpList)
+		{
+			lPowerUp.draw(g);
+		}
+	}
+	
+	// ALEX
+	private void randomSpawnPowerUps()
+	{
+		// Zufällig spawnen (P = 1/400).
+		Random lRandom = new Random();
+		if(lRandom.nextInt(400) == 399)
+		{
+			PowerUp lPowerUp = new PowerUp(0,0);
+			lPowerUp.setPosition(new Point2D.Double(lRandom.nextInt(Main.SIZE - (int)(lPowerUp.getSize().getWidth())),
+					lRandom.nextInt(Main.SIZE - (int)(lPowerUp.getSize().getHeight()))));
+			mPowerUpList.add(lPowerUp);
+		}
+	}	
 }
 

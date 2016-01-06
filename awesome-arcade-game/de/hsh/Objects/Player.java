@@ -123,4 +123,12 @@ public class Player extends Movable {
 		pos.setLocation(pos.getX() + speed*(getDirection().getX()*pDeltaTime), pos.getY() + speed*(getDirection().getY()*pDeltaTime));
 		setPosition(pos);
 	}
+	
+	// Liefert true, wenn der Gegner den übergebenen Gegner berührt.
+	// Vorsicht: Hier wird angenommen, dass die Objekte kreisrund sind.
+	public boolean intersectsWithPowerUp(PowerUp pPowerUp)
+	{
+		return (this.getCenter().distance(pPowerUp.getCenter()) 
+				<= ((this.getSize().getWidth() / 2) + (pPowerUp.getSize().getWidth() / 2)));
+	}
 }

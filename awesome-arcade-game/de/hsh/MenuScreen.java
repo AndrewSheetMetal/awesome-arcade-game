@@ -140,6 +140,20 @@ public class MenuScreen extends Screen {
 			
 		});
 		
+		hilfeBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				HelpControlScreen hcScreen = new HelpControlScreen(main);
+				
+				main.setScreen(hcScreen);
+				setVisible(false);
+				hcScreen.setFocusable(true);
+				hcScreen.requestFocus();
+				
+			}
+			
+		});
+		
 		endeBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
