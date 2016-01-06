@@ -55,6 +55,13 @@ public class GameScreen extends Screen implements Runnable {
 	private double anfangsflaeche;
 	private double zielflaeche = 50000;
 	
+	private double playerAdditionalSpeedTime = 0; //Zeit, in der der Spieler noch erh√∂hte Geschwindigkeit hat.
+	private double enemyAdditionalSpeedTime = 0; //Zeit, in der die Enemys noch erh√∂hte Geschwindigkeit haben.
+	private double enemyReducedSpeedTime = 0; //Zeit, in der der Spieler noch verringerte Geschwindigkeit hat.
+	private double playerReducedSpeedTime = 0; //Siehe enemyReducedSpeedTime nur f√ºr Player
+	private double playerNormalSpeed = 1;
+	private double enemyNormalSpeed = 1;
+	
 	// ALEX
 	public static List<Enemy> EnemyList;
 	public List<PowerUp> mPowerUpList;
@@ -161,7 +168,12 @@ public class GameScreen extends Screen implements Runnable {
 		time += pDeltaTime;
 		
 		//Andreas
-		player.updatePosition(speed,pDeltaTime);
+		float realPlayerSpeed = 1;
+		if(playerAdditionalSpeedTime > 0) {
+			playerAdditionalSpeedTime -= pDeltaTime;
+			realPlayerSpeed *= 2;
+		}
+		player.updatePosition(speed,pDeltaTime*realPlayerSpeed);
 		
 		// ALEX
 		// Gegner bewegen.
@@ -232,7 +244,7 @@ public class GameScreen extends Screen implements Runnable {
 			if(lEnemy.intersectsWithObject(player.getPosition(), 
 					new Point2D.Double(player.getSize().getWidth(),  player.getSize().getHeight())))
 			{
-				lostLife("Spieler hat Gegner ber¸hrt");
+				lostLife("Spieler hat Gegner berÔøΩhrt");
 			}
 			// Kollisionen mit anderen Gegnern.
 			lEnemy.handleIntersectionWithFriends();
@@ -254,7 +266,7 @@ public class GameScreen extends Screen implements Runnable {
 			if(player.intersectsWithPowerUp(mPowerUpList.get(i)))
 			{
 				System.out.println("Spieler hat Power-Up eingesammelt.");
-				// TODO: Andi kann hier einf¸gen.
+				// TODO: Andi kann hier einfÔøΩgen.
 				mPowerUpList.remove(i);
 				i--;
 			}
@@ -526,13 +538,16 @@ public class GameScreen extends Screen implements Runnable {
     			
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_S) {
-    			speed /= 10;
+    			playerAdditionalSpeedTime = 100;//speed /= 10;
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_PLUS) {
     			speed *= 2.0;
     		}
     		else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
     			speed /= 2.0;
+    		}
+    		else if(e.getKeyCode() == KeyEvent.VK_P) {
+    			running = !running;
     		}
         }
     }
@@ -551,7 +566,7 @@ public class GameScreen extends Screen implements Runnable {
 			if (timeout == 0) {
 				running = false;
 				
-				this.cancel();
+				//this.cancel();
 			}
 		}
 
@@ -573,20 +588,31 @@ public class GameScreen extends Screen implements Runnable {
 		long lastTime = System.nanoTime();
 		double nsPerTick = 1000000000D/60D;
 		float delta = 0;
-		
-		while(running){
-			long now = System.nanoTime();
-			delta +=  (now-lastTime)/nsPerTick;
-			lastTime = now;			
-			
-			if(delta >= 1) {
-				//if(running) {
-					update(delta);
-
-				//}
-				updateUI();
-				delta = 0;
-
+		while(true) {
+			delta = 0;
+			lastTime = System.nanoTime();
+			while(running){
+				long now = System.nanoTime();
+				delta +=  (now-lastTime)/nsPerTick;
+				lastTime = now;			
+				
+				if(delta >= 1) {
+					//if(running) {
+						update(delta);
+	
+					//}
+					updateUI();
+					delta = 0;
+	
+				}
+				else {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
@@ -626,7 +652,7 @@ public class GameScreen extends Screen implements Runnable {
 	// ALEX
 	private void randomSpawnPowerUps()
 	{
-		// Zuf‰llig spawnen (P = 1/400).
+		// ZufÔøΩllig spawnen (P = 1/400).
 		Random lRandom = new Random();
 		if(lRandom.nextInt(400) == 399)
 		{
