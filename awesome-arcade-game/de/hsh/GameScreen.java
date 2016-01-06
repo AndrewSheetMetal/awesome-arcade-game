@@ -16,7 +16,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
@@ -30,8 +29,10 @@ import de.hsh.Objects.Player;
 import de.hsh.Objects.Enemy;
 import de.hsh.Objects.Ball;
 import de.hsh.Objects.Porcupine;
+import de.hsh.Objects.PowerUp;
 
 import java.util.Random;
+
 
 //Cocken
 import javax.swing.JLabel;
@@ -54,15 +55,9 @@ public class GameScreen extends Screen implements Runnable {
 	private double anfangsflaeche;
 	private double zielflaeche = 50000;
 	
-	private int playerAdditionalSpeedTime = 0; //Zeit, in der der Spieler noch erhöhte Geschwindigkeit hat.
-	private int enemyAdditionalSpeedTime = 0; //Zeit, in der die Enemys noch erhöhte Geschwindigkeit haben.
-	private int enemyReducedSpeedTime = 0; //Zeit, in der der Spieler noch verringerte Geschwindigkeit hat.
-	private int playerReducedSpeedTime = 0; //Siehe enemyReducedSpeedTime nur für Player
-	private double playerNormalSpeed = 1;
-	private double enemyNormalSpeed = 1;
-	
 	// ALEX
 	public static List<Enemy> EnemyList;
+	public List<PowerUp> mPowerUpList;
 	private Polygon gamearea = new Polygon();
 	
 	private int level;
@@ -98,7 +93,8 @@ public class GameScreen extends Screen implements Runnable {
 			e.setSpeed((int)speed);
 		}
 		
-		
+		// ALEX
+		mPowerUpList = new ArrayList<PowerUp>();
 		
 		//SVEN: Größe des Felds abspeichern
 		bfInitialSize.x = battlefields.get(0).getBounds().getWidth();
@@ -154,23 +150,24 @@ public class GameScreen extends Screen implements Runnable {
 			public void componentHidden(ComponentEvent e) {}
 		});
 		
+		
 		running = true;
 		new Thread(this).start();
 		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
-	private void update(float pDeltaTime){
+	private void update(float pDeltaTime)
+	{
 		time += pDeltaTime;
 		
 		//Andreas
-		/*double realPlayerSpeed = 
-		if(playerAdditionalSpeedTime > 0) {
-			playerAdditionalSpeedTime -= pDeltaTime;
-		}*/
 		player.updatePosition(speed,pDeltaTime);
 		
 		// ALEX
+		// Gegner bewegen.
 		refreshEnemyPositions(pDeltaTime);
+		// Power-Up ggf. spawnen oder verschwinden lassen.
+		randomSpawnPowerUps();
 		
 		/*Checken, ob Player im Battlefield ist*/
 		//player.setColor(Color.BLUE);
@@ -178,8 +175,7 @@ public class GameScreen extends Screen implements Runnable {
 		{
 			Battlefield b = battlefields.get(i);
 			
-			// ALEX
-			
+			// ALEX			
 			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
@@ -188,12 +184,6 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					((Porcupine) lEnemy).handleIntersectionWithBorder(Main.SIZE, Main.SIZE);
 				}
-				// TODO: �berlagerung?
-				lEnemy.handleIntersectionWithFriends();
-				/*if(lEnemy.intersectsWithMovable(player))
-				{
-					lostLife("Spieler hat Gegner ber�hrt");
-				}*/
 			}
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
@@ -226,15 +216,47 @@ public class GameScreen extends Screen implements Runnable {
 			lostLife("Player hat PrototypeWall geschnitten");
 			//player.setColor(Color.PINK);
 		}
-		// ALEX: An Enemy angepasst.
+		
+		// ALEX: Kollisionen managen.
 		for(Enemy lEnemy : EnemyList)
 		{
-			if(lEnemy instanceof Ball)
+			// Kollisionen mit Prototyp-Wand.
+			if(lEnemy instanceof  Ball)
 			{
-				if(prototypeWall.intersects(((Ball)lEnemy).getBounds(),player.getCenter())) {
+				if(prototypeWall.intersects((( Ball)lEnemy).getBounds(),player.getCenter())) {
 					//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 					//lostLife();
 				}
+			}
+			// Kollisionen mit Spieler.
+			if(lEnemy.intersectsWithObject(player.getPosition(), 
+					new Point2D.Double(player.getSize().getWidth(),  player.getSize().getHeight())))
+			{
+				lostLife("Spieler hat Gegner ber�hrt");
+			}
+			// Kollisionen mit anderen Gegnern.
+			lEnemy.handleIntersectionWithFriends();
+			// Kollisionen mit Power-Ups.
+			for(int i = 0; i < mPowerUpList.size(); i++)
+			{
+			 	if(lEnemy.intersectsWithObject(mPowerUpList.get(i).getPosition(), 
+						new Point2D.Double(mPowerUpList.get(i).getSize().getWidth(), 
+								mPowerUpList.get(i).getSize().getHeight())))
+				{
+					 mPowerUpList.remove(i);
+					i--;
+				}
+			}
+		}
+		// Kollision von Spieler und Power-Up.
+		for(int i = 0; i < mPowerUpList.size();  i++)
+		{
+			if(player.intersectsWithPowerUp(mPowerUpList.get(i)))
+			{
+				System.out.println("Spieler hat Power-Up eingesammelt.");
+				// TODO: Andi kann hier einf�gen.
+				mPowerUpList.remove(i);
+				i--;
 			}
 		}
 		
@@ -249,10 +271,6 @@ public class GameScreen extends Screen implements Runnable {
 				lostLife("PrototypeWall wurde zerstört");
 			}
 			
-		}
-		
-		if(timeout <= 0) {
-			lostLife("Zeit abgelaufen");
 		}
 		
 		//updateUI();
@@ -432,6 +450,7 @@ public class GameScreen extends Screen implements Runnable {
 		
 		// ALEX
 		drawEnemies(g);
+		drawPowerUps(g);
 		
 		prototypeWall.draw(g,player.getCenter());
 		
@@ -457,6 +476,8 @@ public class GameScreen extends Screen implements Runnable {
 		
 		gT.setColor(Color.BLACK);
 		
+		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
+		
 		
 		gT.drawString("Leben: "+player.getLifePoints(), getWidth()-75, getHeight()-10);
 	
@@ -466,13 +487,6 @@ public class GameScreen extends Screen implements Runnable {
 		double prozentGefuellt = ((int)(((anfangsflaeche-restflaeche)/(anfangsflaeche-zielflaeche))*1000)/10.0);
 		
 		gT.drawString("Fortschritt: "+ prozentGefuellt,10,getHeight()-10);
-		
-		if(timeout <= 5) {
-			gT.setColor(Color.RED);
-			gT.setFont(gT.getFont().deriveFont(gT.getFont().getSize() * 1.5F));
-		}
-		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
-
 		
 		//gT.drawPolygon(background);
 	}
@@ -520,9 +534,6 @@ public class GameScreen extends Screen implements Runnable {
     		else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
     			speed /= 2.0;
     		}
-    		else if(e.getKeyCode() == KeyEvent.VK_P) {
-    			running = !running;
-    		}
         }
     }
 
@@ -537,11 +548,11 @@ public class GameScreen extends Screen implements Runnable {
 			//System.out.println("Timer:" + timeout);
 			timebox.setText("" + timeout);
 			//Sven: Zum testen erstemal auskommentiert
-			/*if (timeout == 0) {
+			if (timeout == 0) {
 				running = false;
 				
 				this.cancel();
-			}*/
+			}
 		}
 
 	};
@@ -563,29 +574,19 @@ public class GameScreen extends Screen implements Runnable {
 		double nsPerTick = 1000000000D/60D;
 		float delta = 0;
 		
-		while(true) { //Während der Pause loopt er hier drin rum
-			System.out.println("Spielläuft: "+running);
-			delta = 0;
-			lastTime = System.nanoTime();
-			while(running){
-				long now = System.nanoTime();
-				delta +=  (now-lastTime)/nsPerTick;
-				lastTime = now;			
-				
-				if(delta >= 1) {
+		while(running){
+			long now = System.nanoTime();
+			delta +=  (now-lastTime)/nsPerTick;
+			lastTime = now;			
+			
+			if(delta >= 1) {
+				//if(running) {
 					update(delta);
-					updateUI();
-					delta = 0;
-	
-				}
-				else {
-					try {
-						Thread.sleep(1, 0);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+
+				//}
+				updateUI();
+				delta = 0;
+
 			}
 		}
 	}
@@ -612,5 +613,28 @@ public class GameScreen extends Screen implements Runnable {
 			lEnemy.draw(g);
 		}
 	}
+	
+	// ALEX
+	private void drawPowerUps(Graphics g)
+	{
+		for(PowerUp lPowerUp : mPowerUpList)
+		{
+			lPowerUp.draw(g);
+		}
+	}
+	
+	// ALEX
+	private void randomSpawnPowerUps()
+	{
+		// Zuf�llig spawnen (P = 1/400).
+		Random lRandom = new Random();
+		if(lRandom.nextInt(400) == 399)
+		{
+			PowerUp lPowerUp = new PowerUp(0,0);
+			lPowerUp.setPosition(new Point2D.Double(lRandom.nextInt(Main.SIZE - (int)(lPowerUp.getSize().getWidth())),
+					lRandom.nextInt(Main.SIZE - (int)(lPowerUp.getSize().getHeight()))));
+			mPowerUpList.add(lPowerUp);
+		}
+	}	
 }
 

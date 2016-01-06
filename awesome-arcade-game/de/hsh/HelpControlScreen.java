@@ -12,7 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class HelpControlScreen extends Screen  {
-	private static final long serialVersionUID = 1L;
+	//private static final long serialVersionUID = 1L;
 	private Main main;
 	public HelpControlScreen(Main main) {
 		this.main = main;
@@ -72,24 +72,24 @@ public class HelpControlScreen extends Screen  {
 				"Die Spielfigur muss das Spielfeld mittels gezogener Mauern auf einen",
 				350, 200, g2d);
 		drawCenteredString(
-				"Prozentsatz reduzieren um ein Level erfolgreich abzuschließen",
+				"Prozentsatz reduzieren um ein Level erfolgreich abzuschlieï¿½en",
 				350, 220, g2d);
 		drawCenteredString(
 				"image/Gegner.png",
 				" Diese Gegner bewegen sich innerhalb des Spielfeldes und ziehen dem",
 				350, 300, g2d);
 		drawCenteredString(
-				" Spieler bei Berührung ein Leben ab. Außerdem zerstören sie die gezogenen",
+				" Spieler bei Berï¿½hrung ein Leben ab. Auï¿½erdem zerstï¿½ren sie die gezogenen",
 				350, 320, g2d);
 		drawCenteredString(
 				"Mauern solange diese noch nicht komplett errichtet wurden ",
 				350, 340, g2d);
 		drawCenteredString("image/Stachelschwein.png",
-				"Stachelschweine bewegen sich nur auf der Fläche außerhalb ",
+				"Stachelschweine bewegen sich nur auf der Flï¿½che auï¿½erhalb ",
 				350, 400, g2d);
 		drawCenteredString("des Spielfeldes und ziehen dem Spieler ebenfalls",
 				350, 420, g2d);
-		drawCenteredString("bei Berührung ein Leben ab", 350, 440, g2d);
+		drawCenteredString("bei Berï¿½hrung ein Leben ab", 350, 440, g2d);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 1.15F));
 		drawCenteredString("Seite 1 von 3", 350, 650, g2d);
 
