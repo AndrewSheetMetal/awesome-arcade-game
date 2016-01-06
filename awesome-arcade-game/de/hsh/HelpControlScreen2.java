@@ -69,14 +69,14 @@ public class HelpControlScreen2 extends Screen  {
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.6F));
 		drawCenteredString(
 				"image/stand.png",
-				"Dieses Power-Up sorgt dafür das der Spieler ein zusaetzliches Leben bekommt",
+				"Dieses Power-Up sorgt dafuer das der Spieler ein zusaetzliches Leben bekommt",
 				350, 200, g2d);
 		drawCenteredString(
 				"image/stand.png",
-				"Dieses Power-Up sorgt dafür das der Spieler Zeit gutgeschrieben bekommt",
+				"Dieses Power-Up sorgt dafuer das der Spieler Zeit gutgeschrieben bekommt",
 				350, 300, g2d);
 		drawCenteredString("image/stand.png",
-				"Dieses Power-Up sogt dafür das der Spieler sich für kurze Zeit schneller bewegt",
+				"Dieses Power-Up sogt dafuer das der Spieler sich für kurze Zeit schneller bewegt",
 				350, 400, g2d);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 1.15F));
 		drawCenteredString("Seite 2 von 3", 350, 650, g2d);
