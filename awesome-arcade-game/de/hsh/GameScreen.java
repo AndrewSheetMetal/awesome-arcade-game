@@ -221,16 +221,16 @@ public class GameScreen extends Screen implements Runnable {
 		for(Enemy lEnemy : EnemyList)
 		{
 			// Kollisionen mit Prototyp-Wand.
-			if(lEnemy instanceof Ball)
+			if(lEnemy instanceof  Ball)
 			{
-				if(prototypeWall.intersects(((Ball)lEnemy).getBounds(),player.getCenter())) {
+				if(prototypeWall.intersects((( Ball)lEnemy).getBounds(),player.getCenter())) {
 					//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
 					//lostLife();
 				}
 			}
 			// Kollisionen mit Spieler.
 			if(lEnemy.intersectsWithObject(player.getPosition(), 
-					new Point2D.Double(player.getSize().getWidth(), player.getSize().getHeight())))
+					new Point2D.Double(player.getSize().getWidth(),  player.getSize().getHeight())))
 			{
 				lostLife("Spieler hat Gegner berührt");
 			}
@@ -239,17 +239,17 @@ public class GameScreen extends Screen implements Runnable {
 			// Kollisionen mit Power-Ups.
 			for(int i = 0; i < mPowerUpList.size(); i++)
 			{
-				if(lEnemy.intersectsWithObject(mPowerUpList.get(i).getPosition(), 
+			 	if(lEnemy.intersectsWithObject(mPowerUpList.get(i).getPosition(), 
 						new Point2D.Double(mPowerUpList.get(i).getSize().getWidth(), 
 								mPowerUpList.get(i).getSize().getHeight())))
 				{
-					mPowerUpList.remove(i);
+					 mPowerUpList.remove(i);
 					i--;
 				}
 			}
 		}
 		// Kollision von Spieler und Power-Up.
-		for(int i = 0; i < mPowerUpList.size(); i++)
+		for(int i = 0; i < mPowerUpList.size();  i++)
 		{
 			if(player.intersectsWithPowerUp(mPowerUpList.get(i)))
 			{
