@@ -68,7 +68,7 @@ public class HelpControlScreen extends Screen  {
 		drawCenteredString("Hilfe / Steuerung", 350, 100, g2d);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.6F));
 		drawCenteredString(
-				"image/ball.png",
+				"image/Ball.png",
 				"Die Spielfigur muss das Spielfeld mittels gezogener Mauern auf einen",
 				350, 200, g2d);
 		drawCenteredString(
