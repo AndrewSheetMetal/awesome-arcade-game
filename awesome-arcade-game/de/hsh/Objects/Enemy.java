@@ -27,7 +27,6 @@ public abstract class Enemy extends Movable
 	private final int HORIZONTAL = 0, VERTICAL = 1;	
 	private Color mColor;
 	private int mSpeed;
-	private Point2D mDirection;
 	protected Class mType;
 	// Gibt an, ob bereits auf Kollision fï¿½r diesen Zyklus ï¿½berprï¿½ft wurde. 
 	private boolean mHandled;
@@ -183,11 +182,13 @@ public abstract class Enemy extends Movable
 
 	}
 	
+	@Override
 	public Point getCenter() {
 		return new Point((int)getPosition().getX()+getSize().width/2,
 				(int)getPosition().getY()+getSize().height/2);
 	}
 	
+	@Override
 	public Dimension getSize() {
 		Dimension toReturn = new Dimension();
 		toReturn.setSize(50, 50);
@@ -262,15 +263,6 @@ public abstract class Enemy extends Movable
 		}
 	}
 	
-	public Point2D getDirection()
-	{
-		return mDirection;
-	}
-	
-	public void setDirection(Point2D pDirection) {
-		mDirection = pDirection;		
-	}
-
 	public Color getColor() {
 		return mColor;
 	}
@@ -354,7 +346,7 @@ public abstract class Enemy extends Movable
 			// TODO: Auf Typgleichheit prï¿½fen.
 			// Vorsicht: Hier wird angenommen, dass die Gegner kreisrund sind.
 			if((lEnemy != this) && (lEnemy.getPosition() != null) 
-					&& intersectsWithFriend(lEnemy))
+					&& intersectsWithMovable(lEnemy))
 			{
 				if (DEBUG == 1)
 				{
@@ -370,10 +362,10 @@ public abstract class Enemy extends Movable
 	}
 	
 	// Liefert true, wenn der Gegner den übergebenen Gegner berührt.
-	private boolean intersectsWithFriend(Enemy pEnemy)
+	public boolean intersectsWithMovable(Movable pMovable)
 	{
-		return (this.getCenter().distance(pEnemy.getCenter()) 
-				<= ((this.getSize().getWidth() / 2) + (pEnemy.getSize().getWidth() / 2)));
+		return (this.getCenter().distance(pMovable.getCenter()) 
+				<= ((this.getSize().getWidth() / 2) + (pMovable.getSize().getWidth() / 2)));
 	}
 	
 	public void setHandled(boolean pHandled)
@@ -386,7 +378,7 @@ public abstract class Enemy extends Movable
 		return mHandled;
 	}
 	
-	// Prï¿½ft, 
+	// Prüft, ob sich Gegner berühren und lässt sie ggf. abprallen.
 	public void handleIntersectionWithFriends()
 	{
 		// Alle Handles auf false setzen.

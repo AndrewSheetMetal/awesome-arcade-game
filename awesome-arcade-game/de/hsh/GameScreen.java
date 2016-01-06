@@ -179,6 +179,10 @@ public class GameScreen extends Screen implements Runnable {
 				}
 				// TODO: ï¿½berlagerung?
 				lEnemy.handleIntersectionWithFriends();
+				if(lEnemy.intersectsWithMovable(player))
+				{
+					lostLife("Spieler hat Gegner berührt");
+				}
 			}
 			
 			if(b.contains(player.getPosition().getX(),player.getPosition().getY(),player.getSize().getWidth(),player.getSize().getHeight())) {
