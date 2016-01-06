@@ -61,8 +61,8 @@ public class MenuScreen extends Screen {
 		setSize(size);
 		setLayout(null);
 		
-		CircleButton bsp = new CircleButton("Start", 50, 50, 100,100, Color.RED, Color.WHITE);
-		add(bsp);
+		//CircleButton bsp = new CircleButton("Start", 250, 250, 100,100, Color.RED, Color.WHITE);
+		//add(bsp);
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton highscoreBtn = new JButton("Highscore");
 		JButton creditsBtn = new JButton("Credits");
