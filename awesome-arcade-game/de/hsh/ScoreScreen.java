@@ -153,6 +153,7 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		int y = h;//(fm.getAscent() + (h - (fm.getAscent() + fm.getDescent())) / 2);
 		    g2d.drawString(s, x, y);
 	}
+	 
 
 	
 }
