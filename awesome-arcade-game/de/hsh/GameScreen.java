@@ -260,6 +260,7 @@ public class GameScreen extends Screen implements Runnable {
 			}
 		}
 		
+		
 		prototypeWall.update(pDeltaTime);
 		
 		/*Wurde die PrototypeWall von einem Ball berührt, so bilden sich Kreise um den
