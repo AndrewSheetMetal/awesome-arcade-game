@@ -191,6 +191,7 @@ public class GameScreen extends Screen implements Runnable {
 			Battlefield b = battlefields.get(i);
 			
 			// ALEX
+			
 			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
@@ -382,7 +383,7 @@ public class GameScreen extends Screen implements Runnable {
 	 * Hier wird er z.B. auf die Startposition gesetzt*/
 	public void lostLife() {
 		
-		if(player.getLifePoints() == 0) {
+		if(player.getLifePoints() <= 1) {
 			//Game over - keine Leben mehr
 			System.out.println("Game over :(");
 			GameoverScreen gameoverScreen = new GameoverScreen(main, level);

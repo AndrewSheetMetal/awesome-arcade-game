@@ -23,8 +23,21 @@ public class GameoverScreen  extends Screen implements Runnable  {
 		this.addKeyListener(new KeyListener (){
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				name += arg0.getKeyChar();
-				System.out.println("Return to Main menü");
+				if((arg0.getKeyChar() >= 'A' && arg0.getKeyChar() <= 'Z') || (arg0.getKeyChar() >= 'a' && arg0.getKeyChar() <= 'z') || (arg0.getKeyChar() >= '0' && arg0.getKeyChar() <= '9'))
+				{
+					name += arg0.getKeyChar();	
+				}
+				else if(arg0.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					if(name.length() > 0) {
+						name = name.substring(0, name.length()-1);
+					}
+				}
+				else if(arg0.getKeyCode() == KeyEvent.VK_ENTER){
+					//TODO Speichern falls unter den Top Ten
+					//Beim Betätigen von Enter wird der HighscoreScreen angezeigt 
+					showHighscoreScreen();
+				}
+				//System.out.println("Return to Main menü");
 				//returnToMainMenu();
 			}
 			@Override
@@ -37,6 +50,19 @@ public class GameoverScreen  extends Screen implements Runnable  {
 		});
 		
 		new Thread(this).start();
+	}
+	
+	private void showHighscoreScreen() {
+		System.out.println("Show HighscoreScreen");
+		HighscoreScreen highscoreScreen = new HighscoreScreen(main);
+		//main.getContentPane().removeAll();
+		//main.removeAll();
+		main.setScreen(highscoreScreen);
+		//setVisible(false);
+		highscoreScreen.setVisible(true);
+		highscoreScreen.setFocusable(true);
+		highscoreScreen.requestFocus();
+		highscoreScreen.updateUI();
 	}
 	
 	@Override
