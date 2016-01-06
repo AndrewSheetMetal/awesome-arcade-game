@@ -54,6 +54,13 @@ public class GameScreen extends Screen implements Runnable {
 	private double anfangsflaeche;
 	private double zielflaeche = 50000;
 	
+	private int playerAdditionalSpeedTime = 0; //Zeit, in der der Spieler noch erhöhte Geschwindigkeit hat.
+	private int enemyAdditionalSpeedTime = 0; //Zeit, in der die Enemys noch erhöhte Geschwindigkeit haben.
+	private int enemyReducedSpeedTime = 0; //Zeit, in der der Spieler noch verringerte Geschwindigkeit hat.
+	private int playerReducedSpeedTime = 0; //Siehe enemyReducedSpeedTime nur für Player
+	private double playerNormalSpeed = 1;
+	private double enemyNormalSpeed = 1;
+	
 	// ALEX
 	public static List<Enemy> EnemyList;
 	private Polygon gamearea = new Polygon();
@@ -156,6 +163,10 @@ public class GameScreen extends Screen implements Runnable {
 		time += pDeltaTime;
 		
 		//Andreas
+		/*double realPlayerSpeed = 
+		if(playerAdditionalSpeedTime > 0) {
+			playerAdditionalSpeedTime -= pDeltaTime;
+		}*/
 		player.updatePosition(speed,pDeltaTime);
 		
 		// ALEX
@@ -551,7 +562,7 @@ public class GameScreen extends Screen implements Runnable {
 		double nsPerTick = 1000000000D/60D;
 		float delta = 0;
 		
-		while(true) {
+		while(true) { //Während der Pause loopt er hier drin rum
 			System.out.println("Spielläuft: "+running);
 			delta = 0;
 			lastTime = System.nanoTime();
@@ -561,10 +572,7 @@ public class GameScreen extends Screen implements Runnable {
 				lastTime = now;			
 				
 				if(delta >= 1) {
-					//if(running) {
-						update(delta);
-	
-					//}
+					update(delta);
 					updateUI();
 					delta = 0;
 	
