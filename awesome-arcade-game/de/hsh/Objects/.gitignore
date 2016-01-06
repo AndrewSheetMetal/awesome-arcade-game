@@ -9,5 +9,11 @@
 /Porcupine.class
 /PrototypeWall$Collision.class
 /CircleButton.class
+<<<<<<< HEAD
 /PowerUp.class
 /PowerUp$PuType.class
+=======
+/Highscore.class
+/HighscoreEntry.class
+/Highscore$EntryCompare.class
+>>>>>>> branch 'master' of https://github.com/AndrewSheetMetal/awesome-arcade-game.git
