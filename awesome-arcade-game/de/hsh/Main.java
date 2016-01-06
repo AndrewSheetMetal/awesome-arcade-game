@@ -39,9 +39,11 @@ public class Main extends JFrame {
 
 	public void setScreen(JPanel pScreen) {
 		//getContentPane().removeAll();
+		getContentPane().removeAll();
 		getContentPane().add(pScreen);
 		System.out.println("Screens: "+getContentPane().getComponentCount());
 		//getContentPane().getComponentCount()
+		pScreen.updateUI();
 	}
 	public List<Battlefield> createBattlefields(int level) {
 		List<Battlefield> fields = new ArrayList<Battlefield>();

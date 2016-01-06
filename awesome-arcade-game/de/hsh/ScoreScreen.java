@@ -98,45 +98,28 @@ public class ScoreScreen  extends Screen implements Runnable  {
 	
 	public void paintComponent(Graphics g) {
 		//super.paintComponent(g);
-		g.clearRect(0, 0, 700, 500);
+		g.clearRect(0, 0, 700, 700);
 		
 		g.translate((getWidth()-700)/2, (getHeight()-700)/2);
 		
 		Graphics2D g2d = (Graphics2D)g;
 		
-		//Zentrieren
-		
-		//g2d.translate((getWidth()-700)/2, (getHeight()-700)/2);
-		
-		
 		
 		Color c = new Color(0.3f,0.5f,0.3f,0.5f);
-		//Color c = Color.decode("0xFF00FF55");
 		
 		g2d.setColor(c);
-		
-		
-		//g2d.setColor(Color.BLUE);
-		
-		
 		g2d.fillRect(0, 0, 700, 700);
-		
-		
 		g2d.setColor(Color.RED);
 		
 		//Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 2.4F));
 		
-		//drawCenteredString("Level completed: ", w, h, g2d)
-		
-		//g2d.drawString("Level completed: ",350,200);
 		drawCenteredString("Level "+level+" completed: "+((int)(10*prozentGefuellt))/10.f+"%", 350, 150, g2d);
 		
 		drawCenteredString("Score: "+(int)score+" XP", 350, 220, g2d);
 		
 		if(oldHighscore < score) {
-			drawCenteredString("New Highscore!!! ", 350, 280, g2d);
-			
+			drawCenteredString("New Highscore!!! ", 350, 280, g2d);	
 		}
 		
 		drawCenteredString("Total Score: "+main.score, 350, 370, g2d);

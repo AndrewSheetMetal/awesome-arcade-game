@@ -117,28 +117,15 @@ public class GameScreen extends Screen implements Runnable {
 		
 		anfangsflaeche = getTotalArea();
 		restflaeche = anfangsflaeche;
-		// Muss sp�ter dynamisch erzeugt werden.
-		/*Ball b1 = new Ball();
-		Ball b2 = new Ball();
-		b1.setPosition(new Point2D.Double(400,200));
-		b2.setPosition(new Point2D.Double(350,300));
-		b1.setDirection(new Point2D.Double(-1,0));
-		b2.setDirection(new Point2D.Double(-0.5,-0.5));
-		EnemyList.add(b1);
-		EnemyList.add(b2);*/
-		
+		// TODO sollte sp�ter dynamisch erzeugt werden.
 		
 		this.addKeyListener(new TAdapter());
 		System.out.println("Keylistener"+this.getKeyListeners());
 		
 		
 		addComponentListener(new ComponentListener() {
-			
 			@Override
-			public void componentShown(ComponentEvent e) {
-				
-				
-			}
+			public void componentShown(ComponentEvent e) {}
 			
 			@Override
 			public void componentResized(ComponentEvent e) {
@@ -150,20 +137,13 @@ public class GameScreen extends Screen implements Runnable {
 				gamearea.addPoint((int)center.x+((Main.MARGIN+Main.SIZE)/2), (int)center.y-((Main.MARGIN+Main.SIZE)/2));
 				gamearea.addPoint((int)center.x+((Main.MARGIN+Main.SIZE)/2), (int)center.y+((Main.MARGIN+Main.SIZE)/2));
 				gamearea.addPoint((int)center.x-((Main.MARGIN+Main.SIZE)/2), (int)center.y+((Main.MARGIN+Main.SIZE)/2));
-				
 			}
 			
 			@Override
-			public void componentMoved(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void componentMoved(ComponentEvent e) {}
 			
 			@Override
-			public void componentHidden(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void componentHidden(ComponentEvent e) {}
 		});
 		
 		
@@ -173,9 +153,6 @@ public class GameScreen extends Screen implements Runnable {
 	}
 	
 	private void update(float pDeltaTime){
-		/*if(player.getLifePoints()<=0){
-			running = false;
-		}*/
 		time += pDeltaTime;
 		
 		//Andreas
@@ -191,6 +168,7 @@ public class GameScreen extends Screen implements Runnable {
 			Battlefield b = battlefields.get(i);
 			
 			// ALEX
+			
 			// Kollisionen der Gegner mit W�nden oder anderen Gegnern managen.
 			for(Enemy lEnemy : EnemyList)
 			{
@@ -228,8 +206,8 @@ public class GameScreen extends Screen implements Runnable {
 		}		
 		/*Schauen, ob der Player seine eigene Linie kreuzt*/
 		if(prototypeWall.intersects(player.getBounds())) {
-			JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
-			lostLife();
+			//JOptionPane.showMessageDialog(null, "Haha, Leben verloren");
+			lostLife("Player hat PrototypeWall geschnitten");
 			//player.setColor(Color.PINK);
 		}
 		// ALEX: An Enemy angepasst.
@@ -251,7 +229,7 @@ public class GameScreen extends Screen implements Runnable {
 		*/
 		if(!prototypeWall.isValid()) {
 			if(prototypeWall.isPlayerCatched(player)) {
-				lostLife();
+				lostLife("PrototypeWall wurde zerstört");
 			}
 			
 		}
@@ -351,21 +329,12 @@ public class GameScreen extends Screen implements Runnable {
 				
 				scoreScreen.setFocusable(true);
 				scoreScreen.requestFocus();
-		
-				
-				//GameScreen newLevel = new GameScreen(main.createBattlefields(), level+1, main);
-				//main.setScreen(newLevel);
-		
-				//main.remove(this);
-				}
+				scoreScreen.updateUI();
+			}
 			
 			System.out.println("Gesamtfläche: "+totalArea);
 			
 		}
-		
-		//battlefields.clear();
-		//battlefields.add(b);
-		
 		prototypeWall.clear();		
 	}
 	
@@ -380,9 +349,10 @@ public class GameScreen extends Screen implements Runnable {
 	
 	/*Diese Methode wird aufgerufen, wenn der Spieler ein Leben verliert.
 	 * Hier wird er z.B. auf die Startposition gesetzt*/
-	public void lostLife() {
+	public void lostLife(String reason) {
+		System.out.println("Leben verloren: "+reason);
 		
-		if(player.getLifePoints() == 0) {
+		if(player.getLifePoints() <= 1) {
 			//Game over - keine Leben mehr
 			System.out.println("Game over :(");
 			GameoverScreen gameoverScreen = new GameoverScreen(main, level);
@@ -395,8 +365,9 @@ public class GameScreen extends Screen implements Runnable {
 			gameoverScreen.requestFocus();
 		}
 		else {
-			System.out.println("Leben verloren");
 			//Spieler wird zurückgesetzt und ein Leben wird abgezogen
+			Point p = new Point();
+			player.setDirection(p);
 			player.setLifePoints(player.getLifePoints()-1);
 			prototypeWall.clear();
 			player.setPosition(new Point2D.Double(-75, Main.SIZE/2-player.getSize().height/2));	
@@ -441,9 +412,6 @@ public class GameScreen extends Screen implements Runnable {
 		drawEnemies(g);
 		
 		prototypeWall.draw(g,player.getCenter());
-		
-		
-		
 		
 	}
 		
