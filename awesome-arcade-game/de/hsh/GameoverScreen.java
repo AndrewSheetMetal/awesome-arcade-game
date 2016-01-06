@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import de.hsh.Objects.HighscoreEntry;
+
 public class GameoverScreen  extends Screen implements Runnable  {
 	private int level;
 	private Main main;
@@ -54,9 +56,12 @@ public class GameoverScreen  extends Screen implements Runnable  {
 	
 	private void showHighscoreScreen() {
 		System.out.println("Show HighscoreScreen");
+		HighscoreEntry entry = new HighscoreEntry(name, main.score);
+		main.highscore.addEntry(entry);
 		HighscoreScreen highscoreScreen = new HighscoreScreen(main);
 		//main.getContentPane().removeAll();
 		//main.removeAll();
+		main.remove(this);
 		main.setScreen(highscoreScreen);
 		//setVisible(false);
 		highscoreScreen.setVisible(true);

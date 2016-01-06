@@ -9,3 +9,6 @@
 /Porcupine.class
 /PrototypeWall$Collision.class
 /CircleButton.class
+/Highscore.class
+/HighscoreEntry.class
+/Highscore$EntryCompare.class

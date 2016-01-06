@@ -5,10 +5,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import de.hsh.Objects.HighscoreEntry;
+
 public class HighscoreScreen extends BasicScreen {
-	//private Main main;
 	
 	
 	public HighscoreScreen(Main main) {
@@ -41,21 +44,25 @@ public class HighscoreScreen extends BasicScreen {
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.7F));
 		
 		
-		Random rand = new Random();
+		/*Random rand = new Random();
 		
 		long start = Math.abs(rand.nextInt());
 		//Generiere 10 zufällige Einträge
 		//TODO Highscores laden
 		//TODO Am besten mit Stringformat und rechtsbündig, damit man die Scores besser vergleichen kann
-		/*for(int i = 1; i<=10; i++) {
+		for(int i = 1; i<=10; i++) {
 			g2d.drawString(i+". "+rand.nextLong(), 200, 150+i*50);
-		}*/
+		}
 		
 		//Erstmal rückwärts
 		for(int i = 10; i>=0; i--) {
 			start += Math.abs(rand.nextInt());
 			g2d.drawString(i+". "+start, 270, 150+i*40);
+		}*/
+		for(int i=0; i<main.highscore.getList().size();i++){
+			g2d.drawString(i+" "+main.highscore.getList().get(i).getName()+" "+main.highscore.getList().get(i).getPoints(), 270, 150+i*40);
 		}
+		
 		
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 1.15F));
 		

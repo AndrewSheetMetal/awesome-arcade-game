@@ -61,7 +61,8 @@ public class ScoreScreen  extends Screen implements Runnable  {
 		
 		//Gesamtscore
 		main.score += (int)score;
-		
+		delta = 0;
+		lastTime = System.currentTimeMillis();
 		while(aktuelleWartezeit > 0) {
 			long now = System.currentTimeMillis();
 			delta +=  (now-lastTime);
