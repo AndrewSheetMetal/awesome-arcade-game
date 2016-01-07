@@ -25,7 +25,7 @@ public class BattlefieldSeperator {
 	}
 	
 	/*
-	 * Kalkuliert die Battlefield Hälften, die entstehen, wenn man das Battlefield durch die übergebene prototypeWall teilen würde
+	 * Kalkuliert die Battlefield Haelften, die entstehen, wenn man das Battlefield durch die übergebene prototypeWall teilen würde
 	 * */
 	public void calculateBattlefieldHalfs(PrototypeWall wall) {
 		calculateStartAndEndIndex(wall);
@@ -37,7 +37,7 @@ public class BattlefieldSeperator {
 	}
 	
 	/*
-	 * Dies ist die zweite Methode, die aufgerufen wird, wenn in beiden zuvor berechneten Battlefield Hälften Kugeln sind.
+	 * Dies ist die zweite Methode, die aufgerufen wird, wenn in beiden zuvor berechneten Battlefield Haelften Kugeln sind.
 	 * */
 	public void calculateSplittedBattlefields() {
 		b1 = calculateFirstSplittedBattlefield();

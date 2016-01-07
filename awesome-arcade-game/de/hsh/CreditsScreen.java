@@ -37,14 +37,14 @@ public class CreditsScreen extends BasicScreen implements Runnable {
 		
 		drawCenteredString("Credits: ",350,moveup(150),g2d);
 		
-		//Etwas kleinere Schriftgröße für die Namen
+		//Etwas kleinere Schriftgroessee fuer die Namen
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.7F));
 		
 		int left = 250;
 		int top = 200;
 		int distance = 50;
 		
-		g2d.drawString("- Sven Döring", left, moveup(top));
+		g2d.drawString("- Sven Doehring", left, moveup(top));
 		g2d.drawString("- Alexander Gauggel", left, moveup(top+1*distance));
 		g2d.drawString("- Andreas Blech", left, moveup(top+2*distance));
 		g2d.drawString("- Alexander von Grunewald", left, moveup(top+3*distance));
