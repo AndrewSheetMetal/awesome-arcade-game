@@ -61,8 +61,8 @@ public class MenuScreen extends Screen {
 		setSize(size);
 		setLayout(null);
 		
-		CircleButton bsp = new CircleButton("Start", 50, 50, 100,100, Color.RED, Color.WHITE);
-		add(bsp);
+		//CircleButton bsp = new CircleButton("Start", 250, 250, 100,100, Color.RED, Color.WHITE);
+		//add(bsp);
 		JButton newGameBtn = new JButton("Neues Spiel");
 		JButton highscoreBtn = new JButton("Highscore");
 		JButton creditsBtn = new JButton("Credits");
@@ -135,6 +135,20 @@ public class MenuScreen extends Screen {
 				setVisible(false);
 				creditsScreen.setFocusable(true);
 				creditsScreen.requestFocus();
+				
+			}
+			
+		});
+		
+		hilfeBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				HelpControlScreen hcScreen = new HelpControlScreen(main);
+				
+				main.setScreen(hcScreen);
+				setVisible(false);
+				hcScreen.setFocusable(true);
+				hcScreen.requestFocus();
 				
 			}
 			

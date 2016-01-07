@@ -24,7 +24,7 @@ public class CreditsScreen extends BasicScreen implements Runnable {
 		
 		Graphics2D g2d = (Graphics2D)g;
 		
-		Color c = new Color(0.3f,0.6f,0.3f,0.5f);
+		Color c = new Color(0.3f,0.3f,0.6f,0.5f);
 		g2d.setColor(c);
 		g2d.fillRect(0, 0, 700, 700);
 		
@@ -44,11 +44,11 @@ public class CreditsScreen extends BasicScreen implements Runnable {
 		int top = 200;
 		int distance = 50;
 		
-		g2d.drawString("- Sven Doehring", left, moveup(top));
+		g2d.drawString("- Sven Döring", left, moveup(top));
 		g2d.drawString("- Alexander Gauggel", left, moveup(top+1*distance));
 		g2d.drawString("- Andreas Blech", left, moveup(top+2*distance));
-		g2d.drawString("- Alexander von Grunewald", left, moveup(top+3*distance));
-		g2d.drawString("- Bastian Goldbeck", left, moveup(top+4*distance));
+		g2d.drawString("- Alexander Grunewald", left, moveup(top+3*distance));
+		g2d.drawString("- Bastian Goldbeck(Cocken)", left, moveup(top+4*distance));
 		g2d.drawString("- Philipp Gottschalk", left, moveup(top+5*distance));
 		
 		

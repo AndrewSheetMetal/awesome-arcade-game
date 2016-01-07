@@ -5,23 +5,31 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import de.hsh.Objects.Highscore;
+
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final int SIZE = 500;
 	public static final int MARGIN = 200;
+	public int score;
 	private MenuScreen menuScreen;
+	public Highscore highscore;
 
 	public static void main(String[] args) {
+		
 		new Main().start();
 	}
 
 	private void start() {
+		highscore = new Highscore();
+		highscore.restore();
 		setTitle("Field$");
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -32,15 +40,17 @@ public class Main extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		score = 0;
 		
-
 	}
 
 	public void setScreen(JPanel pScreen) {
 		//getContentPane().removeAll();
+		getContentPane().removeAll();
 		getContentPane().add(pScreen);
 		System.out.println("Screens: "+getContentPane().getComponentCount());
 		//getContentPane().getComponentCount()
+		pScreen.updateUI();
 	}
 	public List<Battlefield> createBattlefields(int level) {
 		List<Battlefield> fields = new ArrayList<Battlefield>();

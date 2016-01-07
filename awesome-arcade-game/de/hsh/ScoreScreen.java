@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class ScoreScreen  extends Screen implements Runnable  {
 	private int level;
@@ -14,7 +16,7 @@ public class ScoreScreen  extends Screen implements Runnable  {
 	private int oldHighscore = 10000;
 	private int aktuelleWartezeit = -1; //Die aktuelle Wartezeit bis zum nächsten Level, wird runtergezählt
 	
-	private final int wartezeit = 5; //Die gesamt Wartezeit bis zum nächsten Level, nachdem der Score kalkuliert wurde
+	private final int WARTEZEIT = 5; //Die gesamt Wartezeit bis zum nächsten Level, nachdem der Score kalkuliert wurde
 	
 	public ScoreScreen(Main main, int level, double prozentGefuellt) {
 		this.main = main;
@@ -55,14 +57,18 @@ public class ScoreScreen  extends Screen implements Runnable  {
 			}
 		}
 		
-		aktuelleWartezeit = wartezeit;
+		aktuelleWartezeit = WARTEZEIT;
 		
+		//Gesamtscore
+		main.score += (int)score;
+		delta = 0;
+		lastTime = System.currentTimeMillis();
 		while(aktuelleWartezeit > 0) {
-			long now = System.nanoTime();
-			delta +=  (now-lastTime)/nsPerTick;
+			long now = System.currentTimeMillis();
+			delta +=  (now-lastTime);
 			lastTime = now;	
 			
-			if(delta > 60) {
+			if(delta > 1000) {
 				aktuelleWartezeit -= 1;
 				
 				System.out.println("Wartezeit: "+aktuelleWartezeit);
@@ -93,50 +99,34 @@ public class ScoreScreen  extends Screen implements Runnable  {
 	
 	public void paintComponent(Graphics g) {
 		//super.paintComponent(g);
-		g.clearRect(0, 0, 700, 500);
+		g.clearRect(0, 0, 700, 700);
 		
 		g.translate((getWidth()-700)/2, (getHeight()-700)/2);
 		
 		Graphics2D g2d = (Graphics2D)g;
 		
-		//Zentrieren
-		
-		//g2d.translate((getWidth()-700)/2, (getHeight()-700)/2);
-		
-		
 		
 		Color c = new Color(0.3f,0.5f,0.3f,0.5f);
-		//Color c = Color.decode("0xFF00FF55");
 		
 		g2d.setColor(c);
-		
-		
-		//g2d.setColor(Color.BLUE);
-		
-		
 		g2d.fillRect(0, 0, 700, 700);
-		
-		
 		g2d.setColor(Color.RED);
 		
 		//Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 2.4F));
 		
-		//drawCenteredString("Level completed: ", w, h, g2d)
+		drawCenteredString("Level "+level+" completed: "+((int)(10*prozentGefuellt))/10.f+"%", 350, 150, g2d);
 		
-		//g2d.drawString("Level completed: ",350,200);
-		drawCenteredString("Level "+level+" completed: "+((int)(10*prozentGefuellt))/10.f+"%", 350, 200, g2d);
-		
-		drawCenteredString("Score: "+(int)score+" XP", 350, 250, g2d);
-		
+		drawCenteredString("Score: "+(int)score+" XP", 350, 220, g2d);
+		/*
 		if(oldHighscore < score) {
-			drawCenteredString("New Highscore!!! ", 350, 300, g2d);
-			
-		}
+			drawCenteredString("New Highscore!!! ", 350, 280, g2d);	
+		}*/
+		
+		drawCenteredString("Total Score: "+main.score, 350, 290, g2d);
 		
 		if(aktuelleWartezeit > 0) {
-			drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 400, g2d);
-			
+			drawCenteredString("Noch "+(int)aktuelleWartezeit+" Sekunden bis zum nächsten Level", 350, 480, g2d);
 		}
 		
 	}
@@ -144,15 +134,8 @@ public class ScoreScreen  extends Screen implements Runnable  {
 	/*
 	 * Schreibt horizontalzentrierten Text
 	 * */
-	private void drawCenteredString(String s, int w, int h, Graphics2D g2d) {
-			    //FontMetrics fm = g.getFontMetrics();
-		
-		int x = (int)(w - g2d.getFontMetrics().getStringBounds(s, g2d).getWidth()/2);
-		
-		//int x = w;//(w - fm.stringWidth(s)) / 2;
-		int y = h;//(fm.getAscent() + (h - (fm.getAscent() + fm.getDescent())) / 2);
-		    g2d.drawString(s, x, y);
-	}
+	
+	 
 
 	
 }

@@ -20,13 +20,13 @@ import javax.swing.ImageIcon;
 import de.hsh.GameScreen;
 
 public class Player extends Movable {
+	
 	private int lifePoints;
 	private Color color;
 	private BufferedImage img;
 	
 	// ALEX
 	private int mSpeed;
-	private Point2D mDirection;
 		
 	public Player() {
 		setColor(Color.RED);
@@ -49,7 +49,9 @@ public class Player extends Movable {
 	
 	public void draw(Graphics g) {
 		
+		
 		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		//RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 		//rh.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
@@ -81,11 +83,13 @@ public class Player extends Movable {
 		//g.drawImage(img, (int)pos.getX()+img.getWidth()/2,(int)pos.getY()+img.getHeight()/2, null);
 
 	}
-	
+
+	@Override
 	public Point getCenter() {
 		return new Point((int)getPosition().getX()+getSize().width/2,(int)getPosition().getY()+getSize().height/2);
 	}
 	
+	@Override
 	public Dimension getSize() {
 		Dimension toReturn = new Dimension();
 		toReturn.setSize(50, 50);
@@ -106,21 +110,6 @@ public class Player extends Movable {
 		return mSpeed;
 	}
 
-	// ALEX
-	public void setDirection(Point2D pDirection) {
-		mDirection = pDirection;
-		
-		//System.out.println("Direction "+direction);
-		
-		// TODO Auto-generated method stub
-		
-	}
-	
-	// ALEX
-	public Point2D getDirection()
-	{
-		return mDirection;
-	}
 	public void setLifePoints(int life){
 		lifePoints = life;
 	}
@@ -133,5 +122,13 @@ public class Player extends Movable {
 		//Point2D direction = getDirection();
 		pos.setLocation(pos.getX() + speed*(getDirection().getX()*pDeltaTime), pos.getY() + speed*(getDirection().getY()*pDeltaTime));
 		setPosition(pos);
+	}
+	
+	// Liefert true, wenn der Gegner den übergebenen Gegner berührt.
+	// Vorsicht: Hier wird angenommen, dass die Objekte kreisrund sind.
+	public boolean intersectsWithPowerUp(PowerUp pPowerUp)
+	{
+		return (this.getCenter().distance(pPowerUp.getCenter()) 
+				<= ((this.getSize().getWidth() / 2) + (pPowerUp.getSize().getWidth() / 2)));
 	}
 }
