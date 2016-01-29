@@ -1,0 +1,50 @@
+package de.hsh.Objects;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
+
+import javax.swing.JComponent;
+
+import java.awt.event.ComponentListener;
+
+public class CircleButton extends JComponent{
+	private static final long serialVersionUID = 1L;
+	private String text;
+	private Shape sh;
+	private double x;
+	private double y;
+	private double width;
+	private double heigth;
+	private Color cText;
+	private Color cArea;
+	public CircleButton(String text, double x, double y, double width, double height, Color cArea, Color cText){
+		super();
+		this.text = text;
+		sh = new Ellipse2D.Double(x,y,width, height);
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.heigth = height;
+		this.cArea = cArea;
+		this.cText = cText;
+	}
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.setColor(cArea);
+		g2d.translate(-sh.getBounds2D().getWidth()/2, 0);
+		g2d.fill(sh);
+		
+		g2d.setColor(cText);
+		g2d.drawString(text, (int)(x+width/2-(g2d.getFontMetrics().getStringBounds(text, g2d).getWidth()/2)), (int) (y+heigth/2+(g2d.getFontMetrics().getStringBounds(text, g2d).getHeight()/2)));
+
+		g2d.translate(sh.getBounds2D().getWidth()/2, 0);
+	}
+	
+
+}
