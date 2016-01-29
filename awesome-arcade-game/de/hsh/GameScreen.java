@@ -30,6 +30,7 @@ import de.hsh.Objects.Enemy;
 import de.hsh.Objects.Ball;
 import de.hsh.Objects.Porcupine;
 import de.hsh.Objects.PowerUp;
+import de.hsh.Objects.PowerUp.PuType;
 
 import java.util.Random;
 
@@ -59,8 +60,6 @@ public class GameScreen extends Screen implements Runnable {
 	private double enemyAdditionalSpeedTime = 0; //Zeit, in der die Enemys noch erhöhte Geschwindigkeit haben.
 	private double enemyReducedSpeedTime = 0; //Zeit, in der der Spieler noch verringerte Geschwindigkeit hat.
 	private double playerReducedSpeedTime = 0; //Siehe enemyReducedSpeedTime nur für Player
-	private double playerNormalSpeed = 1;
-	private double enemyNormalSpeed = 1;
 	
 	// ALEX
 	public static List<Enemy> EnemyList;
@@ -86,7 +85,7 @@ public class GameScreen extends Screen implements Runnable {
 		this.main = main;
 		//SVEN: Zeit, Anzahl Gegner anhand des Levels initialisieren
 		this.level = level;
-		timeout = 60+level*10;
+		timeout = 20;//60+level*10;
 		battlefields = pBattlefields;
 		EnemyList = new ArrayList<Enemy>();
 		for(int i=0; i< level;i++){
@@ -173,11 +172,26 @@ public class GameScreen extends Screen implements Runnable {
 			playerAdditionalSpeedTime -= pDeltaTime;
 			realPlayerSpeed *= 2;
 		}
+		if(playerReducedSpeedTime > 0) {
+			playerReducedSpeedTime -= pDeltaTime;
+			realPlayerSpeed /= 2;
+		}
 		player.updatePosition(speed,pDeltaTime*realPlayerSpeed);
+		
+		float realEnemySpeed = 1;
+		if(enemyAdditionalSpeedTime > 0) {
+			enemyAdditionalSpeedTime -= pDeltaTime;
+			realEnemySpeed *= 2;
+		}
+		if(enemyReducedSpeedTime > 0) {
+			enemyReducedSpeedTime -= pDeltaTime;
+			realEnemySpeed /= 2;
+		}
+	
 		
 		// ALEX
 		// Gegner bewegen.
-		refreshEnemyPositions(pDeltaTime);
+		refreshEnemyPositions(pDeltaTime*realEnemySpeed);
 		// Power-Up ggf. spawnen oder verschwinden lassen.
 		randomSpawnPowerUps();
 		
@@ -257,6 +271,7 @@ public class GameScreen extends Screen implements Runnable {
 				{
 					 mPowerUpList.remove(i);
 					i--;
+					
 				}
 			}
 		}
@@ -267,8 +282,27 @@ public class GameScreen extends Screen implements Runnable {
 			{
 				System.out.println("Spieler hat Power-Up eingesammelt.");
 				// TODO: Andi kann hier einf�gen.
+				
+					
+				PuType type = mPowerUpList.get(i).getPuType();
+				if(type == PuType.Random) {
+					type = PowerUp.getRandomType(true);
+				}
+					
+				switch(type) {
+					case Life : player.setLifePoints(player.getLifePoints()+1); break; 
+					case Time : timeout += 30;
+					case Speed : playerAdditionalSpeedTime += 100;
+					case Slow : playerReducedSpeedTime += 100;
+					case Shield : /*TODO*/ break;
+					default: //Nichtstun
+						//PowerUp.getRandomType(true);
+				}
+				
 				mPowerUpList.remove(i);
 				i--;
+				
+				
 			}
 		}
 		
@@ -488,8 +522,6 @@ public class GameScreen extends Screen implements Runnable {
 		
 		gT.setColor(Color.BLACK);
 		
-		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
-		
 		
 		gT.drawString("Leben: "+player.getLifePoints(), getWidth()-75, getHeight()-10);
 	
@@ -499,6 +531,14 @@ public class GameScreen extends Screen implements Runnable {
 		double prozentGefuellt = ((int)(((anfangsflaeche-restflaeche)/(anfangsflaeche-zielflaeche))*1000)/10.0);
 		
 		gT.drawString("Fortschritt: "+ prozentGefuellt,10,getHeight()-10);
+		
+
+		if(timeout <= 5) {
+			gT.setColor(Color.RED);
+			gT.setFont(gT.getFont().deriveFont(gT.getFont().getSize() * 1.5F));
+		}
+		gT.drawString("Zeit: "+(int)timeout, 10, getHeight()-30);
+		
 		
 		//gT.drawPolygon(background);
 	}
@@ -551,9 +591,6 @@ public class GameScreen extends Screen implements Runnable {
     		}
         }
     }
-
-	
-
 	//Goldbeck: run() Methode des Timers, mit der im Sekundentakt hochgez�hlt wird.
 
 	TimerTask timerTask = new TimerTask() {
@@ -564,7 +601,9 @@ public class GameScreen extends Screen implements Runnable {
 			timebox.setText("" + timeout);
 			//Sven: Zum testen erstemal auskommentiert
 			if (timeout == 0) {
-				running = false;
+				lostLife("Zeit abgelaufen");
+				timeout = 60;
+				//running = false;
 				
 				//this.cancel();
 			}
@@ -589,6 +628,7 @@ public class GameScreen extends Screen implements Runnable {
 		double nsPerTick = 1000000000D/60D;
 		float delta = 0;
 		while(true) {
+			//System.out.println("Läuft: "+running);
 			delta = 0;
 			lastTime = System.nanoTime();
 			while(running){
@@ -613,6 +653,12 @@ public class GameScreen extends Screen implements Runnable {
 						e.printStackTrace();
 					}
 				}
+			}
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

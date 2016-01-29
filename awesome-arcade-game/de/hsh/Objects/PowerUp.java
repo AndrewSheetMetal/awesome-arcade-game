@@ -10,7 +10,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.Random;
 
-//ALEX: Klasse gefüllt
+//ALEX: Klasse gefï¿½llt
 public class PowerUp extends Actor 
 {		
 	private PuType mType;
@@ -31,7 +31,7 @@ public class PowerUp extends Actor
 				(int)getPosition().getY()+getSize().height/2);
 	}
 	
-	// Liefert die Größe.
+	// Liefert die Grï¿½ï¿½e.
 	public Dimension getSize() 
 	{
 		Dimension toReturn = new Dimension();
@@ -61,9 +61,14 @@ public class PowerUp extends Actor
 		g2d.fill(circle2D);	
 
 	}
+	public PuType getPuType() {
+		return mType; //Auch ein PuType.Random kann ausgegeben werden 
+		
+	}
 	
-	// Liefert einen zufälligen Power-Up-Typ.
-	private PuType getRandomType(boolean pReal)
+	
+	// Liefert einen zufï¿½lligen Power-Up-Typ.
+	public static PuType getRandomType(boolean pReal)
 	{
 		Random lRandom = new Random();
 		int lType;
