@@ -37,7 +37,7 @@ public class CreditsScreen extends BasicScreen implements Runnable {
 		
 		drawCenteredString("Credits: ",350,moveup(150),g2d);
 		
-		//Etwas kleinere Schriftgröße für die Namen
+		//Etwas kleinere Schriftgroessee fuer die Namen
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.7F));
 		
 		int left = 250;
