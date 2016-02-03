@@ -46,8 +46,6 @@ public class MenuScreen extends Screen {
 	private Image img;
 
 	public MenuScreen(final Main main) {
-		
-		
 	
 		this.img = new ImageIcon("image/balls_nigga.jpg").getImage();
 		

@@ -43,7 +43,6 @@ public abstract class BasicScreen extends Screen {
 	private void returnToMainMenu() {
 		MenuScreen menuScreen = new MenuScreen(main);
 		main.getContentPane().removeAll();
-		
 		main.setScreen(menuScreen);
 		
 		menuScreen.setVisible(true);

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class HelpControlScreen extends Screen  {
+public class HelpControlScreen  extends Screen    {
 	//private static final long serialVersionUID = 1L;
 	private Main main;
 	public HelpControlScreen(Main main) {
@@ -67,26 +67,40 @@ public class HelpControlScreen extends Screen  {
 
 		drawCenteredString("Hilfe / Steuerung", 350, 100, g2d);
 		g2d.setFont(g2d.getFont().deriveFont(g2d.getFont().getSize() * 0.6F));
-		drawCenteredString(
-				"image/Ball.png",
-				"Die Spielfigur muss das Spielfeld mittels gezogener Mauern auf einen",
-				350, 200, g2d);
+		try {
+			drawCenteredString(
+					"image/Ball.png",
+					"Die Spielfigur muss das Spielfeld mittels gezogener Mauern auf einen",
+					350, 200, g2d);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		drawCenteredString(
 				"Prozentsatz reduzieren um ein Level erfolgreich abzuschliessen",
 				350, 220, g2d);
-		drawCenteredString(
-				"image/Gegner.png",
-				" Diese Gegner bewegen sich innerhalb des Spielfeldes und ziehen dem",
-				350, 300, g2d);
+		try {
+			drawCenteredString(
+					"image/Gegner.png",
+					" Diese Gegner bewegen sich innerhalb des Spielfeldes und ziehen dem",
+					350, 300, g2d);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		drawCenteredString(
 				" Spieler bei Beruehrung ein Leben ab. Ausserdem zerstoeren sie die ",
 				350, 320, g2d);
 		drawCenteredString(
 				"gezogenen Mauern solange diese noch nicht komplett errichtet wurden ",
 				350, 340, g2d);
-		drawCenteredString("image/Stachelschwein.png",
-				"Stachelschweine bewegen sich nur auf der Flaeche ausserhalb ",
-				350, 400, g2d);
+		try {
+			drawCenteredString("image/Stachelschwein.png",
+					"Stachelschweine bewegen sich nur auf der Flaeche ausserhalb ",
+					350, 400, g2d);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		drawCenteredString("des Spielfeldes und ziehen dem Spieler ebenfalls",
 				350, 420, g2d);
 		drawCenteredString("bei Beruehrung ein Leben ab", 350, 440, g2d);
@@ -96,13 +110,13 @@ public class HelpControlScreen extends Screen  {
 	}
 
 	protected void drawCenteredString(String imgName, String s, int w, int h,
-			Graphics2D g2d) {
+			Graphics2D g2d)  throws IOException {
 		BufferedImage img = null;
-		try {
+	//	try {
 			img = ImageIO.read(new File(imgName));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//}
 		int imgW = img.getWidth();
 
 		int x = (int) (w - g2d.getFontMetrics().getStringBounds(s, g2d)
