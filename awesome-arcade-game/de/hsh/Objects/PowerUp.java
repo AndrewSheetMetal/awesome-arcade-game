@@ -103,6 +103,16 @@ public class PowerUp extends Actor
 	public void setType(PuType pType)
 	{
 		mType = pType;
+		
+		switch(mType) {
+		case Life : setColor(Color.GREEN); break; 
+		case Time : setColor(Color.RED); break;
+		case Speed : setColor(Color.YELLOW); break;
+		case Slow : setColor(Color.CYAN); break;
+		case Shield : /*TODO*/ break;
+		default: //Nichtstun
+			//PowerUp.getRandomType(true);
+	}
 	}
 	
 	// Definiert den Typen des Power-Ups
