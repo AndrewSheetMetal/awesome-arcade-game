@@ -71,6 +71,9 @@ public class GameScreen extends Screen implements Runnable {
 	private Point2D.Double center = new Point2D.Double(0, 0);
 	private Point2D.Double bfInitialSize = new Point2D.Double();
 	
+	private String infoMessage; 
+	private int infoMessageOutstandingTime = 0;
+	
 	private boolean running;
     private double speed = 2;
 	private PrototypeWall prototypeWall; //Die Linie, die der Player innerhalb des Battlefields zeichnet
@@ -80,6 +83,7 @@ public class GameScreen extends Screen implements Runnable {
 	//Timer-Objekt f�r den Countdown
 	private Timer timer = new Timer();
 	
+	private Thread runningThread;
 	
 	public GameScreen(List<Battlefield> pBattlefields, int level, Main main){
 		this.main = main;
@@ -156,9 +160,13 @@ public class GameScreen extends Screen implements Runnable {
 			public void componentHidden(ComponentEvent e) {}
 		});
 		
+		runningThread = new Thread(this);
+		runningThread.start();
+		//new Thread(this).run();
+		
 		
 		running = true;
-		new Thread(this).start();
+		
 		//battlefieldHitPoint = new Point(-1,-1); //Initialisiere den Hitpoint mit negativen Werten
 	}
 	
@@ -222,15 +230,15 @@ public class GameScreen extends Screen implements Runnable {
 				
 				if(!(playerIsInBattlefield==b) && b.contains(player.getCenter())) {
 					playerIsInBattlefield = b;
-					System.out.println("Enter Battlefield  "+battlefields.size());
+					//System.out.println("Enter Battlefield  "+battlefields.size());
 					enterBattlefield(b);
 					break;
 				}
 				else if(playerIsInBattlefield==b && !b.contains(player.getCenter())) {
 					playerIsInBattlefield = null;
-					System.out.println("Leave Battlefield  "+battlefields.size());
+					//System.out.println("Leave Battlefield  "+battlefields.size());
 					leaveBattlefield(b);
-					System.out.println("Leave Battlefield  "+battlefields.size());
+					//System.out.println("Leave Battlefield  "+battlefields.size());
 					break; //Verlässt der Spieler das Battlefield, so ändert sich die Battlefield Liste und die for-each Schleife wird inkonsistent
 				}
 			}
@@ -290,10 +298,22 @@ public class GameScreen extends Screen implements Runnable {
 				}
 					
 				switch(type) {
-					case Life : player.setLifePoints(player.getLifePoints()+1); break; 
-					case Time : timeout += 30;
-					case Speed : playerAdditionalSpeedTime += 100;
-					case Slow : playerReducedSpeedTime += 100;
+					case Life : player.setLifePoints(player.getLifePoints()+1);
+								System.out.println("Leben gewonnen");
+								showInfoMessage("One more Life");
+								break; 
+					case Time : timeout += 30; 
+								showInfoMessage("More Time");
+								System.out.println("30 Sekunden mehr Zeit");
+								break;
+					case Speed : playerAdditionalSpeedTime += 500; 
+								System.out.println("Höhere Geschwindigkeit");
+								showInfoMessage("HIGHSPEED");
+								break;
+					case Slow : playerReducedSpeedTime += 500; 
+								showInfoMessage("SLOWMOTION");
+								System.out.println("Niedrigere Geschindigkeit");
+								break;
 					case Shield : /*TODO*/ break;
 					default: //Nichtstun
 						//PowerUp.getRandomType(true);
@@ -436,19 +456,21 @@ public class GameScreen extends Screen implements Runnable {
 	 * Hier wird er z.B. auf die Startposition gesetzt*/
 	public void lostLife(String reason) {
 		System.out.println("Leben verloren: "+reason);
-		
+		showInfoMessage(reason);
 		if(player.getLifePoints() <= 1) {
 			//Game over - keine Leben mehr
 			System.out.println("Game over :(");
 			GameoverScreen gameoverScreen = new GameoverScreen(main, level);
-			
+			//this.
 			this.running = false;
 			main.remove(this);
+			//runningThread.su();
 			
 			main.setScreen(gameoverScreen);
 			
 			gameoverScreen.setFocusable(true);
 			gameoverScreen.requestFocus();
+			gameoverScreen.updateUI();
 		}
 		else {
 			//Spieler wird zurückgesetzt und ein Leben wird abgezogen
@@ -499,6 +521,14 @@ public class GameScreen extends Screen implements Runnable {
 		drawPowerUps(g);
 		
 		prototypeWall.draw(g,player.getCenter());
+		
+		if(infoMessageOutstandingTime > 0) {
+			gT.setColor(Color.RED);
+			gT.setFont(gT.getFont().deriveFont(gT.getFont().getSize() * 2.4F));
+			drawCenteredString(infoMessage, 250, 150, gT);
+			infoMessageOutstandingTime--;
+		}
+		
 		
 	}
 		
@@ -707,6 +737,11 @@ public class GameScreen extends Screen implements Runnable {
 					lRandom.nextInt(Main.SIZE - (int)(lPowerUp.getSize().getHeight()))));
 			mPowerUpList.add(lPowerUp);
 		}
-	}	
+	}
+	
+	private void showInfoMessage(String message) {
+		infoMessage = message;
+		infoMessageOutstandingTime = 300;
+	}
 }
 

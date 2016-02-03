@@ -59,24 +59,24 @@ public class BattlefieldSeperator {
 		 * Habe hier deshalb nur die Vergleichsoperatoren der inneren if-Bedingungen umgedreht
 		 * */
 		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
-			System.out.println("Startet in Vertikaler Linie");
+			//System.out.println("Startet in Vertikaler Linie");
 			if(bat.ypoints[startIndex] > prototypePoints.get(0).getY()) {
-				System.out.println("Ziehe y ab");
+				//System.out.println("Ziehe y ab");
 				toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY()-t);
 			}
 			else {
-				System.out.println("füge y hinzu");
+				//System.out.println("füge y hinzu");
 				toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY()+t);
 			}
 		}
 		else {
-			System.out.println("Startet in Horizontaler Linie");
+			//System.out.println("Startet in Horizontaler Linie");
 			if(bat.xpoints[startIndex] > prototypePoints.get(0).getX()) {
-				System.out.println("Ziehe x ab");
+				//System.out.println("Ziehe x ab");
 				toReturn.addPoint((int)prototypePoints.get(0).getX()-t, bat.ypoints[startIndex]);
 			}
 			else {
-				System.out.println("Füge x hinzu");
+				//System.out.println("Füge x hinzu");
 				toReturn.addPoint((int)prototypePoints.get(0).getX()+t, bat.ypoints[startIndex]);
 			}
 			
@@ -121,24 +121,24 @@ public class BattlefieldSeperator {
 		 * Habe hier deshalb nur die Vergleichsoperatoren der inneren if-Bedingungen umgedreht
 		 * */
 		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
-			System.out.println("Endet in Vertikaler Linie");
+			//System.out.println("Endet in Vertikaler Linie");
 			if(bat.ypoints[(endIndex+1)%bat.npoints] > prototypePoints.get(prototypePoints.size()-1).getY()) {
-				System.out.println("Ziehe y ab");
+				//System.out.println("Ziehe y ab");
 				toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY()-t);
 			}
 			else {
-				System.out.println("Füge y hinzu");
+				//System.out.println("Füge y hinzu");
 				toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY()+t);
 			}
 		}
 		else {
-			System.out.println("Endet in Horizontaler Linie");
+			//System.out.println("Endet in Horizontaler Linie");
 			if(bat.xpoints[(endIndex+1)%bat.npoints] > prototypePoints.get(prototypePoints.size()-1).getX()) {
-				System.out.println("Ziehe x ab");
+				//System.out.println("Ziehe x ab");
 				toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()-t, bat.ypoints[(endIndex+1)%bat.npoints]);
 			}
 			else {
-				System.out.println("Füge x hinzu");
+				//System.out.println("Füge x hinzu");
 				toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()+t, bat.ypoints[(endIndex+1)%bat.npoints]);
 			}
 			
@@ -160,24 +160,24 @@ public class BattlefieldSeperator {
 		}
 		
 		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
-			System.out.println("Startet in Vertikaler Linie");
+			//System.out.println("Startet in Vertikaler Linie");
 			if(bat.ypoints[startIndex] < prototypePoints.get(0).getY()) {
-				System.out.println("Ziehe y ab");
+				//System.out.println("Ziehe y ab");
 				toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY()-t);
 			}
 			else {
-				System.out.println("füge y hinzu");
+				//System.out.println("füge y hinzu");
 				toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY()+t);
 			}
 		}
 		else {
-			System.out.println("Startet in Horizontaler Linie");
+			//System.out.println("Startet in Horizontaler Linie");
 			if(bat.xpoints[startIndex] < prototypePoints.get(0).getX()) {
-				System.out.println("Ziehe x ab");
+				//System.out.println("Ziehe x ab");
 				toReturn.addPoint((int)prototypePoints.get(0).getX()-t, bat.ypoints[startIndex]);
 			}
 			else {
-				System.out.println("Füge x hinzu");
+				//System.out.println("Füge x hinzu");
 				toReturn.addPoint((int)prototypePoints.get(0).getX()+t, bat.ypoints[startIndex]);
 			}
 			
@@ -218,24 +218,24 @@ public class BattlefieldSeperator {
 		}
 		
 		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
-			System.out.println("Endet in Vertikaler Linie");
+			//System.out.println("Endet in Vertikaler Linie");
 			if(bat.ypoints[(endIndex+1)%bat.npoints] < prototypePoints.get(prototypePoints.size()-1).getY()) {
-				System.out.println("Ziehe y ab");
+				//System.out.println("Ziehe y ab");
 				toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY()-t);
 			}
 			else {
-				System.out.println("Füge y hinzu");
+				//System.out.println("Füge y hinzu");
 				toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY()+t);
 			}
 		}
 		else {
-			System.out.println("Endet in Horizontaler Linie");
+			//System.out.println("Endet in Horizontaler Linie");
 			if(bat.xpoints[(endIndex+1)%bat.npoints] < prototypePoints.get(prototypePoints.size()-1).getX()) {
-				System.out.println("Ziehe x ab");
+				//System.out.println("Ziehe x ab");
 				toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()-t, bat.ypoints[(endIndex+1)%bat.npoints]);
 			}
 			else {
-				System.out.println("Füge x hinzu");
+				//System.out.println("Füge x hinzu");
 				toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX()+t, bat.ypoints[(endIndex+1)%bat.npoints]);
 			}
 			
@@ -301,11 +301,11 @@ public class BattlefieldSeperator {
 		}
 		
 		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
-			System.out.println("Startet in Vertikaler Linie");
+			//System.out.println("Startet in Vertikaler Linie");
 			toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY());
 		}
 		else {
-			System.out.println("Startet in Horizontaler Linie");
+			//System.out.println("Startet in Horizontaler Linie");
 			toReturn.addPoint((int)prototypePoints.get(0).getX(), bat.ypoints[startIndex]);
 		}
 		
@@ -314,11 +314,11 @@ public class BattlefieldSeperator {
 		}
 		
 		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
-			System.out.println("Endet in Vertikaler Linie");
+			//System.out.println("Endet in Vertikaler Linie");
 			toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY());
 		}
 		else {
-			System.out.println("Endet in Horizontaler Linie");
+			//System.out.println("Endet in Horizontaler Linie");
 			toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), bat.ypoints[(endIndex+1)%bat.npoints]);
 		}
 		
@@ -334,11 +334,11 @@ public class BattlefieldSeperator {
 		Battlefield toReturn = new Battlefield();		
 		
 		if(Math.abs(bat.xpoints[startIndex] - bat.xpoints[(startIndex+1)%bat.npoints]) < Math.abs(bat.ypoints[startIndex] - bat.ypoints[(startIndex+1)%bat.npoints])) {
-			System.out.println("Startet in Vertikaler Linie");
+			//System.out.println("Startet in Vertikaler Linie");
 			toReturn.addPoint(bat.xpoints[startIndex], (int)prototypePoints.get(0).getY());
 		}
 		else {
-			System.out.println("Startet in Horizontaler Linie");
+			//System.out.println("Startet in Horizontaler Linie");
 			toReturn.addPoint((int)prototypePoints.get(0).getX(), bat.ypoints[startIndex]);
 		}
 		
@@ -347,11 +347,11 @@ public class BattlefieldSeperator {
 		}
 		
 		if(Math.abs(bat.xpoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getX()) < Math.abs(bat.ypoints[(endIndex+1)%bat.npoints] - prototypePoints.get(prototypePoints.size()-1).getY())) {
-			System.out.println("Endet in Vertikaler Linie");
+			//System.out.println("Endet in Vertikaler Linie");
 			toReturn.addPoint(bat.xpoints[(endIndex+1)%bat.npoints], (int)prototypePoints.get(prototypePoints.size()-1).getY());
 		}
 		else {
-			System.out.println("Endet in Horizontaler Linie");
+			//System.out.println("Endet in Horizontaler Linie");
 			toReturn.addPoint((int)prototypePoints.get(prototypePoints.size()-1).getX(), bat.ypoints[(endIndex+1)%bat.npoints]);
 		}
 		
