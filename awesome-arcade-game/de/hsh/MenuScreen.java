@@ -162,6 +162,45 @@ public class MenuScreen extends Screen {
 			
 		});
 		
+		hilfeBtn.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				HelpControlScreen  helpScreen= new HelpControlScreen(main);
+				main.setScreen(helpScreen);
+				setVisible(false);
+				helpScreen.setFocusable(true);
+				helpScreen.requestFocus();
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+		});
+		
 		creditsBtn.addMouseListener(new MouseListener() {
 
 			@Override
